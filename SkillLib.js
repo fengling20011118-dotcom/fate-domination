@@ -688,7 +688,15 @@ const SkillLib = {
         "神秘杀手": { onCombatWin: wrap((pt, winners, all, gl) => { let losers = all.filter(o => o.id !== pt.id); if(losers.length){ let hi = losers.reduce((a,b) => a.ply.vp >= b.ply.vp ? a : b); hi.ply.vp = Math.max(0, hi.ply.vp - 3); gl.push(`<div class="report-line" style="color:var(--red);"><span>✨ ${pt.ply.master.name} (神秘杀手)</span> <span>战果最高的败者 ${hi.ply.master.name} 失去3点战果</span></div>`); } }) },
         "神圣的献身": { onAction: wrap((p) => { let lead = State.players.filter(op => op.isAlive).every(op => op.vp <= p.vp); if(lead){ let g = State.day >= 9 ? 3 : 1; p.vp += g; Engine.log(`【神圣的献身】战果领先，获得${g}点战果！`, "var(--vp)"); } }) },
         "王之号炮": { onAction: wrap((p) => { p.kingCannonPendingDay = State.day + 1; Engine.log(`【王之号炮】开炮！下回合准备阶段额外抽2张牌，并可追加打出1张常规牌！`, "var(--gold)"); }) },
-        "天授的英雄": { onAction: wrap((p) => { if(payCost(p, 1, "天授的英雄")){ Engine.drawCards(p, 1); Engine.log(`【天授的英雄】花费1点魔力，检索一张基础牌入手！`, "var(--mana)"); } }) },
+        "天授的英雄": { onAction: wrap((p) => {
+            if(!payCost(p, 1, "天授的英雄")) return false;
+            let basicIds=[...(p.deck||[]),...(p.discard||[])].filter(cid=>{let c=Engine.getCardData(cid);return c&&String(c.desc||"").includes("基础攻击");});
+            basicIds=[...new Set(basicIds)];
+            let take=cid=>{let i=p.deck.indexOf(cid);if(i>-1)p.deck.splice(i,1);else{i=p.discard.indexOf(cid);if(i>-1)p.discard.splice(i,1);}if(i>-1||p.hand.includes(cid)){p.hand.push(cid);Engine.log(`【天授的英雄】选择【${Engine.getCardData(cid)?.name||cid}】加入手牌！`,"var(--mana)");UI.updateAll();UI.renderHand(true);Network.sync();}};
+            if(!basicIds.length){Engine.log(`【天授的英雄】牌库与弃牌堆没有基础牌。`,"#aaa");return;}
+            if(p.isPlayer&&p.id===Network.myPlayerId){Interaction.choose("【天授的英雄】选择牌库或弃牌堆中的基础牌",basicIds.map(cid=>({label:Engine.getCardData(cid)?.name||cid,desc:Engine.getCardData(cid)?.desc||""})),i=>take(basicIds[i]),()=>{p.mana+=1;});return;}
+            take(basicIds[0]);
+        }) },
         "少女贞洁": {
             // sc_frank_1（威力3版）：战斗阶段关闭同地点魔术属性基础牌，获得其威力魔力（近似：封魔术压制+回魔）
             onCombatStart: wrap((pt, all, gl) => {
@@ -2112,9 +2120,35 @@ const SkillLib = {
                     if(p.isPlayer&&p.id===Network.myPlayerId) Engine.openChoiceModal(`【凡性之赠】选择${source==="discard"?"弃牌堆":"牌库"}中的一张牌`, options, apply, ()=>{p._dioscuriGiftPending=false;});
                     else apply(Math.floor(Math.random()*options.length));
                 };
-                let start = () => { let discarded=p.hand.splice(0,2); p.discard.push(...discarded); let useDiscard=p.mana>=4; if(p.isPlayer&&p.id===Network.myPlayerId){ Engine.openChoiceModal("【凡性之赠】弃置2张牌后选择检索区域", [{label:"从牌库检索",desc:"不额外支付魔力"},{label:"从弃牌堆检索",desc:"额外支付4点魔力",disabled:!useDiscard}], i=>{if(i===1){p.mana-=4;finish("discard");}else finish("deck");}, ()=>{p._dioscuriGiftPending=false;}); } else finish(useDiscard&&Math.random()<0.5?"discard":"deck"); };
+                let start = () => {
+                    let discardPair = pair => {
+                        let ids=pair.map(i=>p.hand[i]).filter(Boolean); if(ids.length!==2){p._dioscuriGiftPending=false;return;}
+                        ids.forEach(cid=>{let i=p.hand.indexOf(cid);if(i>-1)p.discard.push(p.hand.splice(i,1)[0]);});
+                        let useDiscard=p.mana>=4;
+                        if(p.isPlayer&&p.id===Network.myPlayerId){ Engine.openChoiceModal("【凡性之赠】选择检索区域", [{label:"从牌库检索",desc:"不额外支付魔力"},{label:"从弃牌堆检索",desc:"额外支付4点魔力",disabled:!useDiscard}], i=>{if(i===1){p.mana-=4;finish("discard");}else finish("deck");}, ()=>{p._dioscuriGiftPending=false;}); }
+                        else finish(useDiscard&&Math.random()<0.5?"discard":"deck");
+                    };
+                    if(p.isPlayer&&p.id===Network.myPlayerId){
+                        let first=-1;
+                        Engine.openChoiceModal("【凡性之赠】选择要弃置的第1张手牌",p.hand.map((cid,i)=>({label:DB.cards[cid]?.name||cid,desc:DB.cards[cid]?.desc||""})),i=>{
+                            first=i;
+                            Engine.openChoiceModal("【凡性之赠】选择要弃置的第2张手牌",p.hand.map((cid,i)=>({label:DB.cards[cid]?.name||cid,desc:DB.cards[cid]?.desc||"",disabled:i===first})),i=>discardPair([first,i]),()=>{p._dioscuriGiftPending=false;});
+                        },()=>{p._dioscuriGiftPending=false;});
+                        return;
+                    }
+                    discardPair([0,1]);
+                };
                 start();
             })
+        },
+        "守护的誓约": {
+            onAction: wrap((p) => {
+                if(!p.hand || p.hand.length===0){ Engine.log(`【守护的誓约】没有可弃置的手牌。`, "#aaa"); return false; }
+                let apply=cid=>{let i=p.hand.indexOf(cid);if(i<0)return false;p.discard.push(p.hand.splice(i,1)[0]);p._守护的誓约=true;Engine.log(`【守护的誓约】弃置【${Engine.getCardData(cid)?.name||cid}】，本回合获得+2合计威力并免受其他玩家能力影响。`,"var(--gold)");UI.updateAll();UI.renderHand(true);Network.sync();return true;};
+                if(p.isPlayer&&p.id===Network.myPlayerId){Interaction.choose("【守护的誓约】选择弃置一张手牌",p.hand.map(cid=>({label:Engine.getCardData(cid)?.name||cid,desc:Engine.getCardData(cid)?.desc||""})),i=>apply(p.hand[i]),()=>{});return;}
+                return apply(p.hand[0]);
+            }),
+            onCombatCalc: wrap((pt)=>{if(pt.ply._守护的誓约){pt.p+=2;pt.tags.push(`<span style="color:var(--gold);">[守护的誓约(+2)]</span>`);}})
         },
         "放荡之宴": {
             onAction: wrap((p) => {
