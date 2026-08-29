@@ -1565,7 +1565,7 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
                 
                 let isPh3=(State.phase===3&&State.isMyTurn);let isPh2=(State.phase===2&&State.isMyTurn); let isDeployAbility=(State.phase===2&&State.deployAbilityPending&&State.turnOrder[State.currentTurnIdx]===Network.myPlayerId); let finishDeploy=document.getElementById('btn-finish-deploy');let playBeast=document.getElementById('btn-play-beast');if(finishDeploy)finishDeploy.classList.toggle('hidden',!isDeployAbility);if(playBeast)playBeast.classList.toggle('hidden',!(isDeployAbility&&p.master.id==='m_chaos'&&window.hasPlayableBeast(p.beasts))); let mSkillHtml="";
                 if (State.tokiomiItems && isPh3) { let pOrderIdx = State.turnOrder.indexOf(p.id); let isLastTwo = pOrderIdx >= State.turnOrder.length - 2; if (p.master.id === "m_tokiomi" || isLastTwo) { mSkillHtml += `<button class="skill-btn" style="border-color:var(--gold); color:var(--gold);" onclick="Engine.openTokiomiItemModal()">🏺 选用【道具】</button>`; } }
-                let masterSkillEntries=[...(p.pSkills||[]).map((sk,idx)=>({sk,idx,source:"master"})),...((p.servant&&p.servant.skillCards)||[]).map((sk,idx)=>({sk,idx,source:"servant"})).filter(entry=>entry.sk&&entry.sk.isMasterSkill)];let eventSkillNames=new Set(["魔兽","俄罗斯异闻带","北欧异闻带","印度异闻带","中国异闻带","冻土","适者生存","皇帝敕令","和平日","苏尔特领域","女武神领域","斯卡蒂领域"]);masterSkillEntries.forEach(({sk,idx,source})=>{let sc=sk;let previewType=source;if(sk.name==="兽王之巢"||eventSkillNames.has(sk.name))return;let tStr=String(sk.type||"");let bPhase=MasterSkillBatch.phaseOf(sk.name, sk);let isPassive=(tStr==="被动"||tStr==="提示"||sk.name==="兽王之巢")&&!bPhase;let isOwned=Engine.isOwnedMasterSkill(p,sk);let skillSource=sc.isMasterSkill?"master":source;let isUsable=false;if(!sk.used){if(tStr.includes("行动")&&State.phase===3)isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("前哨")&&State.phase===2&&(isDeployAbility||!State.deployAbilityPending))isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("准备")&&State.phase===1)isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("战斗")&&State.phase===4)isUsable=p.mana>=(Number(sk.cost)||0);if(bPhase&&State.phase===bPhase&&(State.isMyTurn||isDeployAbility)&&(State.phase!==2||isDeployAbility||!State.deployAbilityPending))isUsable=true;}let mImgPath=`images/skills/${p.master.id}_${sk.id}.jpg`;let mFallbacks=`images/skills/${p.master.id}_${sk.id}.png|images/skills/${sk.id}.jpg|images/skills/${sk.id}.png|images/skills/${sk.name}.jpg|images/skills/${sk.name}.png`;mSkillHtml+=`<button class="skill-btn ${sk.used?"selected":""}" ${(!isOwned||(!isPassive&&!isUsable&&!sk.used))?'disabled':''} onclick="${isOwned&&!isPassive?`Engine.activateMasterSkill('${sk.id}')`:''}" onmousemove="window.showSingleSkillTip(event, '${p.id}', '${previewType}', ${idx})" onmouseleave="window.hideTip()"><img class="skill-btn-image" src="${mImgPath}" data-fallbacks="${mFallbacks}" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-m">${tStr}</span><span class="skill-btn-name">${sk.used?'✔️':'▶'} ${sk.name}</span></span></button>`;});
+                let masterSkillEntries=[...(p.pSkills||[]).map((sk,idx)=>({sk,idx,source:"master"})),...((p.servant&&p.servant.skillCards)||[]).map((sk,idx)=>({sk,idx,source:"servant"})).filter(entry=>entry.sk&&entry.sk.isMasterSkill)];let eventSkillNames=new Set(["魔兽","俄罗斯异闻带","北欧异闻带","印度异闻带","中国异闻带","冻土","适者生存","皇帝敕令","和平日","苏尔特领域","女武神领域","斯卡蒂领域"]);masterSkillEntries.forEach(({sk,idx,source})=>{let sc=sk;let previewType=source;if(sk.name==="兽王之巢"||eventSkillNames.has(sk.name))return;let tStr=String(sk.type||"");let bPhase=MasterSkillBatch.phaseOf(sk.name, sk);let hasPhaseText=/(准备|前哨|行动|战斗)阶段?/.test(tStr)||!!bPhase;let isPassive=(tStr==="被动"||tStr==="提示"||sk.name==="兽王之巢")&&!hasPhaseText;let isOwned=Engine.isOwnedMasterSkill(p,sk);let skillSource=sc.isMasterSkill?"master":source;let isUsable=false;if(!sk.used){if(tStr.includes("行动")&&State.phase===3)isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("前哨")&&State.phase===2&&(isDeployAbility||!State.deployAbilityPending))isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("准备")&&State.phase===1)isUsable=p.mana>=(Number(sk.cost)||0);if(tStr.includes("战斗")&&State.phase===4)isUsable=p.mana>=(Number(sk.cost)||0);if(bPhase&&State.phase===bPhase&&(State.isMyTurn||isDeployAbility)&&(State.phase!==2||isDeployAbility||!State.deployAbilityPending))isUsable=true;}let mImgPath=`images/skills/${p.master.id}_${sk.id}.jpg`;let mFallbacks=`images/skills/${p.master.id}_${sk.id}.png|images/skills/${sk.id}.jpg|images/skills/${sk.id}.png|images/skills/${sk.name}.jpg|images/skills/${sk.name}.png`;mSkillHtml+=`<button class="skill-btn ${sk.used?"selected":""}" ${(!isOwned||(!isPassive&&!isUsable&&!sk.used))?'disabled':''} onclick="${isOwned&&!isPassive?`Engine.activateMasterSkill('${sk.id}')`:''}" onmousemove="window.showSingleSkillTip(event, '${p.id}', '${previewType}', ${idx})" onmouseleave="window.hideTip()"><img class="skill-btn-image" src="${mImgPath}" data-fallbacks="${mFallbacks}" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-m">${tStr}</span><span class="skill-btn-name">${sk.used?'✔️':'▶'} ${sk.name}</span></span></button>`;});
                 (p.tiamatReadyBeasts||[]).forEach(cid=>{let b=Engine.ensureTiamatBeastCard(cid);if(!b)return;let beastSelected=(State.selectedTiamatBeasts||[]).includes(cid);let beastCanUse=isPh3&&p.master.id==='m_tiamat';let beastTip=`${b.desc}\n${beastSelected?'已选入本回合攻击':'行动阶段点击此牌选入攻击'}`.replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/'/g,"\\'");mSkillHtml+=`<button class="skill-btn ${beastSelected?'selected':''} ${beastCanUse?'active':''}" ${beastCanUse?`onclick="Engine.toggleTiamatBeast('${cid}')"`:''} ${!beastCanUse?'disabled':''} onmousemove="window.showNamedSkillTip(event, '${b.name}', '${beastTip}', '${b.cost}魔·${b.power}威')" onmouseleave="window.hideTip()"><img class="skill-btn-image" src="images/skills/${b.name}.jpg" data-fallbacks="images/skills/${b.name}.png|images/cards/${b.name}.jpg|images/cards/${b.name}.png|images/skills/生命之海.png" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-m">魔兽·${b.type}｜${b.cost}魔</span><span class="skill-btn-name">${beastSelected?'✔':'▶'} ${b.name}（${b.power}威）</span></span></button>`;});
                 (p.kiaraSecretGardens||[]).forEach(name=>{mSkillHtml+=`<button class="skill-btn" disabled onmousemove="window.showNamedSkillTip(event, '${name}', '你持有的暗置【秘密花园】。只有你可以查看这张牌。', '秘密花园')" onmouseleave="window.hideTip()"><img class="skill-btn-image" src="images/skills/${name}.png" data-fallbacks="images/events/${name}.png|images/skills/${name}.jpg|images/events/${name}.jpg" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-m">秘密·仅你可见</span><span class="skill-btn-name">${name}</span></span></button>`;});
                 
@@ -1586,8 +1586,8 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
                 if(p.servant.skillCards){
                     p.servant.skillCards.forEach((sc,idx)=>{
                         if(sc.isMasterSkill)return;
-                        let selClass=State.selectedSkillCards.includes(idx)?"selected":""; let isCollapse = (p.kariyaMustPlay === sc.id || p.kariyaMustPlay === sc.name); let isDispatched=!!sc.jasonDispatched;
-                        let sImgPath=`images/skills/${sc.id}.jpg`;let sFallbacks=`images/skills/${sc.id}.png|images/skills/${sc.name}.jpg|images/skills/${sc.name}.png|images/servants/${p.servant.trueName}.jpg|images/servants/${p.servant.trueName}.png`;sSkillHtml+=`<button data-skill-index="${idx}" class="skill-btn ${selClass} ${isPh3&&!isDispatched?'active':''}" style="border-color:${isCollapse?'var(--red)':'#444'};opacity:${isDispatched?'0.45':'1'};" onmousemove="window.showSingleSkillTip(event, '${p.id}', 'servant', ${idx})" onmouseleave="window.hideTip()" ${isPh3&&!isDispatched?`onclick="Engine.toggleSelect('servant_skill', ${idx})"`:''} ${!isPh3||isDispatched?'disabled':''}><img class="skill-btn-image" src="${sImgPath}" data-fallbacks="${sFallbacks}" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-s">${sc.type||'宝具'}</span><span class="skill-btn-name">${sc.name}${isDispatched?'（已派遣）':''}</span></span></button>`;
+                        let selClass=State.selectedSkillCards.includes(idx)?"selected":""; let isCollapse = (p.kariyaMustPlay === sc.id || p.kariyaMustPlay === sc.name); let isDispatched=!!sc.jasonDispatched; let isPhaseSkill=/(准备|前哨|行动|战斗)阶段?/.test(String(sc.desc||"")) || String(sc.type||"").includes("阶段"); let canSelectSkill=isPh3&&!isDispatched&&!String(sc.type||"").includes("被动") || (isPh3&&!isDispatched&&String(sc.desc||"").includes("被动/行动阶段"));
+                        let sImgPath=`images/skills/${sc.id}.jpg`;let sFallbacks=`images/skills/${sc.id}.png|images/skills/${sc.name}.jpg|images/skills/${sc.name}.png|images/servants/${p.servant.trueName}.jpg|images/servants/${p.servant.trueName}.png`;sSkillHtml+=`<button data-skill-index="${idx}" class="skill-btn ${selClass} ${canSelectSkill?'active':''}" style="border-color:${isCollapse?'var(--red)':'#444'};opacity:${isDispatched?'0.45':'1'};" onmousemove="window.showSingleSkillTip(event, '${p.id}', 'servant', ${idx})" onmouseleave="window.hideTip()" ${canSelectSkill?`onclick="Engine.toggleSelect('servant_skill', ${idx})"`:''} ${!canSelectSkill?'disabled':''}><img class="skill-btn-image" src="${sImgPath}" data-fallbacks="${sFallbacks}" onerror="window.onImgError(this)"><span class="skill-btn-content"><span class="skill-type type-s">${sc.type||'宝具'}</span><span class="skill-btn-name">${sc.name}${isDispatched?'（已派遣）':''}</span></span></button>`;
                     });
                 }
                 UI.setStableHTML(document.getElementById('ui-servant-skill-area'),sSkillHtml,sSkillHtml);
@@ -1866,6 +1866,12 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
             Engine.log(`【炼金术师】${p.master.name} 从独立牌库抽取一张【月灵髓液】！`, "var(--mana)");
         },
         phaseOf: (n, sk) => {
+            // 规则文本中的“被动/前哨阶段”“被动/行动阶段”等复合关键词仍是可主动触发的阶段能力。
+            let rawType=String(sk&&sk.type||"");
+            if(rawType.includes("准备阶段")) return 1;
+            if(rawType.includes("前哨阶段")||rawType.includes("前哨")) return 2;
+            if(rawType.includes("行动阶段")||rawType.includes("行动")) return 3;
+            if(rawType.includes("战斗阶段")||rawType.includes("战斗")) return 4;
             // 【生命之海】整张牌可在行动阶段使用；牌面内的“前哨阶段”是独立分技能。
             if(n === "生命之海" || (sk && sk.id === "sc_tiamat_sea")) return 3;
             if(n === "鬼之血脉" && sk && sk.id !== "s3" && !String(sk.type || "").includes("行动")) return 0;
@@ -2099,10 +2105,17 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
             },
             "莱妮丝·阿奇佐尔缇": (p, sk) => {
                 let trims = ["reines_trimmau_slash", "reines_trimmau_wing", "reines_trimmau_confession"];
-                let trimId = trims[Math.floor(Math.random()*trims.length)];
-                p.hand.push(trimId);
-                p.reinesTrimCount = (p.reinesTrimCount||0) + 1;
-                Engine.log(`【炼金术师】${p.master.name} 将一张游戏外的【特里姆玛乌】加入手牌（不展示）！`, "var(--gold)");
+                let apply = trimId => {
+                    if(!trims.includes(trimId)) return;
+                    p.hand.push(trimId); p.reinesTrimCount = (p.reinesTrimCount||0) + 1;
+                    Engine.log(`【炼金术师】${p.master.name} 选择将【特里姆玛乌】加入手牌！`, "var(--gold)");
+                    UI.updateAll(); UI.renderHand(true); Network.sync();
+                };
+                if(p.isPlayer && p.id===Network.myPlayerId){
+                    Engine.openChoiceModal("【炼金术师】选择一张【特里姆玛乌】加入手牌", trims.map(id=>({label:DB.cards[id]?.name||"特里姆玛乌", cardId:id, desc:DB.cards[id]?.desc||""})), i=>apply(trims[i]), ()=>{sk.used=false;UI.updateAll();Network.sync();});
+                    return;
+                }
+                apply(trims[Math.floor(Math.random()*trims.length)]);
             },
             "奥菲莉娅·法姆索罗涅": (p, sk) => { // 迁延之魔眼
                 if((p.opheliaEyeUses||0) >= 2) { sk.used = false; return alert("<每局游戏限两次>已用尽！"); }
@@ -2905,6 +2918,14 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
             if(targets.length===0)return {ok:false,message:"当前战场上没有可支援的玩家！"};
             return {ok:true,targets};
         },
+        hasTrueNameRelease:(sk)=>!!(sk && String(sk.desc||"").includes("真名解放")),
+        revealTrueName:(p,sk,reason="")=>{
+            if(!p || p.isRevealed || !Engine.hasTrueNameRelease(sk)) return false;
+            if(p.servant && p.servant.skillCards && p.servant.skillCards.some(s=>s.name==="不为一己之荣光(被动)")) return false;
+            p.isRevealed=true; Engine.log(reason||`${p.master.name} 真名公开！`,"var(--vp)");
+            if(p.master && p.master.id==="m_caren" && !p.carenShroud){ p.carenShroud=true; Engine.log(`【抹大拉的圣骸布】卡莲首次真名解放，获得圣骸布！`,"var(--gold)"); }
+            return true;
+        },
         isOwnedMasterSkill:(p,sk)=>{
             if(!p||!p.master||!sk)return false;
             if(sk.isMasterSkill&&p.servant&&Array.isArray(p.servant.skillCards)&&p.servant.skillCards.includes(sk))return true;
@@ -3040,7 +3061,8 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
         getServantSkillPlayRule:(p,sk)=>{
             let type=String(sk&&sk.type||"");
             let desc=String(sk&&sk.desc||"");
-            let passivePhase=type.includes("被动/")||type.includes("被动／");
+            // 阶段关键词写在卡牌描述中（多数从者技能的 type 仍标为“被动”），必须同时解析 desc。
+            let passivePhase=type.includes("被动/")||type.includes("被动／")||desc.includes("被动/")||desc.includes("被动／");
             let requiredMana=passivePhase?0:8;
             if(p&&p.master&&p.master.id==="m_kayneth")requiredMana=0;
             if(p&&p.master&&p.master.id==="m_bazett"&&sk&&sk.name==="佛拉格拉克")requiredMana=Number(sk.req)||Number(sk.cost)||0;
@@ -3413,7 +3435,7 @@ window.onerror = function(m, s, l, c, e) { console.error("🚨 游戏代码检�
             let hasCommon = false; if (cardAttrSets.length >= 2) { let firstAttrs = cardAttrSets[0]; hasCommon = firstAttrs.some(attr => cardAttrSets.every(set => set.includes(attr))); }
             if (hasCommon) { if (evtNames.includes("协同")) pwr += 4; if (curSitName === "对未来的憧憬") pwr += 3; }
             if (evtNames.includes("铤而走险")) { let allVPs = [...new Set(State.players.filter(p=>p.isAlive).map(p=>p.vp))].sort((a,b)=>a-b); let count = evtNames.filter(n=>n==="铤而走险").length; for (let i = 0; i < count; i++) { if (ply.vp === allVPs[0]) pwr += 12; else if (allVPs.length > 1 && ply.vp === allVPs[1]) pwr += 8; else if (allVPs.length > 2 && ply.vp === allVPs[2]) pwr += 4; } }
-            let simulatedIsRevealed = ply.isRevealed; if (!simulatedIsRevealed && c.servantSkills && c.servantSkills.length > 0) { let willReveal = c.servantSkills.some(sIdx => { let sk = ply.servant.skillCards[sIdx]; return sk && sk.name !== "自我改造" && !ply.servant.skillCards.some(s => s.name === "不为一己之荣光(被动)"); }); if (willReveal) simulatedIsRevealed = true; }
+            let simulatedIsRevealed = ply.isRevealed; if (!simulatedIsRevealed && c.servantSkills && c.servantSkills.length > 0) { let willReveal = c.servantSkills.some(sIdx => { let sk = ply.servant.skillCards[sIdx]; return Engine.hasTrueNameRelease(sk) && sk.name !== "自我改造" && !ply.servant.skillCards.some(s => s.name === "不为一己之荣光(被动)"); }); if (willReveal) simulatedIsRevealed = true; }
             if (evtNames.includes("偷袭") && !simulatedIsRevealed) { let count = evtNames.filter(n=>n==="偷袭").length; pwr += (5 * count); }
             return isNaN(pwr) ? 0 : pwr;
         },
@@ -4292,8 +4314,28 @@ if(m.id === "m_caules"){
 			let sit;if(State.day===9)sit=DB.situations.find(s=>s.name==="命运之夜");else if(State.day===10)sit=DB.situations.find(s=>s.name==="身处地狱之门");else if(State.day>=11)sit=DB.situations.find(s=>s.name==="天之杯");else{let nSits=DB.situations.filter(s=>!s.isClimax);sit=nSits[Math.floor(Math.random()*nSits.length)];}
 			State.currentSituation = { name: sit.name, desc: sit.desc };
 			let sitNameEl=document.getElementById('sit-name');let sitDescEl=document.getElementById('sit-desc');if(sitNameEl)sitNameEl.innerText=sit.name;if(sitDescEl)sitDescEl.innerText=sit.desc;
-			if (sit.name === "转机" || sit.name === "命运之夜") { State.currentEvents.miyama.push(...Engine.drawEventCards(1,{revealLocation:"深山町"})); State.currentEvents.shinto.push(...Engine.drawEventCards(1,{revealLocation:"新都"})); } else if (sit.name === "新都之战") State.currentEvents.shinto.push(...Engine.drawEventCards(1,{revealLocation:"新都"})); else if (sit.name === "深山町的杀人魔" || sit.name === "身处地狱之门") State.currentEvents.miyama.push(...Engine.drawEventCards(1,{revealLocation:"深山町"})); else if (sit.name === "天之杯") State.currentEvents.miyama.push(...Engine.drawEventCards(2,{revealLocation:"深山町"}));
+            if (sit.name === "转机" || sit.name === "命运之夜") { State.currentEvents.miyama.push(...Engine.drawEventCards(1,{revealLocation:"深山町"})); State.currentEvents.shinto.push(...Engine.drawEventCards(1,{revealLocation:"新都"})); } else if (sit.name === "新都之战") State.currentEvents.shinto.push(...Engine.drawEventCards(1,{revealLocation:"新都"})); else if (sit.name === "深山町的杀人魔" || sit.name === "身处地狱之门") State.currentEvents.miyama.push(...Engine.drawEventCards(1,{revealLocation:"深山町"})); else if (sit.name === "天之杯") State.currentEvents.miyama.push(...Engine.drawEventCards(2,{revealLocation:"深山町"}));
             State.currentEvents.miyama = State.currentEvents.miyama.filter(x=>x); State.currentEvents.shinto = State.currentEvents.shinto.filter(x=>x);
+            // 时代轮回：每回合准备阶段自动把本时代规定的印度事件牌放回轮回区（仅补充缺失牌）。
+            State.players.filter(pl=>pl.isAlive&&pl.master&&pl.master.id==="m_peperoncino").forEach(pl=>{
+                pl.pepeWheel=Array.isArray(pl.pepeWheel)?pl.pepeWheel:[];
+                let names=State.day<=4?["莲池","猎场","实地考察","神之空岩"]:State.day<=7?["莲池","猎场","实地考察"]:State.day<=9?["凋零的平原","衰败的城镇"]:State.day===10?["乳海"]:[];
+                names.forEach(name=>{if(!pl.pepeWheel.some(e=>e&&e.name===name)){let vp={"莲池":1,"猎场":1,"实地考察":1,"神之空岩":0,"凋零的平原":2,"衰败的城镇":2,"乳海":2}[name];pl.pepeWheel.push({name,vp});}});
+                pl.pepeEra=State.day<=4?"圆满时代":State.day<=7?"三分时代":State.day<=9?"二分时代":State.day===10?"争斗时代":"审判时代";
+            });
+            // 赫菲斯托斯终端：事件翻开时立即发放遗产，并将终端移除、从牌库补一张事件。
+            if(Network.isHost){
+                State.locationRelics = State.locationRelics || {};
+                ["miyama","shinto"].forEach(key=>{
+                    let loc=key==="miyama"?"深山町":"新都", evts=State.currentEvents[key]||[];
+                    for(let i=evts.length-1;i>=0;i--) if(evts[i]&&evts[i].name==="赫菲斯托斯终端"){
+                        State.locationRelics[loc]=(State.locationRelics[loc]||0)+3;
+                        State.players.filter(pl=>pl.isAlive).forEach(pl=>pl.wodimeRelics=(pl.wodimeRelics||0)+1);
+                        evts.splice(i,1); let replacement=Engine.drawEventCards(1,{revealLocation:loc})[0]; if(replacement)evts.push(replacement);
+                        Engine.log(`【赫菲斯托斯终端】${loc} 发放：所有玩家获得1个【神之遗产】，地点获得3个遗产；终端移除并补充事件牌。`,"var(--gold)");
+                    }
+                });
+            }
             Engine.log(`====== 第 ${State.day} 回合 开始 ======`, "var(--gold)");
             let addMana=sit.mana||0;if(addMana>0){State.players.forEach(p=>{if(p.isAlive) Engine.addMana(p, addMana);});Engine.log(`【局势】${sit.name}：全体玩家恢复 ${addMana} 点魔力。`,"var(--mana)");}
             State.players.forEach(p => { if (p.isAlive) { let drawTarget = (p.master.id === "m_kohaku") ? 4 : 3; let needed = Math.max(0, drawTarget - p.hand.length); Engine.drawCards(p, needed); Engine.resolvePreparationDrawBonuses(p); } });
@@ -4488,7 +4530,7 @@ processDeployQueue:()=>{
                                     if(sc.name==="沸腾之血" && simMana >= 8) continue; // 沸腾之血：你拥有的魔力少于8点时才可打出
                                     if(sc.name==="不为一己之荣光"){ if(p.commandSpells>0 && Math.random()>0.2 && actions<targetActions){ p.commandSpells--; p.usedCSThisTurn = true; p.lancelotCopied="王之军势"; sSkillsToUse.push(idx); actions++; Engine.log(`⚠️ ${p.master.name} 消耗令咒，【荣光】化身为 王之军势！`,"var(--gold)"); } continue; }
                                     let keepMana = 2; if (sc.name === "天地乖离开辟之星" || sc.name === "誓约胜利之剑") keepMana = 0;
-                                    if(simMana>=req && simMana >= (actualCost + keepMana) && actions<targetActions){ let nextSkills=[...sSkillsToUse,idx];if(sc.name==="王之号炮"){let closeResult=Engine.closeFormationForKingCannon(p,{servantSkills:nextSkills});if(!closeResult.ok)continue;}sSkillsToUse=nextSkills;simMana-=actualCost;actions++; if(sc.name!=="自我改造" && !p.servant.skillCards.some(s=>s.name==="不为一己之荣光(被动)")) p.isRevealed=true; if(SkillLib[sc.name] && SkillLib[sc.name].onAction) { let m0 = p.mana; let ret = SkillLib[sc.name].onAction(p, sc, {cards:p.hand}); simMana = Math.max(0, simMana + (p.mana - m0)); if(ret===false){ sSkillsToUse.pop(); simMana+=actualCost; actions--; continue; } } if(sc.name==="无限剑制"){targetActions=4;} if(sc.name.startsWith("骑乘")||sc.name==="螺湮城教本(水魔)"){targetActions+=3;} }
+                                    if(simMana>=req && simMana >= (actualCost + keepMana) && actions<targetActions){ let nextSkills=[...sSkillsToUse,idx];if(sc.name==="王之号炮"){let closeResult=Engine.closeFormationForKingCannon(p,{servantSkills:nextSkills});if(!closeResult.ok)continue;}sSkillsToUse=nextSkills;simMana-=actualCost;actions++; Engine.revealTrueName(p,sc,`真名公开！`); if(SkillLib[sc.name] && SkillLib[sc.name].onAction) { let m0 = p.mana; let ret = SkillLib[sc.name].onAction(p, sc, {cards:p.hand}); simMana = Math.max(0, simMana + (p.mana - m0)); if(ret===false){ sSkillsToUse.pop(); simMana+=actualCost; actions--; continue; } } if(sc.name==="无限剑制"){targetActions=4;} if(sc.name.startsWith("骑乘")||sc.name==="螺湮城教本(水魔)"){targetActions+=3;} }
                                 }
                             }
                             if(p.pSkills){ p.pSkills.forEach(sk=>{ let tStr=String(sk.type||""); if(MasterSkillBatch.canHandle(p, sk)) return; let skillCost=Engine.getSkillCost(p,sk); if((tStr.includes("行动")||tStr.includes("出牌"))&&!sk.used&&actions<targetActions&&simMana>=(Number(sk.req)||0)&&simMana>=skillCost){ sk.used=true;masterSkFired.push(sk.name);simMana-=skillCost; if((sk.power!==undefined&&Number(sk.power)>0))actions++; } }); }
@@ -4791,7 +4833,7 @@ processDeployQueue:()=>{
                 if(sSkill.jasonDispatched) return alert("该攻击已被派遣，当前不能打出！");
                 if(curSitName.includes("安哥拉·曼纽") && sSkill.type.includes("宝具") && p.master.id !== "m_zouken" && !p.barbatosRelax) return alert("禁止使用宝具！"); if(sSkill.name.startsWith("单独行动")) { let half = Math.floor(State.turnOrder.length/2); if(State.turnOrder.indexOf(p.id) >= half) return alert("【单独行动】要求行动顺位在当前回合前半数！"); } if(sSkill.name === "妄想心音" && p.isRevealed) return alert("必须隐藏真名才能使用妄想心音！"); if (sSkill.name === "无限剑制" && p.ubwActive) return alert("【无限剑制】已在场上持续生效！无需再次支付魔力。您现在可以直接打出0~4张牌！"); if (sSkill.name === "螺湮城教本(海魔)" && State.gillesMonsterLoc) return alert("【海魔】已经存在于场上！无需重复召唤。");
                 // 基础规则书：被动牌（威力0）不可作为攻击打出；其"被动/行动阶段"能力于你的行动阶段自动生效
-                if(String(sSkill.type||'').includes('被动') && !(Number(sSkill.power)>0)) return alert("此为被动技能牌，无法作为攻击打出（其效果于你的行动阶段自动生效）。");
+                if(String(sSkill.type||'').includes('被动') && !(Number(sSkill.power)>0) && !String(sSkill.desc||'').includes('被动/行动阶段')) return alert("此为纯被动技能牌，无法作为攻击打出。");
                 if(sSkill.name === "沸腾之血" && p.mana >= 8) return alert("【沸腾之血】你拥有的魔力少于8点时才可打出此牌！");
                 let sPos = st.selectedSkillCards.indexOf(idx);
                 if(sPos > -1) { 
@@ -4810,7 +4852,7 @@ processDeployQueue:()=>{
                         st.selectedCardIndices = [];
                         st.facedownCardIndices = [];
                         if(!p.pollutedGrailActive) p.mana -= actualCost;
-                        if(!p.isRevealed && !p.servant.skillCards.some(s => s.name === "不为一己之荣光(被动)")) { p.isRevealed = true; Engine.log(`真名公开！`, "var(--vp)"); }
+                    Engine.revealTrueName(p,sSkill,`真名公开！`);
                         let ret = SkillLib[sSkill.name] && SkillLib[sSkill.name].onAction ? SkillLib[sSkill.name].onAction(p, sSkill, {cards: p.hand}) : true;
                         if(ret === false) { if(!p.pollutedGrailActive) p.mana += actualCost; return; }
                         State.ubwActivatedSkillIdx = idx;
@@ -4935,7 +4977,7 @@ if(validNormal < reqActs || validNormal > maxLimit) return alert(`出牌数量�
                 let hasBattleCont=false;
                 for(let i=State.selectedSkillCards.length-1;i>=0;i--){
                     let idx=State.selectedSkillCards[i];let sc=p.servant.skillCards[idx];
-                    if(!p.isRevealed && sc.name!=="自我改造" && !p.servant.skillCards.some(s=>s.name==="不为一己之荣光(被动)")){p.isRevealed=true;Engine.log(`真名公开！`,"var(--vp)"); if(p.master.id==="m_caren" && !p.carenShroud){ p.carenShroud = true; Engine.log(`【抹大拉的圣骸布】卡莲首次真名解放，获得圣骸布（行动阶段可束缚一名交战对手）！`, "var(--gold)"); }}
+                    if(sc.name!=="自我改造") Engine.revealTrueName(p,sc,`真名公开！`);
                     if(SkillLib[sc.name] && SkillLib[sc.name].onAction && sc.name !== "不为一己之荣光" && !(sc.name === "无限剑制" && idx === State.ubwActivatedSkillIdx)) { SkillLib[sc.name].onAction(p, sc, {cards: [...cC, ...fC]}); }
                     if(sc.name.startsWith("战斗续行")&&sc.type.includes("特殊"))hasBattleCont=true; if(sc.name==="万符必应破戒"){p.servant.skillCards.splice(idx,1);State.selectedSkillCards.splice(i,1);}
                 }

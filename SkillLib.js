@@ -2101,20 +2101,19 @@ const SkillLib = {
         },
         "凡性之赠": {
             onAction: wrap((p) => {
-                let discarded = 0;
-                while (discarded < 2 && p.hand.length > 0) { p.discard.push(p.hand.pop()); discarded++; }
-                if (discarded === 2) {
-                    let c = p.deck.pop();
-                    if (c) { p.hand.push(c); Engine.log(`【凡性之赠】${p.master.name} 弃置2张牌，从牌库将【${(DB.cards[c] || {}).name}】加入手牌！`, "var(--vp)"); }
-                    else Engine.log(`【凡性之赠】牌库已空，检索失败。`, "#aaa");
-                } else {
-                    Engine.log(`【凡性之赠】手牌不足2张，检索效果未发动（打出卡斯托耳的攻击照常）。`, "#aaa");
-                }
-                if (payCost(p, 4, "凡性之赠·弃牌堆检索") && p.discard.length) {
-                    let c = p.discard.pop();
-                    p.hand.push(c);
-                    Engine.log(`【凡性之赠】花费4点魔力，改为从弃牌堆将【${(DB.cards[c] || {}).name}】加入手牌！`, "var(--mana)");
-                }
+                if(p._dioscuriGiftPending) return;
+                if(p.hand.length < 2) { Engine.log(`【凡性之赠】手牌不足2张，效果未发动。`, "#aaa"); return; }
+                p._dioscuriGiftPending = true;
+                let finish = (source) => {
+                    let pool = source === "discard" ? p.discard : p.deck;
+                    if(!pool || !pool.length){ p._dioscuriGiftPending=false; Engine.log(`【凡性之赠】${source==="discard"?"弃牌堆":"牌库"}没有可检索的牌。`,"#aaa"); return; }
+                    let options = pool.map((cid,i)=>({label:DB.cards[cid]?.name||cid, cardId:cid, desc:DB.cards[cid]?.desc||""}));
+                    let apply = i => { let cid=pool[i]; if(cid===undefined){p._dioscuriGiftPending=false;return;} let pos=pool.indexOf(cid); if(pos>-1)pool.splice(pos,1); p.hand.push(cid); p._dioscuriGiftPending=false; Engine.log(`【凡性之赠】${p.master.name} 选择【${DB.cards[cid]?.name||cid}】加入手牌！`,"var(--vp)"); UI.updateAll(); UI.renderHand(true); Network.sync(); };
+                    if(p.isPlayer&&p.id===Network.myPlayerId) Engine.openChoiceModal(`【凡性之赠】选择${source==="discard"?"弃牌堆":"牌库"}中的一张牌`, options, apply, ()=>{p._dioscuriGiftPending=false;});
+                    else apply(Math.floor(Math.random()*options.length));
+                };
+                let start = () => { let discarded=p.hand.splice(0,2); p.discard.push(...discarded); let useDiscard=p.mana>=4; if(p.isPlayer&&p.id===Network.myPlayerId){ Engine.openChoiceModal("【凡性之赠】弃置2张牌后选择检索区域", [{label:"从牌库检索",desc:"不额外支付魔力"},{label:"从弃牌堆检索",desc:"额外支付4点魔力",disabled:!useDiscard}], i=>{if(i===1){p.mana-=4;finish("discard");}else finish("deck");}, ()=>{p._dioscuriGiftPending=false;}); } else finish(useDiscard&&Math.random()<0.5?"discard":"deck"); };
+                start();
             })
         },
         "放荡之宴": {
