@@ -1,0 +1,1524 @@
+{
+  "schemaVersion": 1,
+  "source": "FD全卡图鉴V2.0.chm/FD全卡图鉴V2.0.hhc",
+  "categoryRule": "从者/<职阶>/英文版 的直接子节点",
+  "counts": {
+    "englishEntries": 185,
+    "exactMatches": 181,
+    "unresolved": 3,
+    "ambiguous": 0,
+    "classMismatches": 1,
+    "duplicateMappedIds": 0,
+    "runtimeNotInEnglishIndex": 2,
+    "runtimeServants": 183,
+    "sourceRefsApplied": 590,
+    "legacySourceRefsApplied": 353,
+    "totalSourceRefs": 943
+  },
+  "duplicateMappedIds": [],
+  "runtimeNotInEnglishIndex": [
+    {
+      "id": "servant.albion",
+      "name": "阿尔比恩之骸",
+      "class": "Lancer"
+    },
+    {
+      "id": "servant.kiritsugu",
+      "name": "卫宫切嗣",
+      "class": "Master"
+    }
+  ],
+  "entries": [
+    {
+      "className": "剑士",
+      "name": "阿尔托莉雅·潘德拉贡",
+      "sourcePage": "阿尔托莉雅·潘德拉贡1.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.saber",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "尼禄·克劳狄乌斯",
+      "sourcePage": "尼禄·克劳狄乌斯.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.nero",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "莫德雷德",
+      "sourcePage": "莫德雷德.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.mordred",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "阿蒂拉",
+      "sourcePage": "阿蒂拉.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.altera",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "高文",
+      "sourcePage": "高文.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.gawain",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "贝狄威尔",
+      "sourcePage": "贝狄威尔.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.bedivere",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "冲田总司",
+      "sourcePage": "冲田总司.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.okita",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "Sigurd",
+      "sourcePage": "Sigurd.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.sigurd",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "剑士",
+      "name": "齐格飞",
+      "sourcePage": "齐格飞.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.siegfried",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "迪昂·德·鲍蒙",
+      "sourcePage": "迪昂·德·鲍蒙.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.deon",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "宫本武藏",
+      "sourcePage": "宫本武藏1.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.musashi",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "阿尔托莉雅·潘德拉贡[Alter",
+      "sourcePage": "阿尔托莉雅·潘德拉贡[Alter.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.artoria-alt",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "剑士",
+      "name": "查理曼",
+      "sourcePage": "查理曼.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.charlemagne",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "剑士",
+      "name": "雅克·德·莫莱",
+      "sourcePage": "雅克·德·莫莱.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.molay",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "亚瑟·潘德拉贡[Prototype]",
+      "sourcePage": "亚瑟·潘德拉贡[Prototype].htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.arthur",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "伊阿宋",
+      "sourcePage": "伊阿宋.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.jason",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "巴格斯特",
+      "sourcePage": "巴格斯特.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.barghest",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "狄俄斯库里",
+      "sourcePage": "狄俄斯库里.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.dioscuri",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "斋藤一",
+      "sourcePage": "斋藤一.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.saitou",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "拉克什米·芭伊",
+      "sourcePage": "拉克什米·芭伊.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.lakshmibai",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "剑士",
+      "name": "铃鹿御前",
+      "sourcePage": "铃鹿御前.htm",
+      "expectedClass": "Saber",
+      "servantId": "servant.suzuka",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "库·丘林",
+      "sourcePage": "库·丘林.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.cu",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "迪卢木多·奥迪那",
+      "sourcePage": "迪卢木多·奥迪那.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.diarmuid",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "迦尔纳",
+      "sourcePage": "迦尔纳.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.karna",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "弗拉德三世",
+      "sourcePage": "弗拉德三世.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.vlad",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "伊丽莎白·巴托里",
+      "sourcePage": "伊丽莎白·巴托里.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.elizabeth",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "斯卡哈",
+      "sourcePage": "斯卡哈.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.scathach",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "瓦尔基里",
+      "sourcePage": "瓦尔基里.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.valkyrie",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "埃列什基伽勒",
+      "sourcePage": "埃列什基伽勒.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.ereshkigal",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "恩齐都",
+      "sourcePage": "恩齐都.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.enkidu",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "布伦希尔德",
+      "sourcePage": "布伦希尔德.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.brynhildr",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "凯妮丝",
+      "sourcePage": "凯妮丝.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.caenis",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "列奥尼达一世",
+      "sourcePage": "列奥尼达一世.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.leonidas",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "罗慕路斯",
+      "sourcePage": "罗慕路斯.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.romulus",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "豹人",
+      "sourcePage": "豹人.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.jaguarman",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "武藏坊弁庆",
+      "sourcePage": "武藏坊弁庆.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.benkei",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "布拉达曼特",
+      "sourcePage": "布拉达曼特.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.bradamante",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "伦戈米尼亚德",
+      "sourcePage": "伦戈米尼亚德.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.lionking",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "加雷斯",
+      "sourcePage": "加雷斯.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.gareth",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "堂吉诃德",
+      "sourcePage": "堂吉诃德.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.donquixote",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "长尾景虎",
+      "sourcePage": "长尾景虎.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.kagetora",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "梅柳齐娜",
+      "sourcePage": "梅柳齐娜.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.melusine",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "枪兵",
+      "name": "帕尔瓦蒂",
+      "sourcePage": "帕尔瓦蒂.htm",
+      "expectedClass": "Lancer",
+      "servantId": "servant.parvati",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "卫宫",
+      "sourcePage": "卫宫.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.emiya",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "吉尔伽美什",
+      "sourcePage": "吉尔伽美什.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.gil",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "织田信长",
+      "sourcePage": "织田信长.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.nobunaga",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "阿塔兰忒",
+      "sourcePage": "阿塔兰忒.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.atalanta",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "喀戎",
+      "sourcePage": "喀戎.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.chiron",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "罗宾汉",
+      "sourcePage": "罗宾汉.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.robin",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "阿周那",
+      "sourcePage": "阿周那.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.arjuna-archer",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "伊什塔尔",
+      "sourcePage": "伊什塔尔.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.ishtar",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "阿拉什",
+      "sourcePage": "阿拉什.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.arash",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "尼古拉·特斯拉",
+      "sourcePage": "尼古拉·特斯拉.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.tesla",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "比利小子",
+      "sourcePage": "比利小子.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.billy",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "拿破仑",
+      "sourcePage": "拿破仑.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.napoleon",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "克洛伊·冯·爱因兹贝伦",
+      "sourcePage": "克洛伊·冯·爱因兹贝伦1.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.chloe",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "崔斯坦",
+      "sourcePage": "崔斯坦.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.tristan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "卫宫(Alter",
+      "sourcePage": "卫宫(Alter.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.emiya-alt",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "弓兵",
+      "name": "马嘶",
+      "sourcePage": "马嘶.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.ashva",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "超人俄里翁",
+      "sourcePage": "超人俄里翁.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.orion",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "芭万·希",
+      "sourcePage": "芭万·希.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.baobhan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "巴御前",
+      "sourcePage": "巴御前.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.tomoe",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "詹姆斯·莫里亚蒂",
+      "sourcePage": "詹姆斯·莫里亚蒂.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.moriarty",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "清少纳言",
+      "sourcePage": "清少纳言.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.sei",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "尤瑞艾莉",
+      "sourcePage": "尤瑞艾莉.htm",
+      "expectedClass": "Archer",
+      "servantId": "servant.euryale",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "弓兵",
+      "name": "源为朝",
+      "sourcePage": "源为朝.htm",
+      "expectedClass": "Archer",
+      "servantId": null,
+      "matchStatus": "unresolved"
+    },
+    {
+      "className": "骑兵",
+      "name": "美杜莎",
+      "sourcePage": "美杜莎.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.medusa",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "伊斯坎达尔",
+      "sourcePage": "伊斯坎达尔.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.iskandar",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "阿斯托尔福",
+      "sourcePage": "阿斯托尔福.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.astolfo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "阿喀琉斯",
+      "sourcePage": "阿喀琉斯.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.achilles",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "伊凡雷帝",
+      "sourcePage": "伊凡雷帝.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.ivan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "弗朗西斯·德雷克",
+      "sourcePage": "弗朗西斯·德雷克.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.drake",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "牛若丸",
+      "sourcePage": "牛若丸.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.ushiwakamaru",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "奥兹曼迪亚斯",
+      "sourcePage": "奥兹曼迪亚斯.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.ozymandias",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "奥德修斯",
+      "sourcePage": "奥德修斯.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.odysseus",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "女王梅芙",
+      "sourcePage": "女王梅芙.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.medb",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "巴沙洛缪·罗伯茨",
+      "sourcePage": "巴沙洛缪·罗伯茨.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.roberts",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "布狄卡",
+      "sourcePage": "布狄卡.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.boudica",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "魁札尔·科亚特尔",
+      "sourcePage": "魁札尔·科亚特尔.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.quetzalcoatl",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "坂本龙马",
+      "sourcePage": "坂本龙马.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.ryouma",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "尼莫船长",
+      "sourcePage": "尼莫船长.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.nemo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "曼迪卡尔多",
+      "sourcePage": "曼迪卡尔多.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.mandricardo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "爱德华·蒂奇",
+      "sourcePage": "爱德华·蒂奇.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.teach",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "乔尔乔斯",
+      "sourcePage": "乔尔乔斯.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.georgios",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "玛尔达",
+      "sourcePage": "玛尔达.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.martha",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "骑兵",
+      "name": "君士坦丁十一世",
+      "sourcePage": "君士坦丁十一世.htm",
+      "expectedClass": "Rider",
+      "servantId": "servant.constantine",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "美狄亚",
+      "sourcePage": "美狄亚.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.medea",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "吉尔·德·雷",
+      "sourcePage": "吉尔·德·雷.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.gilles",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "玉藻前",
+      "sourcePage": "玉藻前1.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.tamamo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "汉斯·克里斯蒂安·安徒生",
+      "sourcePage": "汉斯·克里斯蒂安·安徒生.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.andersen",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "阿维斯布隆",
+      "sourcePage": "阿维斯布隆.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.avicebron",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "威廉·莎士比亚",
+      "sourcePage": "威廉·莎士比亚.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.shakespeare",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "莱昂纳多·达·芬奇",
+      "sourcePage": "莱昂纳多·达·芬奇2.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.davinci",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "莫扎特",
+      "sourcePage": "莫扎特.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.mozart",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "伊莉雅丝菲尔",
+      "sourcePage": "伊莉雅丝菲尔.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.illya",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "梅林",
+      "sourcePage": "梅林.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.merlin",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "托马斯·爱迪生",
+      "sourcePage": "托马斯·爱迪生.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.edison",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "阿纳斯塔西娅",
+      "sourcePage": "阿纳斯塔西娅.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.anastasia",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "麦克斯韦妖",
+      "sourcePage": "麦克斯韦妖.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.maxwell",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "吉尔伽美什",
+      "sourcePage": "吉尔伽美什2.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.kinggil",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "魔术师",
+      "name": "梅菲斯托费勒斯",
+      "sourcePage": "梅菲斯托费勒斯.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.mephisto",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "阿尔托莉雅·卡斯特",
+      "sourcePage": "阿尔托莉雅·卡斯特.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.artoriac",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "玄奘三藏",
+      "sourcePage": "玄奘三藏.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.sanzang",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "斯卡哈·斯卡蒂",
+      "sourcePage": "斯卡哈·斯卡蒂.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.skadi",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "尼托克丽丝",
+      "sourcePage": "尼托克丽丝.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.nitocris",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "童谣",
+      "sourcePage": "童谣.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.nursery",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "魔术师",
+      "name": "海伦娜·布拉瓦茨基",
+      "sourcePage": "海伦娜·布拉瓦茨基.htm",
+      "expectedClass": "Caster",
+      "servantId": "servant.helena",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "佐佐木小次郎",
+      "sourcePage": "佐佐木小次郎.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.sasaki",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "哈桑·萨巴赫(咒腕)",
+      "sourcePage": "哈桑·萨巴赫(咒腕).htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.hassan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "哈桑·萨巴赫(百貌)",
+      "sourcePage": "哈桑·萨巴赫(百貌).htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.hassanhf",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "哈桑·萨巴赫(静谧)",
+      "sourcePage": "哈桑·萨巴赫(静谧).htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.hassanser",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "山中老人",
+      "sourcePage": "山中老人.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.kinghassan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "塞弥拉弥斯",
+      "sourcePage": "塞弥拉弥斯.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.semiramis",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "卫宫",
+      "sourcePage": "卫宫1.htm",
+      "expectedClass": "Assassin",
+      "servantId": null,
+      "matchStatus": "class-mismatch"
+    },
+    {
+      "className": "暗匿者",
+      "name": "开膛手杰克",
+      "sourcePage": "开膛手杰克.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.jack",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "李书文",
+      "sourcePage": "李书文1.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.lishuwen",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "酒吞童子",
+      "sourcePage": "酒吞童子1.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.shuten",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "亨利·杰基尔博士",
+      "sourcePage": "亨利·杰基尔博士.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.jekyll",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "暗匿者",
+      "name": "夏洛特·科黛",
+      "sourcePage": "夏洛特·科黛.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.corday",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "夏尔·亨利·桑松",
+      "sourcePage": "夏尔·亨利·桑松.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.sanson",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "伽摩",
+      "sourcePage": "伽摩.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.kama",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "斯忒诺",
+      "sourcePage": "斯忒诺.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.stheno",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "刑部姬",
+      "sourcePage": "刑部姬.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.osakabe",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "风魔小太郎",
+      "sourcePage": "风魔小太郎.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.kotarou",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "冈田以藏",
+      "sourcePage": "冈田以藏.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.izou",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "加藤段藏",
+      "sourcePage": "加藤段藏.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.danzou",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "谜之女主角X",
+      "sourcePage": "谜之女主角X.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.mhx",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "卡米拉",
+      "sourcePage": "卡米拉.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.carmilla",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "暗匿者",
+      "name": "泰兹卡特里波卡",
+      "sourcePage": "泰兹卡特里波卡.htm",
+      "expectedClass": "Assassin",
+      "servantId": "servant.tezcat",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "赫拉克勒斯",
+      "sourcePage": "赫拉克勒斯.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.herc",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "兰斯洛特",
+      "sourcePage": "兰斯洛特1.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.lance",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "爱尔奎德·布伦史塔德",
+      "sourcePage": "爱尔奎德·布伦史塔德.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.arcueid",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "弗兰肯斯坦",
+      "sourcePage": "弗兰肯斯坦.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.frank",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "斯巴达克斯",
+      "sourcePage": "斯巴达克斯.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.spartacus",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "清姬",
+      "sourcePage": "清姬1.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.kiyohime",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "彭忒西勒亚",
+      "sourcePage": "彭忒西勒亚.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.penthesilea",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "坂田金时",
+      "sourcePage": "坂田金时.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.kintoki",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "源赖光",
+      "sourcePage": "源赖光.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.raikou",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "大流士三世",
+      "sourcePage": "大流士三世.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.darius",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "吕布",
+      "sourcePage": "吕布.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.lubu",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "项羽",
+      "sourcePage": "项羽.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.xiangyu",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "阿周那(Alter)",
+      "sourcePage": "阿周那(Alter).htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.arjuna",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "狂战士",
+      "name": "南丁格尔",
+      "sourcePage": "南丁格尔.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.nightingale",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "库·丘林〔Alter]",
+      "sourcePage": "库·丘林〔Alter].htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.cu-alter",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "狂战士",
+      "name": "克琳希德",
+      "sourcePage": "克琳希德.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.kriemhild",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "鬼女红叶",
+      "sourcePage": "鬼女红叶.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.koyo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "土方岁三",
+      "sourcePage": "土方岁三.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.hijikata",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "茨木童子",
+      "sourcePage": "茨木童子.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.ibaraki",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "卡利古拉",
+      "sourcePage": "卡利古拉.htm",
+      "expectedClass": "Berserker",
+      "servantId": "servant.caligula",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "狂战士",
+      "name": "阿斯忒里俄斯",
+      "sourcePage": "阿斯忒里俄斯.htm",
+      "expectedClass": "Berserker",
+      "servantId": null,
+      "matchStatus": "unresolved"
+    },
+    {
+      "className": "裁定者",
+      "name": "贞德",
+      "sourcePage": "贞德.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.jeanne",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "裁定者",
+      "name": "天草四郎时贞",
+      "sourcePage": "天草四郎时贞.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.amakusa",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "裁定者",
+      "name": "夏洛克·福尔摩斯",
+      "sourcePage": "夏洛克·福尔摩斯.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.sherlock",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "裁定者",
+      "name": "阿斯特蕾亚",
+      "sourcePage": "阿斯特蕾亚.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.astraea",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "裁定者",
+      "name": "阿摩耳〔卡莲]",
+      "sourcePage": "阿摩耳〔卡莲].htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.amor",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "裁定者",
+      "name": "摩根",
+      "sourcePage": "摩根.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.morgan",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "裁定者",
+      "name": "卑弥呼",
+      "sourcePage": "卑弥呼.htm",
+      "expectedClass": "Ruler",
+      "servantId": "servant.himiko",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "安格拉·曼纽",
+      "sourcePage": "安格拉·曼纽.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.angra",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "爱德蒙·唐泰斯",
+      "sourcePage": "爱德蒙·唐泰斯.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.dantes",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "安东尼奥·萨列里",
+      "sourcePage": "安东尼奥·萨列里.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.salieri",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "贞德〔Alter ]",
+      "sourcePage": "贞德〔Alter_].htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.jeanne-alter",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "复仇者",
+      "name": "黑森·罗伯",
+      "sourcePage": "黑森·罗伯.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.lobo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "平景清",
+      "sourcePage": "平景清.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.kagekiyo",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "复仇者",
+      "name": "戈耳工",
+      "sourcePage": "戈耳工.htm",
+      "expectedClass": "Avenger",
+      "servantId": "servant.gorgon",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "千子村正",
+      "sourcePage": "千子村正.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.muramasa",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "冲田总司(〔Alter ]",
+      "sourcePage": "冲田总司(〔Alter_].htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.okita-alt",
+      "matchStatus": "exact",
+      "mappingSource": "explicit-alias"
+    },
+    {
+      "className": "他人格",
+      "name": "梅尔特莉莉丝",
+      "sourcePage": "梅尔特莉莉丝.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.meltryllis",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "机械伊丽亲",
+      "sourcePage": "机械伊丽亲.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.mechaeli",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "志度内",
+      "sourcePage": "志度内.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.sitonai",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "太岁星君",
+      "sourcePage": "太岁星君.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.taisui",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "芦屋道满",
+      "sourcePage": "芦屋道满.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.douman",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "高扬斯卡娅",
+      "sourcePage": "高扬斯卡娅.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.koyanskaya",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "帕森莉普",
+      "sourcePage": "帕森莉普.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.passionlip",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "他人格",
+      "name": "帝王花",
+      "sourcePage": "帝王花.htm",
+      "expectedClass": "Alterego",
+      "servantId": "servant.kingprotea",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "月之癌",
+      "name": "B.B.",
+      "sourcePage": "B.B..htm",
+      "expectedClass": "MoonCancer",
+      "servantId": "servant.bb",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "月之癌",
+      "name": "八百比丘尼",
+      "sourcePage": "八百比丘尼.htm",
+      "expectedClass": "MoonCancer",
+      "servantId": "servant.bikuni",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "降临者",
+      "name": "阿比盖尔·威廉姆斯",
+      "sourcePage": "阿比盖尔·威廉姆斯.htm",
+      "expectedClass": "Foreigner",
+      "servantId": "servant.abigail",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "降临者",
+      "name": "葛饰北斋",
+      "sourcePage": "葛饰北斋.htm",
+      "expectedClass": "Foreigner",
+      "servantId": "servant.hokusai",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "降临者",
+      "name": "旅行者",
+      "sourcePage": "旅行者.htm",
+      "expectedClass": "Foreigner",
+      "servantId": "servant.voyager",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "降临者",
+      "name": "克吕提厄·梵高",
+      "sourcePage": "克吕提厄·梵高.htm",
+      "expectedClass": "Foreigner",
+      "servantId": "servant.clytie",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "降临者",
+      "name": "谜之女主角XX",
+      "sourcePage": "谜之女主角XX.htm",
+      "expectedClass": "Foreigner",
+      "servantId": null,
+      "matchStatus": "unresolved"
+    },
+    {
+      "className": "身披角色者",
+      "name": "赫费斯提翁",
+      "sourcePage": "赫费斯提翁.htm",
+      "expectedClass": null,
+      "servantId": "servant.hephaistion",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "身披角色者",
+      "name": "阿瓦隆女士",
+      "sourcePage": "阿瓦隆女士.htm",
+      "expectedClass": null,
+      "servantId": "servant.ladyavalon",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "身披角色者",
+      "name": "奥伯龙·伏提庚",
+      "sourcePage": "奥伯龙·伏提庚.htm",
+      "expectedClass": null,
+      "servantId": "servant.oberon",
+      "matchStatus": "exact"
+    },
+    {
+      "className": "盾兵",
+      "name": "玛修·基列莱特",
+      "sourcePage": "玛修·基列莱特.htm",
+      "expectedClass": "Shielder",
+      "servantId": "servant.mash",
+      "matchStatus": "exact"
+    }
+  ]
+}
