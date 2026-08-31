@@ -1,0 +1,14 @@
+{
+  "name": "fate-domination-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test && node --experimental-strip-types --test test/ts-core.test.ts",
+    "validate": "node tools/validate-content.mjs",
+    "audit:skills": "node --experimental-strip-types tools/audit-skill-coverage.mjs",
+    "index:development-images": "node tools/build-development-image-index.mjs",
+    "index:servants": "node tools/build-servant-source-index.mjs",
+    "import:legacy": "node tools/import-legacy-content.mjs"
+  }
+}
