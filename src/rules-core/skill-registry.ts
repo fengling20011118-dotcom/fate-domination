@@ -4,6 +4,7 @@ import { getCardAttributes } from "./content-types.ts";
 import type { CardDefinition } from "./content-types.ts";
 import { createUsageRecord, isUsageAvailable } from "./usage-limits.ts";
 import { payMana } from "./costs.ts";
+import { assertSkillRuleProgram } from "./skill-rule-program.ts";
 
 export class SkillRegistry {
   readonly #definitions = new Map<string, SkillDefinition>();
@@ -31,6 +32,10 @@ export class SkillRegistry {
       }
     }
     if (definition.supportLevel === "FULL" && !handler && !definition.handlerId) throw new Error("FULL_SKILL_HANDLER_REQUIRED");
+    if (definition.ruleProgram) {
+      assertSkillRuleProgram(definition.ruleProgram);
+      if (definition.ruleProgram.skillId !== definition.id) throw new Error("SKILL_RULE_PROGRAM_ID_MISMATCH");
+    }
     this.#definitions.set(definition.id, structuredClone(definition));
     if (handler) this.#handlers.set(definition.id, handler);
   }
@@ -57,7 +62,12 @@ export class SkillRegistry {
   asCardDefinitions(): Record<string, import("./content-types.ts").CardDefinition> {
     return Object.fromEntries(this.list().map((skill) => [skill.id, {
       id: skill.id,
+      version: 1,
       name: skill.name,
+      cardType: "skill",
+      ownerType: skill.ownerType,
+      ownerDefinitionId: skill.ownerId,
+      linkedSkillId: skill.id,
       cost: skill.cost,
       costRule: skill.costRule,
       basePower: skill.basePower ?? 0,
@@ -71,17 +81,31 @@ export class SkillRegistry {
       requiresEightMana: skill.requiresEightMana ?? (skill.requirement === undefined
         ? !skill.tags?.includes("ignores-eight-mana")
         : skill.requirement >= 8),
+      hiddenTrueNameCostReduction: skill.hiddenTrueNameCostReduction,
       limit: skill.limit,
       requiresTrueName: skill.requiresTrueName,
       revealsTrueNameOnPlay: skill.revealsTrueNameOnPlay,
       requiresHiddenTrueName: skill.requiresHiddenTrueName,
+      hasReversalEffect: skill.hasReversalEffect,
       ignoresSituationRestrictions: skill.ignoresSituationRestrictions,
       playDrawIfWithBasicAttack: skill.playDrawIfWithBasicAttack,
       appendFromHand: skill.appendFromHand,
       singleCardPlay: skill.singleCardPlay,
+      standardAppend: skill.standardAppend,
       uniqueGroup: skill.uniqueGroup,
       tags: skill.tags,
+      effects: skill.effects?.map((effect) => ({ ...effect })),
+      unparsedEffects: skill.unparsedEffects ? [...skill.unparsedEffects] : undefined,
+      clauses: skill.clauses?.map((clause) => ({ ...clause })),
+      ruleProgram: skill.ruleProgram ? structuredClone(skill.ruleProgram) : undefined,
       text: skill.text,
+      phases: skill.windows.length ? [...skill.windows] : undefined,
+      steps: skill.steps?.length ? [...skill.steps] : undefined,
+      implementation: {
+        level: skill.supportLevel,
+        ...(skill.handlerId ? { handlerId: skill.handlerId } : {}),
+      },
+      sourceRefs: skill.sourceRefs?.map((source) => ({ ...source })),
     }]));
   }
 

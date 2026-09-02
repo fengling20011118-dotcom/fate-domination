@@ -1,0 +1,64 @@
+{
+  "servants": [
+    {
+      "id": "servant.angra",
+      "name": "安格拉·曼纽",
+      "class": "Avenger",
+      "deck": [
+        "card.cardb1", "card.cardb1", "card.cardb2",
+        "card.cardq1", "card.cardq1", "card.cardq2", "card.cardq3",
+        "card.carda1", "card.carda2",
+        "card.card-avenger", "card.card-avenger", "card.card-avenger"
+      ],
+      "skills": [
+        {
+          "id": "servant.angra.skill.sc-angra-1",
+          "legacyId": "sc_angra_1",
+          "name": "伪写记载之万象",
+          "typeLabel": "魔术",
+          "cost": 2,
+          "requirement": 8,
+          "basePower": 4,
+          "text": "【真名解放】\n行动阶段：战斗阶段结束后弃置自己4张牌（若不足4张，则手牌全部弃置）。若你战败，每弃置一张【复仇者】，你便可偷取一名击败你的胜利者2点战果。",
+          "revealsTrueNameOnPlay": true,
+          "activation": { "kind": "active", "windows": ["action", "combat"], "migrationConfidence": "inferred" },
+          "implementation": "pending"
+        },
+        {
+          "id": "servant.angra.skill.sc-angra-2",
+          "legacyId": "sc_angra_2",
+          "name": "永世束缚",
+          "typeLabel": "特殊",
+          "cost": 6,
+          "requirement": 8,
+          "basePower": 7,
+          "text": "行动阶段：将你的弃牌堆中的所有【复仇者】加入手牌。如果你于上一回合中战败，则将它们加入攻击。",
+          "activation": { "kind": "active", "windows": ["action"], "migrationConfidence": "inferred" },
+          "implementation": "pending"
+        },
+        {
+          "id": "servant.angra.skill.sc-angra-3",
+          "legacyId": "sc_angra_3",
+          "name": "左齿啮咬&右齿啮咬",
+          "typeLabel": "迅捷",
+          "cost": 3,
+          "requirement": 0,
+          "basePower": 6,
+          "text": "你拥有的魔力少于8点也可使用此牌。\n行动阶段：若你位于的战场存在对手，抽2张牌。若你独自位于一处战场，获得4点魔力。",
+          "activation": { "kind": "active", "windows": ["action"], "migrationConfidence": "inferred" },
+          "implementation": "pending"
+        }
+      ]
+    }
+  ],
+  "cards": [
+    { "id": "card.carda1", "legacyId": "cardA1", "name": "低位魔法", "cost": 0, "basePower": 2, "typeLabel": "魔法", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.carda2", "legacyId": "cardA2", "name": "中位魔法", "cost": 0, "basePower": 3, "typeLabel": "魔法", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.cardb1", "legacyId": "cardB1", "name": "迫击", "cost": 0, "basePower": 2, "typeLabel": "力量", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.cardb2", "legacyId": "cardB2", "name": "强打", "cost": 0, "basePower": 3, "typeLabel": "力量", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.cardq1", "legacyId": "cardQ1", "name": "翻弄", "cost": 0, "basePower": 2, "typeLabel": "迅捷", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.cardq2", "legacyId": "cardQ2", "name": "瞬间移动", "cost": 0, "basePower": 3, "typeLabel": "迅捷", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.cardq3", "legacyId": "cardQ3", "name": "瞬间的一击", "cost": 0, "basePower": 4, "typeLabel": "迅捷", "basic": true, "text": "基础攻击卡牌" },
+    { "id": "card.card-avenger", "legacyId": "Card_Avenger", "name": "复仇者", "cost": 1, "basePower": 0, "typeLabel": "特殊", "basic": false, "text": "战斗阶段：你的其余攻击威力+1。\n无声业火—残留：此牌残留至你在场战斗中战胜了一名对手为止。" }
+  ]
+}

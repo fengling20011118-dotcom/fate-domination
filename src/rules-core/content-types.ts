@@ -1,4 +1,6 @@
 import type { PhaseId, PhaseStepId } from "../domain/state/types.ts";
+import type { SkillEffectSpec } from "./skill-effects.ts";
+import type { SkillRuleProgram } from "./skill-rule-program.ts";
 
 export interface AppendFromHandRule {
   maxCount: number;
@@ -7,7 +9,14 @@ export interface AppendFromHandRule {
 
 export interface CardDefinition {
   id: string;
+  /** Content schema version for front-end/shared contract consumers. */
+  version?: number;
   name: string;
+  cardType?: "attack" | "skill" | "event" | "situation";
+  ownerType?: "master" | "servant" | "common";
+  ownerDefinitionId?: string;
+  /** Links a catalog card to the executable SkillDefinition with a different ID. */
+  linkedSkillId?: string;
   cost: number;
   /** Structured dynamic cost; display text is never parsed at runtime. */
   costRule?: { kind: "round-linear"; base: number; perRound: number; min: number };
@@ -18,8 +27,14 @@ export interface CardDefinition {
   basic?: boolean;
   isSkill?: boolean;
   requiresEightMana?: boolean;
+  /** Card may only be played while the controller has less than this mana. */
+  maxManaExclusive?: number;
+  /** Cost reduction that applies while the controller's true name is hidden. */
+  hiddenTrueNameCostReduction?: number;
   ignoresSituationRestrictions?: boolean;
   residual?: boolean;
+  /** Authored card contains a separately defined reverse effect. */
+  hasReversalEffect?: boolean;
   skillOwnerType?: "master" | "servant";
   text?: string;
   phases?: PhaseId[];
@@ -38,7 +53,29 @@ export interface CardDefinition {
   appendFromHand?: AppendFromHandRule;
   /** Card explicitly replaces the normal two-card attack with a single-card play. */
   singleCardPlay?: boolean;
+  /** This card may be added on top of the ordinary standard-attack card count. */
+  standardAppend?: boolean;
+  /** Shared once-per-round group also enforced when the card is played. */
+  uniqueGroup?: string;
   tags?: string[];
+  /** Structured deterministic effects extracted during content migration. */
+  effects?: SkillEffectSpec[];
+  /** Effects that could not be safely interpreted remain visible to audits. */
+  unparsedEffects?: string[];
+  /** Non-executable authored-text segments retained for migration and audit. */
+  clauses?: import("./skill-effects.ts").SkillTextClause[];
+  /** Lossless rule program shared with the linked skill definition. */
+  ruleProgram?: SkillRuleProgram;
+  /** Import/implementation status; runtime legality still checks structured fields. */
+  implementation?: {
+    level: "FULL" | "PARTIAL" | "MANUAL" | "DISABLED" | "host_adjudicated";
+    handlerId?: string;
+  };
+  presentation?: {
+    imageKey?: string;
+    cardBackKey?: string;
+  };
+  sourceRefs?: Array<{ kind: string; document: string; locator?: string; page?: string; category?: string }>;
 }
 
 const KNOWN_ATTRIBUTES = ["力量", "迅捷", "魔术", "特殊", "宝具"] as const;
@@ -87,6 +124,14 @@ export interface SituationDefinition {
   text?: string;
   eventPlacement?: { mountain: number; city: number };
   forbiddenAttributes?: CardAttribute[];
+  /** Structured combat modifiers; display text is never parsed at runtime. */
+  combatPower?: SituationCombatPowerDefinition;
+}
+
+export interface SituationCombatPowerDefinition {
+  cardAddByAttribute?: Partial<Record<CardAttribute, number>>;
+  aggregateAddBySharedAttribute?: number;
+  locations?: Array<"mountain" | "city">;
 }
 
 export interface EventDefinition {

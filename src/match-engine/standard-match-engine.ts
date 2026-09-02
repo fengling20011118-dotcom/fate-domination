@@ -2,7 +2,7 @@ import type { GameCommand } from "./commands.ts";
 import { assertCommandEnvelope, CommandType } from "./commands.ts";
 import { createEvent } from "./events.ts";
 import { cloneState } from "../domain/state/createGameState.ts";
-import type { GameEvent, GameState } from "../domain/state/types.ts";
+import type { GameAction, GameEvent, GameState } from "../domain/state/types.ts";
 import { getCardAttributes, type CardDefinition, type EventDefinition, type EventGroupDefinition, type SituationDefinition } from "../rules-core/content-types.ts";
 import { initializePlayerDeck, initializePlayerSkillCards } from "../rules-core/decks.ts";
 import { deployPlayer, movePlayer } from "../rules-core/board.ts";
@@ -12,7 +12,7 @@ import { applyClimaxElimination, chooseEventGroup, endStandardRound, initializeE
 import { StateRandom } from "./random.ts";
 import { SkillRegistry } from "../rules-core/skill-registry.ts";
 import { assignIdentity, assertSetupReady, setPlayerReady } from "../rules-core/setup.ts";
-import { getCombatResponseResponderIds, registerCorePassiveHandlers, registerCoreSkillHandlers } from "../rules-core/skill-handlers.ts";
+import { getCombatResponseResponderIds, registerConfirmedChoiceSkillHandlers, registerCorePassiveHandlers, registerCoreSkillHandlers } from "../rules-core/skill-handlers.ts";
 import { PassiveRuntime, enqueuePassiveEffects } from "../rules-core/passives.ts";
 import { registerSanzangSkill } from "../rules-core/sanzang-skill.ts";
 import { ensureTiamatLifeSea, getTiamatCardDefinitions, initializeTiamatBeasts, registerTiamatCardAbilities, registerTiamatSkill } from "../rules-core/tiamat-skill.ts";
@@ -22,9 +22,11 @@ import { applyThreeXStartModifiers, assertThreeXContentPools, assertThreeXReadyF
 import { applyThreeXPurchases, finalizeThreeXPurchasesForPlayers, type ThreeXPurchase } from "../rules-core/three-x-economy.ts";
 import { DecisionManager } from "./decisions.ts";
 import { EffectRuntime } from "./effect-runtime.ts";
-import { createEffectFrame, DRAW_CARDS_EFFECT, registerStandardEffectHandlers } from "../rules-core/standard-effects.ts";
+import { createEffectFrame, DRAW_CARDS_EFFECT, GAIN_RESOURCES_EFFECT, RESTORE_COMMAND_SEAL_EFFECT, registerStandardEffectHandlers } from "../rules-core/standard-effects.ts";
 import { createDefaultModeRegistry } from "./default-modes.ts";
 import type { ModeRegistry } from "./modes.ts";
+import { assertDeckDefinition, expandDeckDefinition, type DeckDefinition } from "../rules-core/deck-definitions.ts";
+import { enqueueScheduledEffects } from "../rules-core/scheduled-effects.ts";
 
 export interface StandardContent {
   cards: Record<string, CardDefinition>;
@@ -32,6 +34,8 @@ export interface StandardContent {
   events: EventDefinition[];
   eventGroups?: EventGroupDefinition[];
   playerDecks: Record<string, string[]>;
+  /** Formal content definitions keyed by their owning servant ID. */
+  deckDefinitions?: Record<string, DeckDefinition>;
   masterInitialMana?: Record<string, number>;
   threeXMasterRatings?: Record<string, number>;
   threeXMasterPool?: string[];
@@ -68,6 +72,7 @@ export class StandardMatchEngine {
     registerMisfortuneCardAbility(this.cardAbilities);
     if (this.content.skills) {
       registerCoreSkillHandlers(this.content.skills);
+      registerConfirmedChoiceSkillHandlers(this.content.skills, this.effects);
       registerCorePassiveHandlers(this.content.skills, this.passives, this.effects);
       registerSanzangSkill(this.content.skills, this.effects);
       registerTiamatSkill(this.content.skills, this.effects);
@@ -77,6 +82,32 @@ export class StandardMatchEngine {
   /** Returns the immutable rules package selected by a match without exposing engine internals. */
   getModeDefinition(mode: GameState["mode"]): import("./modes.ts").GameModeDefinition {
     return this.modes.get(mode);
+  }
+
+  /** Rules-owned action discovery. Payload candidates are hints; execute remains authoritative. */
+  getLegalActions(state: GameState, playerId: string): GameAction[] {
+    const player = state.players[playerId];
+    if (!player || player.eliminated || state.status === "finished") return [];
+    if (state.pendingDecision) {
+      if (!state.pendingDecision.chooserPlayerIds.includes(playerId)) return [];
+      return [{
+        type: CommandType.ResolveDecision,
+        label: state.pendingDecision.kind,
+        payload: {
+          decisionId: state.pendingDecision.decisionId,
+          options: structuredClone(state.pendingDecision.options),
+          min: state.pendingDecision.min,
+          max: state.pendingDecision.max,
+          allowCancel: state.pendingDecision.allowCancel,
+        },
+      }];
+    }
+    const actions = this.modes.get(state.mode).getLegalActions(structuredClone(state), playerId);
+    if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, this.cardDefinitions()));
+    if (state.activePlayerId === playerId && state.status === "playing") {
+      actions.push({ type: CommandType.CompletePlayerWindow, label: "完成当前步骤", payload: {} });
+    }
+    return structuredClone(actions);
   }
 
   execute(current: GameState, command: GameCommand): { state: GameState; events: GameEvent[]; duplicate: boolean } {
@@ -179,14 +210,28 @@ export class StandardMatchEngine {
       case CommandType.StartStandardGame:
         if (state.status !== "lobby") throw new Error("GAME_ALREADY_STARTED");
         if (this.content.requireReadySetup) assertSetupReady(state);
-        if (state.mode === "three-x") {
+          if (state.mode === "three-x") {
           const threeX = state.modeState.threeX as import("../rules-core/three-x-state.ts").ThreeXModeState | undefined;
           if (!threeX) throw new Error("THREE_X_STATE_MISSING");
           assertThreeXReadyForStart(threeX);
           assertThreeXSelectionsInPools(threeX, this.content.threeXMasterPool, this.content.threeXServantPool);
-          applyThreeXStartModifiers(state);
-        }
-        state.status = "playing";
+            applyThreeXStartModifiers(state);
+          }
+          // Static game-start rule flags must be installed before the first
+          // round draws resources, otherwise a first-round cap would be late.
+          if (this.content.skills && state.mode !== "three-x") {
+            for (const player of Object.values(state.players)) {
+              for (const skill of this.content.skills.list()) {
+                if (skill.supportLevel !== "FULL"
+                  || skill.handlerId !== "core.game-start-rule-flags"
+                  || skill.ownerType !== "master"
+                  || skill.ownerId !== player.masterId
+                  || !skill.playerFlags) continue;
+                Object.assign(player.flags, skill.playerFlags);
+              }
+            }
+          }
+          state.status = "playing";
         state.round = 0;
         for (const player of Object.values(state.players)) {
           if (state.mode !== "three-x") player.mana = this.content.masterInitialMana?.[player.masterId ?? ""] ?? 4;
@@ -197,9 +242,13 @@ export class StandardMatchEngine {
           }
           // Content packages key decks by servant definition; keep player-id as
           // a compatibility fallback for small authored/test packages.
-          const deckDefinitionIds = this.content.playerDecks[player.servantId ?? ""]
-            ?? this.content.playerDecks[player.id]
-            ?? [];
+          const formalDeck = this.content.deckDefinitions?.[player.servantId ?? ""];
+          if (formalDeck) assertDeckDefinition(formalDeck, this.content.cards, player.servantId ?? undefined);
+          const deckDefinitionIds = formalDeck
+            ? expandDeckDefinition(formalDeck)
+            : this.content.playerDecks[player.servantId ?? ""]
+              ?? this.content.playerDecks[player.id]
+              ?? [];
           initializePlayerDeck(state, player.id, deckDefinitionIds, randomInt);
           if (this.content.skills) {
             initializePlayerSkillCards(state, player.id, this.content.skills.list().filter((skill) => (skill.ownerType === "master" && skill.ownerId === player.masterId) || (skill.ownerType === "servant" && skill.ownerId === player.servantId)).map((skill) => ({ id: skill.id, ownerType: skill.ownerType })));
@@ -210,8 +259,9 @@ export class StandardMatchEngine {
         const selectedEvents = chooseEventGroup(state, this.content.eventGroups, this.content.events, randomInt);
         initializeEventDeck(state, selectedEvents, randomInt);
         startStandardRound(state, this.content.situations, selectedEvents, randomInt);
-        state.modeState = { ...state.modeState, resolvedCombats: [], phaseStartPlayerId: state.activePlayerId };
+        state.modeState = { ...state.modeState, resolvedCombats: [], combatWinnerIdsByLocation: {}, phaseStartPlayerId: state.activePlayerId };
         emit("game.started", { round: state.round, phase: state.phase, activePlayerId: state.activePlayerId });
+        emit("round.started", { round: state.round, phase: state.phase, activePlayerId: state.activePlayerId });
         break;
       case CommandType.AssignIdentity:
         {
@@ -242,7 +292,8 @@ export class StandardMatchEngine {
         {
           if (!this.content.skills) throw new Error("SKILL_REGISTRY_NOT_CONFIGURED");
           const payload = command.payload as { skillId: string; data?: unknown };
-          const trueNameBefore = state.players[command.actorId]?.trueNameRevealed === true;
+          const trueNamesBefore = Object.fromEntries(Object.values(state.players).map((player) => [player.id, player.trueNameRevealed]));
+          const trueNameBefore = trueNamesBefore[command.actorId] === true;
           const skillResult = this.content.skills.execute(state, command.actorId, payload.skillId, payload.data, (decision) => {
             if (state.pendingDecision) throw new Error("DECISION_ALREADY_OPEN");
             state.pendingDecision = structuredClone(decision);
@@ -257,11 +308,15 @@ export class StandardMatchEngine {
             }
           }
           const player = state.players[command.actorId];
-          if (!trueNameBefore && !player.trueNameRevealed && playedBySkill.some((card) => card.revealsTrueName === true)) {
+          const revealBlocked = player.flags.preventTrueNameReveal === true
+            || (player.flags.preventTrueNameRevealWhenNoSeals === true && player.commandSeals === 0);
+          if (!trueNameBefore && !player.trueNameRevealed && !revealBlocked && playedBySkill.some((card) => card.revealsTrueName === true)) {
             player.trueNameRevealed = true;
           }
-          if (!trueNameBefore && player.trueNameRevealed) {
-            emit("servant.true-name-revealed", { playerId: command.actorId, servantId: player.servantId });
+          for (const changedPlayer of Object.values(state.players)) {
+            if (!trueNamesBefore[changedPlayer.id] && changedPlayer.trueNameRevealed) {
+              emit("servant.true-name-revealed", { playerId: changedPlayer.id, servantId: changedPlayer.servantId });
+            }
           }
         }
         break;
@@ -333,8 +388,34 @@ export class StandardMatchEngine {
             }));
             emit("card.play-effect.queued", { playerId: command.actorId, sourceInstanceId: request.sourceInstanceId, effect: "draw", count: request.count });
           }
+          for (const [index, request] of result.playEffectRequests.entries()) {
+            const effect = request.effect;
+            const handlerId = effect.kind === "draw-cards"
+              ? DRAW_CARDS_EFFECT
+              : effect.kind === "restore-command-seal"
+                ? RESTORE_COMMAND_SEAL_EFFECT
+                : GAIN_RESOURCES_EFFECT;
+            const payload = effect.kind === "draw-cards"
+              ? { count: effect.count }
+              : effect.kind === "restore-command-seal"
+                ? { amount: effect.amount }
+                : effect.kind === "gain-mana"
+                  ? { mana: effect.amount }
+                  : { victoryPoints: effect.amount };
+            state.effectQueue.push(createEffectFrame({
+              effectId: `${command.commandId}:play-effect:${request.sourceInstanceId}:${index}`,
+              handlerId,
+              sourceId: request.sourceInstanceId,
+              controllerPlayerId: command.actorId,
+              payload,
+              state,
+            }));
+            emit("card.play-effect.queued", { playerId: command.actorId, sourceInstanceId: request.sourceInstanceId, effect: effect.kind });
+          }
           const player = state.players[command.actorId];
-          if (!player.trueNameRevealed && result.cards.some((card) => card.revealsTrueName)) {
+          const revealBlocked = player.flags.preventTrueNameReveal === true
+            || (player.flags.preventTrueNameRevealWhenNoSeals === true && player.commandSeals === 0);
+          if (!player.trueNameRevealed && !revealBlocked && result.cards.some((card) => card.revealsTrueName)) {
             player.trueNameRevealed = true;
             emit("servant.true-name-revealed", { playerId: command.actorId, servantId: player.servantId });
           }
@@ -368,7 +449,12 @@ export class StandardMatchEngine {
           } else {
             const result = finalizeCombatFromSnapshot(state, snapshot, this.cardDefinitions(), Object.fromEntries(this.content.events.map((event) => [event.id, event])));
             resolvedBefore.add(payload.locationId);
-            state.modeState = { ...state.modeState, resolvedCombats: [...resolvedBefore] };
+            const previousWinners = (state.modeState.combatWinnerIdsByLocation as Record<string, string[]> | undefined) ?? {};
+            state.modeState = {
+              ...state.modeState,
+              resolvedCombats: [...resolvedBefore],
+              combatWinnerIdsByLocation: { ...previousWinners, [payload.locationId]: [...result.winnerIds] },
+            };
             emit("combat.resolved", result);
           }
         }
@@ -390,8 +476,13 @@ export class StandardMatchEngine {
             const result = finalizeCombatFromSnapshot(state, pending.snapshot, this.cardDefinitions(), Object.fromEntries(this.content.events.map((event) => [event.id, event])));
             const resolved = new Set<string>((state.modeState.resolvedCombats as string[] | undefined) ?? []);
             resolved.add(pending.snapshot.locationId);
+            const previousWinners = (state.modeState.combatWinnerIdsByLocation as Record<string, string[]> | undefined) ?? {};
             const { pendingCombatResolution: _pending, ...modeState } = state.modeState;
-            state.modeState = { ...modeState, resolvedCombats: [...resolved] };
+            state.modeState = {
+              ...modeState,
+              resolvedCombats: [...resolved],
+              combatWinnerIdsByLocation: { ...previousWinners, [pending.snapshot.locationId]: [...result.winnerIds] },
+            };
             state.step = "settlement";
             state.activePlayerId = null;
             emit("combat.resolved", result);
@@ -401,16 +492,31 @@ export class StandardMatchEngine {
       case CommandType.EndRound:
         if (state.phase !== "combat" || state.step !== "settlement") throw new Error("ROUND_NOT_READY");
         if (new Set((state.modeState.resolvedCombats as string[] | undefined) ?? []).size < 2) throw new Error("COMBAT_NOT_RESOLVED");
+        const endedRound = state.round;
+        const previousLocations = Object.fromEntries(
+          Object.values(state.players).map((player) => [player.id, player.locationId]),
+        );
         const eliminatedThisRound = applyClimaxElimination(state);
-        const shouldFinish = state.board.situationDeck.length === 0 || Object.values(state.players).filter((player) => !player.eliminated).length <= 1;
-        const finalWinnerIds = shouldFinish ? determineFinalWinnerIds(state) : [];
+        const instantVictoryIds = Array.isArray(state.modeState.instantVictoryIds)
+          ? state.modeState.instantVictoryIds.filter((id): id is string => typeof id === "string")
+          : [];
+        const shouldFinish = instantVictoryIds.length > 0
+          || state.board.situationDeck.length === 0
+          || Object.values(state.players).filter((player) => !player.eliminated).length <= 1;
+        const finalStatus = shouldFinish
+          ? (instantVictoryIds.length > 0
+            ? { finished: true, winnerIds: instantVictoryIds, reason: "round-eleven-noble-phantasm" }
+            : (this.getModeDefinition(state.mode).getFinalWinnerStatus?.(state) ?? { finished: true, winnerIds: determineFinalWinnerIds(state), reason: "final-score" }))
+          : null;
+        const finalWinnerIds = finalStatus?.winnerIds ?? [];
         endStandardRound(state, this.cardDefinitions());
         if (shouldFinish) {
           state.status = "finished";
           state.phase = "combat";
           state.step = "settlement";
           state.activePlayerId = null;
-          emit("game.finished", { round: state.round, eliminatedThisRound, winnerIds: finalWinnerIds });
+          emit("round.ended", { round: endedRound, nextPhase: "finished", eliminatedThisRound, previousLocations });
+          emit("game.finished", { round: endedRound, eliminatedThisRound, winnerIds: finalWinnerIds, reason: finalStatus?.reason ?? "final-score" });
         } else {
           const eventPoolIds = Array.isArray(state.modeState.eventPoolEventIds)
             ? state.modeState.eventPoolEventIds.filter((id): id is string => typeof id === "string")
@@ -420,15 +526,19 @@ export class StandardMatchEngine {
             : this.content.events;
           if (eventPool.length === 0) throw new Error("EVENT_GROUP_CARD_NOT_FOUND");
           startStandardRound(state, this.content.situations, eventPool, randomInt);
-          state.modeState = { ...state.modeState, resolvedCombats: [], phaseStartPlayerId: state.activePlayerId };
-          emit("round.ended", { round: state.round, nextPhase: state.phase, eliminatedThisRound });
+          state.modeState = { ...state.modeState, resolvedCombats: [], combatWinnerIdsByLocation: {}, phaseStartPlayerId: state.activePlayerId };
+          emit("round.ended", { round: endedRound, nextPhase: state.phase, eliminatedThisRound, previousLocations });
+          emit("round.started", { round: state.round, phase: state.phase, activePlayerId: state.activePlayerId });
         }
         break;
       default:
         throw new Error("COMMAND_NOT_SUPPORTED_BY_STANDARD_ENGINE");
     }
 
-    for (const event of events) enqueuePassiveEffects(state, this.passives, event);
+    for (const event of events) {
+      enqueueScheduledEffects(state, event);
+      enqueuePassiveEffects(state, this.passives, event);
+    }
     this.drainEffects(state);
     state.revision += 1;
     state.processedCommandIds.push(command.commandId);
@@ -551,6 +661,6 @@ function advanceStandardWindow(state: GameState, playerId: string): { transition
   state.phase = "combat";
   state.step = "player-window";
   state.activePlayerId = firstEligible(state);
-  state.modeState = { ...state.modeState, resolvedCombats: [], phaseStartPlayerId: state.activePlayerId };
+  state.modeState = { ...state.modeState, resolvedCombats: [], combatWinnerIdsByLocation: {}, phaseStartPlayerId: state.activePlayerId };
   return { transition: "next-phase", previousPhase };
 }

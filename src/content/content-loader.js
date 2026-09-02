@@ -113,7 +113,11 @@ function validateEventGroup(group) {
 function validateRoleReferences(content, extension) {
   const cardIds = new Set((content.cards ?? []).map((card) => card.id));
   for (const servant of extension.servants ?? []) {
-    for (const cardId of servant.deck ?? []) {
+    if (servant.deck !== undefined && !Array.isArray(servant.deck)) throw new Error(`SERVANT_DECK_INVALID:${servant.id}`);
+    const deck = servant.deck ?? [];
+    if (servant.deck !== undefined && deck.length !== 12) throw new Error(`SERVANT_DECK_SIZE:${servant.id}`);
+    for (const cardId of deck) {
+      if (!isStableId(cardId)) throw new Error(`SERVANT_DECK_CARD_ID_INVALID:${servant.id}`);
       if (!cardIds.has(cardId)) throw new Error(`SERVANT_CARD_NOT_FOUND:${servant.id}:${cardId}`);
     }
   }
