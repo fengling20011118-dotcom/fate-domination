@@ -8,6 +8,7 @@ export interface StandardContentSources {
   cards?: LegacyContentPackage["cards"];
   situations?: LegacyContentPackage["situations"];
   eventGroups?: LegacyContentPackage["eventGroups"];
+  civilizationRuins?: LegacyContentPackage["civilizationRuins"];
 }
 
 /**
@@ -21,6 +22,7 @@ export function buildStandardContentFromSources(sources: StandardContentSources)
     cards: sources.cards ?? [],
     situations: sources.situations ?? [],
     eventGroups: sources.eventGroups ?? [],
+    civilizationRuins: sources.civilizationRuins ?? [],
   };
 
   return buildStandardContent(raw);

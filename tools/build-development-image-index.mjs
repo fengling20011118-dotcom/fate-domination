@@ -52,6 +52,13 @@ for (const group of groups) {
     if (!source) continue;
     for (const skill of owner.skills ?? []) {
       const otherRefs = (skill.sourceRefs ?? []).filter((ref) => ref.kind !== "development-image");
+      if (otherRefs.length === 0 && typeof skill.legacyId === "string" && skill.legacyId) {
+        otherRefs.push({
+          kind: "legacy",
+          document: "legacy-content.json",
+          locator: `${group.collection === "masters" ? "master" : "servant"}/${owner.id}/${skill.legacyId}`,
+        });
+      }
       skill.sourceRefs = [structuredClone(source), ...otherRefs];
       sourceRefsApplied += 1;
     }

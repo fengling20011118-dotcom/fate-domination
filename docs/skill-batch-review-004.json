@@ -1,0 +1,1607 @@
+{
+  "batchId": "skills-004",
+  "reviewedAt": "2026-09-01",
+  "count": 100,
+  "entries": [
+    {
+      "id": "master.wodime.skill.s1",
+      "name": "隐匿者之首",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.wodime.skill.s1a",
+      "name": "天体学",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.wodime.skill.s2",
+      "name": "人理保障天球",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.wodime.skill.s3",
+      "name": "神之遗产",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 5,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.wodime.skill.s4",
+      "name": "亚特兰蒂斯异闻带",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.wodime.skill.s5",
+      "name": "奥林匹斯异闻带",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.wodime.skill.s9",
+      "name": "德墨忒尔的丰壤",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.wodime.skill.ascension",
+      "name": "冠位指定",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.goetia.skill.s1",
+      "name": "集体意识",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.goetia.skill.s2",
+      "name": "魔神柱",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 14,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.goetia.skill.ascension",
+      "name": "冠位时间神殿",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 5,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.tiamat.skill.s1",
+      "name": "万物之母",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.tiamat.skill.ascension",
+      "name": "泰坦模式",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.reines.skill.s1",
+      "name": "炼金术师",
+      "before": "FULL",
+      "after": "FULL",
+      "handlerId": "core.add-card-to-hand",
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.reines.skill.s1a",
+      "name": "小恶魔",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.reines.skill.s2",
+      "name": "特里姆玛乌·斩击",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.reines.skill.s3",
+      "name": "特里姆玛乌·羽翼",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.reines.skill.s4",
+      "name": "特里姆玛乌·告解",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.reines.skill.ascension",
+      "name": "特里姆玛乌·沸腾",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.illya-mahou.skill.s1",
+      "name": "无限的想象力",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.illya-mahou.skill.s1a",
+      "name": "万花筒之杖",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.illya-mahou.skill.ascension",
+      "name": "双生",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.miyu.skill.s1",
+      "name": "魔法蓝宝石",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.miyu.skill.s2",
+      "name": "卡牌选择",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.miyu.skill.s3",
+      "name": "梦幻召唤",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 13,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.miyu.skill.ascension",
+      "name": "多重选择",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.shiki-ryougi.skill.s1b",
+      "name": "虚无",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.shiki-ryougi.skill.s2",
+      "name": "生・切断",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.shiki-ryougi.skill.s3",
+      "name": "死・紧握",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.shiki-ryougi.skill.ascension",
+      "name": "空之境界",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.fujino.skill.s1a",
+      "name": "\"无痛症\"",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.fujino.skill.s2",
+      "name": "扭曲空间",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.fujino.skill.s3",
+      "name": "歪曲之魔眼",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.fujino.skill.s4",
+      "name": "创伤",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 9,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.fujino.skill.ascension",
+      "name": "痛觉残留",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.araya.skill.s1",
+      "name": "三重结界",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.araya.skill.s1a",
+      "name": "起源：静止",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.araya.skill.ascension",
+      "name": "矛盾螺旋",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.caules.skill.s1",
+      "name": "生物电学",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "master.caules.skill.s2",
+      "name": "巴格达电池",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "master.caules.skill.ascension",
+      "name": "回路增强",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.angra.skill.sc-angra-1",
+      "name": "伪写记载之万象",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.angra.skill.sc-angra-2",
+      "name": "永世束缚",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.angra.skill.sc-angra-3",
+      "name": "左齿啮咬&右齿啮咬",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.emiya.skill.sc-emiya-2",
+      "name": "伪·螺旋剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.emiya.skill.sc-emiya-np",
+      "name": "无限剑制",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.gil.skill.sc-gil-2",
+      "name": "巴比伦之门",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.iskandar.skill.sc-iskandar-2",
+      "name": "神威车轮",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.iskandar.skill.sc-iskandar-np",
+      "name": "王之军势",
+      "before": "FULL",
+      "after": "FULL",
+      "handlerId": "core.create-temporary-attacks",
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.medusa.skill.sc-medusa-2",
+      "name": "石化之魔眼",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.medusa.skill.sc-medusa-np",
+      "name": "骑英之缰绳",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.diarmuid.skill.sc-diarmuid-2",
+      "name": "破魔的红蔷薇",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.medea.skill.sc-medea-1",
+      "name": "神言魔术式",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.medea.skill.sc-medea-np",
+      "name": "万符必应破戒",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.gilles.skill.sc-gilles-1",
+      "name": "螺湮城教本(水魔)",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.gilles.skill.sc-gilles-np",
+      "name": "螺湮城教本(海魔)",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 5,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sasaki.skill.sc-sasaki-1",
+      "name": "一之太刀",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sasaki.skill.sc-sasaki-2",
+      "name": "二之太刀",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sasaki.skill.sc-sasaki-3",
+      "name": "三之太刀",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.hassan.skill.sc-hassan-2",
+      "name": "自我改造",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.lance.skill.sc-lance-1",
+      "name": "无穷的武练",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.lance.skill.sc-lance-3",
+      "name": "不为一己之荣光",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.nero.skill.sc-nero-1",
+      "name": "邀至心荡神驰的黄金剧场",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.nero.skill.sc-nero-2",
+      "name": "陨铁之鞴",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.nero.skill.sc-nero-3",
+      "name": "皇帝特权",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.mordred.skill.sc-mordred-1",
+      "name": "隐藏不贞的头盔",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.mordred.skill.sc-mordred-2",
+      "name": "向端丽的吾父发起叛逆",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.altera.skill.sc-altera-1",
+      "name": "军神之剑·泪之星",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.altera.skill.sc-altera-2",
+      "name": "军神之剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.gawain.skill.sc-gawain-1",
+      "name": "轮转胜利之剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.gawain.skill.sc-gawain-2",
+      "name": "圣者的数字",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.bedivere.skill.sc-bedivere-2",
+      "name": "守护的誓约",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.bedivere.skill.sc-bedivere-3",
+      "name": "银之臂",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.okita.skill.sc-okita-1",
+      "name": "诚之旗",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.okita.skill.sc-okita-2",
+      "name": "无明三段突",
+      "before": "FULL",
+      "after": "FULL",
+      "handlerId": "core.create-temporary-attacks",
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.okita.skill.sc-okita-3",
+      "name": "誓言的羽织",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 1,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.okita.skill.sc-okita-4",
+      "name": "病弱（Weak Constitution）",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sigurd.skill.sc-sigurd-1",
+      "name": "破灭之黎明",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sigurd.skill.sc-sigurd-2",
+      "name": "坏劫之天轮",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.sigurd.skill.sc-sigurd-3",
+      "name": "里迪尔·赫萝蒂",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.siegfried.skill.sc-siegfried-1",
+      "name": "隐身衣",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.siegfried.skill.sc-siegfried-2",
+      "name": "恶龙之血铠",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.siegfried.skill.sc-siegfried-3",
+      "name": "幻想大剑·天魔失坠",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.deon.skill.sc-deon-1",
+      "name": "百合飞散剑之舞蹈",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.deon.skill.sc-deon-2",
+      "name": "百合花开豪华绚烂",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.deon.skill.sc-deon-3",
+      "name": "自我暗示",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.muramasa.skill.sc-muramasa-1",
+      "name": "无元剑制",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.muramasa.skill.sc-muramasa-2",
+      "name": "试斩",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.muramasa.skill.sc-muramasa-3",
+      "name": "他人格（Alter Ego Class）",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 2,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.musashi.skill.sc-musashi-1",
+      "name": "六道五轮·俱利伽罗天象",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.artoria-alt.skill.sc-artoria-alt-1",
+      "name": "誓约胜利之剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.artoria-alt.skill.sc-artoria-alt-2",
+      "name": "黑化诅咒",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": false
+      }
+    },
+    {
+      "id": "servant.charlemagne.skill.sc-charlemagne-1",
+      "name": "展示王勇，遍历巡世的十二辉剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.charlemagne.skill.sc-charlemagne-2",
+      "name": "吾转瞬即逝的荣光",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.molay.skill.sc-molay-1",
+      "name": "如此漫长的巡礼之旅",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.molay.skill.sc-molay-2",
+      "name": "13号星期五",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.molay.skill.sc-molay-3",
+      "name": "堕落的授职",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": true,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.molay.skill.sc-molay-4",
+      "name": "领域外生命",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": true,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.arthur.skill.sc-arthur-1",
+      "name": "契约胜利之剑",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 3,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": true,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    },
+    {
+      "id": "servant.jason.skill.sc-jason-2",
+      "name": "阿塔兰忒 (Attack)",
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "handlerId": null,
+      "parsedEffectCount": 0,
+      "unparsedCount": 4,
+      "requiresDedicatedHandler": true,
+      "flags": {
+        "choice": false,
+        "derivedCard": false,
+        "lifecycle": false,
+        "combat": true
+      }
+    }
+  ]
+}

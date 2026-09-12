@@ -144,6 +144,9 @@ const masters = legacy.masters.map((master) => {
   if (master.ascensionSkill) {
     skills.push({
       ...normalizeSkill(id, { id: "ascension", ...master.ascensionSkill }, skills.length),
+      // FQA: ascension skills stay outside the game until Shakespeare unlocks them.
+      // Persist this as structured content metadata so runtime never has to parse card text.
+      initiallyOwned: false,
       tags: ["ascension"],
     });
   }
@@ -182,6 +185,85 @@ const cards = Object.values(legacy.cards).map((card) => ({
   basic: isBasicCard(card),
   text: card.desc,
 }));
+
+// These two cards are printed on the master cards as derived skill cards,
+// not in data_cards.js.  Register them as first-class definitions so the
+// game-start abilities can create real CardInstances with stable IDs.
+const confirmedDerivedCards = [
+  {
+    id: "card.derived.master.shirou-emiya.ganjiang-moye",
+    name: "干将·莫邪",
+    cost: 1,
+    requirement: 8,
+    basePower: 5,
+    typeLabel: "力量/宝具",
+    isSkill: true,
+    skillOwnerType: "master",
+    ownerDefinitionId: "master.shirou-emiya",
+    text: "（你的魔力需要达到8点才能打出此牌）\\n投影-此牌需追加打出。",
+    implementation: "pending",
+    sourceRefs: [{
+      kind: "development-image",
+      document: "Fate_Domination-开发版",
+      category: "master",
+      page: "images/masters/卫宫士郎.png",
+      locator: "master.shirou-emiya/干将·莫邪",
+    }],
+  },
+  {
+    id: "card.derived.master.tokiomi.fireball",
+    name: "火炎弹",
+    cost: 2,
+    requirement: 0,
+    basePower: 0,
+    typeLabel: "魔术",
+    isSkill: true,
+    skillOwnerType: "master",
+    ownerDefinitionId: "master.tokiomi",
+    text: "此牌需追加打出。\\n战斗阶段：令所有与你交战的其他玩家获得一枚可叠加的【燃烧】标记。每枚【燃烧】标记令所有者-2合计威力，当一名玩家打出2张暗置攻击时，其可移除自己的一枚【燃烧】标记。",
+    implementation: "pending",
+    sourceRefs: [{
+      kind: "development-image",
+      document: "Fate_Domination-开发版",
+      category: "master",
+      page: "images/masters/远坂时臣.png",
+      locator: "master.tokiomi/火炎弹",
+    }],
+  },
+];
+for (const card of confirmedDerivedCards) {
+  if (!cards.some((existing) => existing.id === card.id)) cards.push(card);
+}
+
+// Skill cards are printed cards too.  Keep a formal definition for every
+// imported master/servant skill instead of relying only on the runtime
+// SkillRegistry projection.  The definition uses the same stable skill ID,
+// so existing snapshots and card instances remain compatible.  Rule effects
+// still come from the skill registry and remain PARTIAL until implemented.
+const skillCardIds = new Set(cards.map((card) => card.id));
+for (const owner of [...masters, ...servants]) {
+  for (const skill of owner.skills ?? []) {
+    if (skillCardIds.has(skill.id)) continue;
+    cards.push({
+      // Keep the formal card entity separate from the skill entity.  Runtime
+      // skill instances continue using skill.id; this catalog entry is the
+      // content-layer card definition linked by `linkedSkillId`.
+      id: `card.skill.${skill.id}`,
+      linkedSkillId: skill.id,
+      name: skill.name,
+      cost: Number(skill.cost ?? 0),
+      basePower: Number(skill.basePower ?? 0),
+      typeLabel: skill.typeLabel ?? "特殊",
+      text: skill.text ?? "",
+      isSkill: true,
+      skillOwnerType: owner.id.startsWith("master.") ? "master" : "servant",
+      ownerDefinitionId: owner.id,
+      implementation: "pending",
+      sourceRefs: skill.sourceRefs,
+    });
+    skillCardIds.add(skill.id);
+  }
+}
 
 function isBasicCard(card) {
   return card.desc === "基础攻击卡牌" || ["幸运", "远隔操作", "急行"].includes(card.name);

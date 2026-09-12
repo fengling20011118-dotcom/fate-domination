@@ -147,6 +147,51 @@ interface CardInstance {
 
 卡牌区域、明暗、是否激活、是否付费、是否残留和是否计算威力分别保存。由此才能正确处理暗置、延迟激活、复制、控制权变化、游戏外衍生牌和回合结束去向。
 
+牌库也独立于 `CardDefinition`。`CardDefinition` 只描述卡牌本身，不能同时承担“某角色带了几张”的职责。正式内容包使用如下概念；当前旧数据中的 `servant.deck: string[]` 是其兼容导入格式：
+
+```ts
+interface DeckDefinition {
+  id: string;
+  ownerDefinitionId: string;
+  cards: Array<{ definitionId: string; count: number }>;
+}
+```
+
+导入时必须验证牌库结构、卡牌 ID、卡牌定义引用和所属角色；同名牌的 `count > 1` 合法，开局时展开为不同 `CardInstance`。不把“固定多少张牌”写进通用规则，除非对应模式或卡图明确给出该牌库的固定张数。
+
+### 2.6.1 前后端卡牌契约边界
+
+前端共享的 `CardDefinition` 应保持为规则定义，避免混入运行时区域和实例状态：
+
+- `hand`、`deck`、`discard`、`attack` 是 `CardInstance.zone`，不是 `cardType`；
+- `face_up`、`face_down` 是实例当前状态，定义层只可声明默认明暗或允许的打出方式；
+- `passive` 不是 `play.mode`，被动由触发器注册，不存在“打出被动”的命令；
+- `ownerType` 只描述归属类别，正式内容还要有稳定的 `ownerDefinitionId`；
+- `implementation.level` 可在传输契约使用小写值，但导入领域层后统一规范为 `FULL | PARTIAL | MANUAL | DISABLED`。
+
+建议前端读取的简化契约如下：
+
+```ts
+interface CardDefinition {
+  id: string;
+  version: number;
+  name: string;
+  cardType: "attack" | "skill" | "event" | "situation";
+  ownerType?: "master" | "servant" | "common";
+  ownerDefinitionId?: string;
+  play?: {
+    modes: Array<"normal" | "additional" | "response" | "phase-ability">;
+    cost: CostDefinition;
+    constraints: ConstraintDefinition[];
+  };
+  effects: EffectDefinition[];
+  implementation: { level: "full" | "partial" | "host_adjudicated"; handlerId?: string };
+  presentation: { imageKey?: string; cardBackKey?: string };
+}
+```
+
+卡牌定义不直接驱动结算；应用层仍只提交命令，领域层只读取结构化字段和 `handlerId`。展示文字与卡图仅用于显示和规则来源追溯。
+
 ### 2.7 隐藏信息不仅过滤状态，也过滤命令结果和错误
 
 权威状态只存在于房主。发送给客户端的是玩家投影，必须同时过滤：
@@ -317,6 +362,8 @@ Command
 → 生成各玩家投影
 → 联机广播
 ```
+
+这里采用“草稿状态事务 + 事实事件记录”，而不是强制把全部规则做成 Event Sourcing。复杂卡牌的可选效果、取消和响应窗口需要先在草稿状态中验证、执行和检查不变量，成功后才提交状态与领域事件；这既保留可回放日志，也避免事件归约器变成第二套隐藏规则引擎。
 
 效果帧只保存可序列化数据和处理器 ID，不保存函数：
 

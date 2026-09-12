@@ -12,7 +12,12 @@ import { addCardToAttack } from "../src/rules-core/card-play.ts";
 import { resolveCombat } from "../src/rules-core/combat.ts";
 import { CardAbilityRegistry } from "../src/rules-core/card-abilities.ts";
 import { DecisionManager } from "../src/match-engine/decisions.ts";
-import { endStandardRound } from "../src/rules-core/rounds.ts";
+import { endStandardRound, startStandardRound, initializeEventDeck } from "../src/rules-core/rounds.ts";
+import { movePlayerCard } from "../src/rules-core/decks.ts";
+import { useGorgonNoblePhantasmWatch } from "../src/rules-core/skill-handlers.ts";
+import { useDefeatLoseCommandSeal } from "../src/rules-core/skill-handlers.ts";
+import { useCombatPowerBonus } from "../src/rules-core/skill-handlers.ts";
+import { isPresenceConcealmentLegal } from "../src/rules-core/skill-handlers.ts";
 
 const cards = {
   "card.low-1": { id: "card.low-1", name: "低位一", cost: 0, basePower: 2, typeLabel: "魔术" },
@@ -102,6 +107,44 @@ test("局势牌堆耗尽后结束对局，不会继续抽空牌堆", () => {
   result.state.modeState = { resolvedCombats: ["mountain", "city"] };
   result = engine.execute(result.state, makeCommand(result.state, "end", CommandType.EndRound, "p1"));
   assert.equal(result.state.status, "finished");
+});
+
+test("最终回合仍以清理前位置触发回合结束被动", () => {
+  const kadocSkill = "master.kadoc.skill.s1a";
+  const skills = new SkillRegistry();
+  skills.register({
+    id: kadocSkill,
+    name: "缺乏自信",
+    ownerType: "master",
+    ownerId: "master.kadoc",
+    activation: "passive",
+    windows: [],
+    cost: 0,
+    text: "回合结束时若你位于魔术工房，则失去1点战果。",
+    supportLevel: "FULL",
+    passiveEventTypes: ["round.ended"],
+    roundEndVictoryPointLoss: 1,
+    roundEndLocationId: "workshop",
+    handlerId: "core.round-end-victory-point-loss",
+  });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "kadoc-round-end", players: [{ id: "p1", name: "一" }], seed: 7 });
+  state.status = "playing";
+  state.round = 1;
+  state.phase = "combat";
+  state.step = "settlement";
+  state.activePlayerId = "p1";
+  state.modeState = { resolvedCombats: ["mountain", "city"] };
+  state.board.situationDeck = [];
+  state.players.p1.masterId = "master.kadoc";
+  state.players.p1.locationId = "workshop";
+  state.players.p1.victoryPoints = 3;
+  const result = engine.execute(state, makeCommand(state, "kadoc-end", CommandType.EndRound, "p1"));
+  assert.equal(result.state.status, "finished");
+  assert.equal(result.state.players.p1.victoryPoints, 2);
+  const ended = result.events.find((event) => event.type === "round.ended");
+  assert.equal((ended?.payload as { round: number }).round, 1);
+  assert.equal((ended?.payload as { previousLocations: Record<string, string | null> }).previousLocations.p1, "workshop");
 });
 
 test("技能卡作为卡牌实例加入技能区，并可在满足8魔力门槛后加入攻击", () => {
@@ -378,6 +421,159 @@ test("标准内容包按已选从者 ID 读取牌库，并兼容按玩家 ID 提
   assert.equal(Object.values(result.state.cards).filter((card) => card.ownerPlayerId === "p1").length, 3);
 });
 
+test("齐格龙告令咒生成本回合幻想大剑并只豁免该牌8魔力门槛", () => {
+  const commandId = "master.sieg.skill.s1a";
+  const nobleId = "master.sieg.skill.s2";
+  const skills = new SkillRegistry();
+  skills.register({ id: commandId, name: "龙告令咒", ownerType: "master", ownerId: "master.sieg", activation: "phase", windows: ["action"], steps: ["play-batch-draft"], cost: 0, text: "", supportLevel: "FULL", handlerId: "core.sieg-dragon-command-seal", limit: "once-per-round" });
+  skills.register({ id: nobleId, name: "幻想大剑·天魔失坠", ownerType: "master", ownerId: "master.sieg", activation: "phase", windows: ["action"], cost: 4, requirement: 8, basePower: 8, typeLabel: "力量/宝具", text: "", supportLevel: "PARTIAL" });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "sieg-command", players: [{ id: "p1", name: "一" }], seed: 5 });
+  state.status = "playing"; state.round = 2; state.phase = "action"; state.step = "play-batch-draft"; state.activePlayerId = "p1";
+  state.players.p1.masterId = "master.sieg"; state.players.p1.mana = 3; state.players.p1.locationId = "workshop"; state.board.locations.workshop = ["p1"];
+  state.cards.normal = { instanceId: "normal", definitionId: "card.low-1", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.hand = ["normal"];
+
+  let result = engine.execute(state, makeCommand(state, "sieg-use", CommandType.UseSkill, "p1", { skillId: commandId }));
+  const generatedId = "p1:derived:master.sieg.skill.s1a:round-2";
+  assert.equal(result.state.players.p1.commandSeals, 2);
+  assert.equal(result.state.players.p1.mana, 5);
+  assert.deepEqual(result.state.players.p1.masterSkills, [generatedId]);
+  assert.equal(result.state.cards[generatedId].temporary, true);
+  assert.equal(result.state.cards[generatedId].createdByEffectId, "master.sieg.skill.s1a:round-2");
+
+  result = engine.execute(result.state, makeCommand(result.state, "sieg-play", CommandType.CommitAttack, "p1", { faceUpInstanceIds: [generatedId, "normal"], faceDownInstanceIds: [] }));
+  assert.equal(result.state.players.p1.mana, 1);
+  assert.equal(result.state.cards[generatedId].paidCost, 4);
+  endStandardRound(result.state, skills.asCardDefinitions());
+  assert.equal(result.state.cards[generatedId].zone, "removed");
+  assert.deepEqual(result.state.players.p1.cardRuleModifiers, []);
+});
+
+test("齐格龙告令咒没有令咒时不可用且不会生成半完成状态", () => {
+  const skillId = "master.sieg.skill.s1a";
+  const skills = new SkillRegistry();
+  skills.register({ id: skillId, name: "龙告令咒", ownerType: "master", ownerId: "master.sieg", activation: "phase", windows: ["action"], steps: ["play-batch-draft"], cost: 0, text: "", supportLevel: "FULL", handlerId: "core.sieg-dragon-command-seal" });
+  skills.register({ id: "master.sieg.skill.s2", name: "幻想大剑·天魔失坠", ownerType: "master", ownerId: "master.sieg", activation: "phase", windows: ["action"], cost: 4, requirement: 8, text: "", supportLevel: "PARTIAL" });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "sieg-no-seal", players: [{ id: "p1", name: "一" }], seed: 6 });
+  state.status = "playing"; state.round = 1; state.phase = "action"; state.step = "play-batch-draft"; state.activePlayerId = "p1"; state.players.p1.masterId = "master.sieg"; state.players.p1.commandSeals = 0;
+  const before = structuredClone(state);
+  assert.throws(() => engine.execute(state, makeCommand(state, "sieg-reject", CommandType.UseSkill, "p1", { skillId })), /SKILL_USE_FORBIDDEN/);
+  assert.deepEqual(state, before);
+});
+
+test("未打出的临时技能牌也会在回合结束时移出游戏", () => {
+  const state = createGameState({ gameInstanceId: "temporary-skill-cleanup", players: [{ id: "p1", name: "一" }], seed: 7 });
+  state.cards.temporary = { instanceId: "temporary", definitionId: "master.temp", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "master-skills", face: "up", active: false, residual: false, temporary: true, modifiers: [], createdByEffectId: "effect.temp" };
+  state.players.p1.masterSkills = ["temporary"];
+  endStandardRound(state, { "master.temp": { isSkill: true } });
+  assert.equal(state.cards.temporary.zone, "removed");
+  assert.deepEqual(state.players.p1.masterSkills, []);
+});
+
+test("间桐樱黑泥仅在被污染的圣杯未激活时支付2魔力获得2战果", () => {
+  const blackMudId = "master.sakura.skill.s3";
+  const grailId = "master.sakura.skill.s4";
+  const skills = new SkillRegistry();
+  skills.register({ id: blackMudId, name: "黑泥", ownerType: "master", ownerId: "master.sakura", activation: "phase", windows: ["preparation"], steps: ["player-window"], cost: 2, abilityCost: 2, text: "", supportLevel: "FULL", handlerId: "core.sakura-black-mud", limit: "once-per-round" });
+  skills.register({ id: grailId, name: "被污染的圣杯", ownerType: "master", ownerId: "master.sakura", activation: "passive", windows: [], cost: 0, text: "", supportLevel: "PARTIAL" });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "sakura-black-mud", players: [{ id: "p1", name: "一" }], seed: 8 });
+  state.status = "playing"; state.round = 1; state.phase = "preparation"; state.step = "player-window"; state.activePlayerId = "p1"; state.players.p1.masterId = "master.sakura"; state.players.p1.mana = 3;
+
+  const result = engine.execute(state, makeCommand(state, "black-mud", CommandType.UseSkill, "p1", { skillId: blackMudId }));
+  assert.equal(result.state.players.p1.mana, 1);
+  assert.equal(result.state.players.p1.victoryPoints, 2);
+  assert.throws(() => engine.execute(result.state, makeCommand(result.state, "black-mud-repeat", CommandType.UseSkill, "p1", { skillId: blackMudId })), /SKILL_USE_FORBIDDEN/);
+
+  const active = createGameState({ gameInstanceId: "sakura-corrupted", players: [{ id: "p1", name: "一" }], seed: 9 });
+  active.status = "playing"; active.round = 1; active.phase = "preparation"; active.step = "player-window"; active.activePlayerId = "p1"; active.players.p1.masterId = "master.sakura"; active.players.p1.mana = 3;
+  active.cards.grail = { instanceId: "grail", definitionId: grailId, ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: true, temporary: false, modifiers: [] };
+  active.players.p1.attack = ["grail"];
+  const before = structuredClone(active);
+  assert.throws(() => engine.execute(active, makeCommand(active, "black-mud-blocked", CommandType.UseSkill, "p1", { skillId: blackMudId })), /SKILL_USE_FORBIDDEN/);
+  assert.deepEqual(active, before);
+});
+
+test("间桐樱黑泥魔力不足时支付和战果结算保持原子性", () => {
+  const skillId = "master.sakura.skill.s3";
+  const skills = new SkillRegistry();
+  skills.register({ id: skillId, name: "黑泥", ownerType: "master", ownerId: "master.sakura", activation: "phase", windows: ["preparation"], steps: ["player-window"], cost: 2, abilityCost: 2, text: "", supportLevel: "FULL", handlerId: "core.sakura-black-mud" });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "sakura-no-mana", players: [{ id: "p1", name: "一" }], seed: 10 });
+  state.status = "playing"; state.round = 1; state.phase = "preparation"; state.step = "player-window"; state.activePlayerId = "p1"; state.players.p1.masterId = "master.sakura"; state.players.p1.mana = 1;
+  const before = structuredClone(state);
+  assert.throws(() => engine.execute(state, makeCommand(state, "black-mud-no-mana", CommandType.UseSkill, "p1", { skillId })), /INSUFFICIENT_MANA/);
+  assert.deepEqual(state, before);
+});
+
+test("爱丽丝菲尔转换魔术在前哨阶段按手牌数量换取魔力", () => {
+  const skillId = "master.irisviel.skill.s2";
+  const skills = new SkillRegistry();
+  skills.register({ id: skillId, name: "转换魔术", ownerType: "master", ownerId: "master.irisviel", activation: "phase", windows: ["outpost"], steps: ["player-window"], cost: 0, text: "", supportLevel: "FULL", handlerId: "core.irisviel-conversion-magic", limit: "once-per-round" });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "irisviel-conversion", players: [{ id: "p1", name: "一" }], seed: 11 });
+  state.status = "playing"; state.round = 1; state.phase = "outpost"; state.step = "player-window"; state.activePlayerId = "p1"; state.players.p1.masterId = "master.irisviel"; state.players.p1.mana = 2;
+  for (const [index, definitionId] of ["card.low-1", "card.low-2", "card.high-1"] .entries()) {
+    const id = `hand-${index}`;
+    state.cards[id] = { instanceId: id, definitionId, ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+    state.players.p1.hand.push(id);
+  }
+  const result = engine.execute(state, makeCommand(state, "conversion", CommandType.UseSkill, "p1", { skillId }));
+  assert.equal(result.state.players.p1.mana, 5);
+  assert.deepEqual(result.state.players.p1.hand, []);
+  assert.deepEqual(result.state.players.p1.discard, ["hand-0", "hand-1", "hand-2"]);
+  assert.throws(() => engine.execute(result.state, makeCommand(result.state, "conversion-repeat", CommandType.UseSkill, "p1", { skillId })), /SKILL_USE_FORBIDDEN/);
+});
+
+test("爱丽丝菲尔转换魔术没有手牌时不显示可用技能", () => {
+  const skillId = "master.irisviel.skill.s2";
+  const skills = new SkillRegistry();
+  skills.register({ id: skillId, name: "转换魔术", ownerType: "master", ownerId: "master.irisviel", activation: "phase", windows: ["outpost"], steps: ["player-window"], cost: 0, text: "", supportLevel: "FULL", handlerId: "core.irisviel-conversion-magic" });
+  const state = createGameState({ gameInstanceId: "irisviel-empty", players: [{ id: "p1", name: "一" }], seed: 12 });
+  state.status = "playing"; state.phase = "outpost"; state.step = "player-window"; state.activePlayerId = "p1"; state.players.p1.masterId = "master.irisviel";
+  assert.deepEqual(skills.getLegalActions(state, "p1", skills.asCardDefinitions()), []);
+});
+
+test("正式牌库定义优先于旧兼容数组并展开为独立卡牌实例", () => {
+  const engine = new StandardMatchEngine({
+    cards,
+    situations,
+    events,
+    playerDecks: { "servant.s1": ["card.low-1"] },
+    deckDefinitions: {
+      "servant.s1": {
+        id: "servant.s1.deck",
+        ownerDefinitionId: "servant.s1",
+        cards: [{ definitionId: "card.high-1", count: 2 }],
+      },
+    },
+  });
+  const state = createGameState({ gameInstanceId: "formal-servant-deck", players: [{ id: "p1", name: "一" }], seed: 137 });
+  state.players.p1.masterId = "master.test";
+  state.players.p1.servantId = "servant.s1";
+  const result = engine.execute(state, makeCommand(state, "formal-servant-deck-start", CommandType.StartStandardGame, "host"));
+  const instanceIds = [...result.state.players.p1.hand, ...result.state.players.p1.deck];
+  assert.equal(instanceIds.length, 2);
+  assert.equal(new Set(instanceIds).size, 2);
+  assert.ok(instanceIds.every((instanceId) => result.state.cards[instanceId].definitionId === "card.high-1"));
+
+  const invalid = createGameState({ gameInstanceId: "formal-servant-deck-invalid", players: [{ id: "p1", name: "一" }], seed: 139 });
+  invalid.players.p1.masterId = "master.test";
+  invalid.players.p1.servantId = "servant.s1";
+  const invalidEngine = new StandardMatchEngine({
+    cards,
+    situations,
+    events,
+    playerDecks: {},
+    deckDefinitions: {
+      "servant.s1": { id: "servant.other.deck", ownerDefinitionId: "servant.other", cards: [] },
+    },
+  });
+  assert.throws(() => invalidEngine.execute(invalid, makeCommand(invalid, "formal-invalid-start", CommandType.StartStandardGame, "host")), /DECK_OWNER_MISMATCH/);
+});
+
 test("提亚马特人类恶在战斗结算后令战胜她的每名玩家额外获得1点战果", () => {
   const skillId = "master.tiamat.skill.s1a";
   const skills = new SkillRegistry();
@@ -413,6 +609,60 @@ test("提亚马特人类恶在战斗结算后令战胜她的每名玩家额外�
   assert.deepEqual(result.events.find((event) => event.type === "combat.resolved")?.payload && (result.events.find((event) => event.type === "combat.resolved")!.payload as { winnerIds: string[] }).winnerIds, ["p2"]);
   assert.equal(result.state.players.p2.victoryPoints, 4);
   assert.equal(result.state.players.p1.defeated, true);
+});
+
+test("龙之心在战斗奖励结算后仅因对手同属性更高单张攻击失去3点战果", () => {
+  const skillIds = ["servant.melusine.skill.sc-melusine-3", "servant.albion.skill.sc-albion-3"];
+  const skills = new SkillRegistry();
+  for (const skillId of skillIds) {
+    skills.register({
+      id: skillId,
+      name: "龙之心",
+      ownerType: "servant",
+      ownerId: skillId.includes("melusine") ? "servant.melusine" : "servant.albion",
+      activation: "passive",
+      windows: [],
+      cost: 0,
+      requirement: 8,
+      basePower: skillId.includes("melusine") ? 7 : 12,
+      typeLabel: "迅捷/宝具",
+      text: "龙之心-若你赢得了一场战斗，且你的交战对手控制与你控制的攻击具有相同属性且威力高于该攻击的攻击，战斗阶段结束且计算战斗获得的战果后，你失去3点战果。",
+      supportLevel: "FULL",
+      handlerId: "core.dragon-heart",
+      passiveEventTypes: ["combat.resolved"],
+      requiresActiveCard: true,
+    });
+  }
+  const engine = new StandardMatchEngine({
+    cards: {
+      "card.melusine-low": { id: "card.melusine-low", name: "迅捷攻击", cost: 0, basePower: 2, typeLabel: "迅捷" },
+      "card.opponent-high": { id: "card.opponent-high", name: "对手迅捷攻击", cost: 0, basePower: 4, typeLabel: "迅捷" },
+      "card.opponent-low": { id: "card.opponent-low", name: "对手低攻击", cost: 0, basePower: 1, typeLabel: "力量" },
+    },
+    situations,
+    events: [{ id: "event.dragon-heart", victoryPoints: 1 }],
+    skills,
+    playerDecks: { p1: [], p2: [] },
+  });
+  const state = createGameState({ gameInstanceId: "dragon-heart", players: [{ id: "p1", name: "梅柳齐娜" }, { id: "p2", name: "对手" }], seed: 31 });
+  state.status = "playing"; state.phase = "combat"; state.step = "settlement"; state.round = 1; state.activePlayerId = "p1";
+  state.players.p1.servantId = "servant.melusine"; state.players.p2.servantId = "servant.other";
+  state.players.p1.locationId = "mountain"; state.players.p2.locationId = "mountain"; state.board.locations.mountain = ["p1", "p2"];
+  state.board.currentEvents.mountain = ["event.dragon-heart"]; state.board.eventVisibility["event.dragon-heart"] = "up";
+  state.cards.source = { instanceId: "source", definitionId: skillIds[0], ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.cards.own = { instanceId: "own", definitionId: "card.melusine-low", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.cards.opponent = { instanceId: "opponent", definitionId: "card.opponent-high", ownerPlayerId: "p2", controllerPlayerId: "p2", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.attack = ["source", "own"]; state.players.p2.attack = ["opponent"];
+  const result = engine.execute(state, makeCommand(state, "dragon-heart-resolve", CommandType.ResolveCombat, "p1", { locationId: "mountain" }));
+  assert.deepEqual((result.events.find((event) => event.type === "combat.resolved")?.payload as { winnerIds: string[] }).winnerIds, ["p1"]);
+  assert.equal(result.state.players.p1.victoryPoints, 0);
+
+  const noTrigger = structuredClone(state);
+  noTrigger.gameInstanceId = "dragon-heart-no-trigger";
+  noTrigger.revision = 0; noTrigger.processedCommandIds = []; noTrigger.eventLog = [];
+  noTrigger.cards.opponent.definitionId = "card.opponent-low";
+  const noTriggerResult = engine.execute(noTrigger, makeCommand(noTrigger, "dragon-heart-no-trigger-resolve", CommandType.ResolveCombat, "p1", { locationId: "mountain" }));
+  assert.equal(noTriggerResult.state.players.p1.victoryPoints, 3);
 });
 
 test("十二试炼在战败结算后获得战果、削减胜者并强化其余牌", () => {
@@ -666,7 +916,7 @@ test("对魔力宝具绽放不统计上一回合残留的宝具", () => {
   state.players.p1.servantId = "servant.saber"; state.players.p1.locationId = "mountain"; state.board.locations.mountain = ["p1"];
   state.cards.old = { instanceId: "old", definitionId: "card.noble", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: true, temporary: false, modifiers: [], paidCost: 4, playedRound: 1 };
   state.players.p1.attack = ["old"];
-  assert.throws(() => engine.execute(state, makeCommand(state, "old-bloom", CommandType.UseSkill, "p1", { skillId, data: { abilityId: "noble-bloom" } })), /NOBLE_BLOOM_NO_NOBLE_PHANTASM/);
+  assert.throws(() => engine.execute(state, makeCommand(state, "old-bloom", CommandType.UseSkill, "p1", { skillId, data: { abilityId: "noble-bloom" } })), /SKILL_USE_FORBIDDEN/);
 });
 
 test("标准对局开局选定的事件组会贯穿后续回合", () => {
@@ -891,7 +1141,7 @@ test("三藏法师金蝉子：弃置幸运、抽牌后完成三选一", () => {
   assert.equal(result.state.players.p1.mana, 3);
 });
 
-test("提亚马特生命之海生成真实魔兽，并可在当前行动阶段加入攻击", () => {
+test("提亚马特万物之母与生命之海按前哨规则生成真实魔兽", () => {
   const skills = new SkillRegistry();
   const state = createGameState({ gameInstanceId: "tiamat-beasts", players: [{ id: "p1", name: "提亚马特玩家" }], seed: 19 });
   state.players.p1.masterId = "master.tiamat";
@@ -905,29 +1155,31 @@ test("提亚马特生命之海生成真实魔兽，并可在当前行动阶段�
 
   let result = engine.execute(state, makeCommand(state, "tiamat-start", CommandType.StartStandardGame, "p1"));
   assert.equal(result.state.players.p1.mana >= 8, true);
-  assert.equal(result.state.players.p1.masterSkills.some((id) => result.state.cards[id].definitionId === "master.tiamat.card.life-sea"), true);
-
-  result.state.phase = "action";
-  result.state.step = "move-decision";
+  assert.equal(result.state.players.p1.commandSeals, 0);
+  const seaId = result.state.players.p1.masterSkills.find((id) => result.state.cards[id].definitionId === "master.tiamat.card.life-sea");
+  assert.ok(seaId);
+  movePlayerCard(result.state, "p1", seaId, "attack");
+  result.state.cards[seaId].face = "up";
+  result.state.cards[seaId].active = true;
+  result.state.cards[seaId].residual = true;
+  result.state.phase = "outpost";
+  result.state.step = "player-window";
   result.state.activePlayerId = "p1";
   result = engine.execute(result.state, makeCommand(result.state, "tiamat-life-sea", CommandType.UseSkill, "p1", { skillId: "master.tiamat.card.life-sea" }));
   assert.equal(result.state.pendingDecision?.kind, "tiamat-beast");
   const choice = result.state.pendingDecision!.options[0].id;
   result = engine.execute(result.state, makeCommand(result.state, "tiamat-choice", CommandType.ResolveDecision, "p1", { decisionId: result.state.pendingDecision!.decisionId, selections: [choice] }));
-  const beast = result.state.players.p1.masterSkills.find((id) => result.state.cards[id].definitionId === choice);
+  const beast = result.state.players.p1.attack.find((id) => result.state.cards[id].definitionId === choice);
   assert.ok(beast);
-
-  result.state.step = "play-batch-draft";
-  result.state.players.p1.mana = 8;
-  result = engine.execute(result.state, makeCommand(result.state, "tiamat-attack", CommandType.CommitAttack, "p1", { faceUpInstanceIds: [beast, result.state.players.p1.hand[0]], faceDownInstanceIds: [] }));
   assert.equal(result.state.cards[beast].zone, "attack");
   assert.equal(result.state.cards[beast].active, true);
+  assert.equal(result.state.cards[beast].playedRound, result.state.round);
 });
 
 test("拉克什米·芭伊厄运可在战力结算后弃置并令同场对手败北", () => {
   const definitions = {
     ...cards,
-    "card.x-misfortune": { id: "card.x-misfortune", name: "厄运", cost: 0, basePower: 6, typeLabel: "特殊" },
+    "card.x-misfortune": { id: "card.x-misfortune", name: "厄运", cost: 0, basePower: 6, typeLabel: "特殊", phases: ["combat"], steps: ["post-power-response"], cardAbilityIds: ["misfortune-battle-loss"] },
   };
   const state = createGameState({
     gameInstanceId: "misfortune-response",
@@ -1110,7 +1362,7 @@ test("卡牌能力使用限制按实例生效，并在回合清理后允许回�
   const card = "p1:limited-ability";
   state.cards[card] = { instanceId: card, definitionId: "card.limited", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
   state.players.p1.attack = [card];
-  const definitions = { "card.limited": { id: "card.limited", name: "限次能力", cost: 0, basePower: 1, typeLabel: "特殊", limit: "once-per-round" as const, phases: ["action"] as const } };
+  const definitions = { "card.limited": { id: "card.limited", name: "限次能力", cost: 0, basePower: 1, typeLabel: "特殊", limit: "once-per-round" as const, phases: ["action"] as const, cardAbilityIds: ["limited"] } };
   let calls = 0;
   const abilities = new CardAbilityRegistry();
   abilities.register("limited", () => { calls += 1; });
@@ -1130,7 +1382,7 @@ test("卡牌能力处理器失败时不会提前写入使用限制", () => {
   const card = "p1:atomic-ability";
   state.cards[card] = { instanceId: card, definitionId: "card.atomic", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
   state.players.p1.attack = [card];
-  const definitions = { "card.atomic": { id: "card.atomic", name: "原子能力", cost: 0, basePower: 1, typeLabel: "特殊", limit: "once-per-game" as const } };
+  const definitions = { "card.atomic": { id: "card.atomic", name: "原子能力", cost: 0, basePower: 1, typeLabel: "特殊", limit: "once-per-game" as const, cardAbilityIds: ["atomic"] } };
   const abilities = new CardAbilityRegistry();
   abilities.register("atomic", () => { throw new Error("HANDLER_FAILED"); });
   assert.throws(() => abilities.execute("atomic", { state, playerId: "p1", instanceId: card, definitions }), /HANDLER_FAILED/);
@@ -1141,12 +1393,16 @@ test("标准引擎可以接收内容包提供的卡牌能力注册表", () => {
   const abilities = new CardAbilityRegistry();
   let calls = 0;
   abilities.register("test-card-ability", () => { calls += 1; });
-  const engine = new StandardMatchEngine({ cards, situations, events, cardAbilities: abilities, playerDecks: { p1: [] } });
+  const definitions = {
+    ...cards,
+    "card.test.external-ability": { id: "card.test.external-ability", name: "外部能力测试", cost: 0, basePower: 0, typeLabel: "特殊", cardAbilityIds: ["test-card-ability"] },
+  };
+  const engine = new StandardMatchEngine({ cards: definitions, situations, events, cardAbilities: abilities, playerDecks: { p1: [] } });
   const state = createGameState({ gameInstanceId: "custom-card-ability", players: [{ id: "p1", name: "一" }], seed: 59 });
   state.status = "playing"; state.phase = "action"; state.activePlayerId = "p1";
-  state.cards.custom = { instanceId: "custom", definitionId: "card.low-1", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "master-skills", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.cards.custom = { instanceId: "custom", definitionId: "card.test.external-ability", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "master-skills", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
   state.players.p1.masterSkills.push("custom");
-  engine.cardAbilities.execute("test-card-ability", { state, playerId: "p1", instanceId: "custom", definitions: cards });
+  engine.cardAbilities.execute("test-card-ability", { state, playerId: "p1", instanceId: "custom", definitions });
   assert.equal(calls, 1);
   assert.equal(engine.cardAbilities.has("wave-beast-move"), true);
   assert.equal(engine.cardAbilities.list().includes("test-card-ability"), true);
@@ -1198,6 +1454,120 @@ test("气息遮断只在三人战斗的严格第二名响应，并可令并列�
   assert.deepEqual((completed.events.find((event) => event.type === "combat.resolved")?.payload as { winnerIds: string[] }).winnerIds, ["p1"]);
 });
 
+test("确定性的卡牌打出效果会生成标准效果帧请求", () => {
+  const definitions = {
+    ...cards,
+    "card.restore-seal": {
+      id: "card.restore-seal", name: "令咒", cost: 0, basePower: 0, typeLabel: "特殊",
+      effects: [{ kind: "restore-command-seal", amount: 1 }], unparsedEffects: [],
+    },
+    "card.filler": { id: "card.filler", name: "填充", cost: 0, basePower: 1, typeLabel: "力量" },
+  };
+  const state = createGameState({ gameInstanceId: "card-play-effects", players: [{ id: "p1", name: "一" }], seed: 51 });
+  state.status = "playing"; state.phase = "action"; state.step = "play-batch-draft"; state.activePlayerId = "p1";
+  state.players.p1.locationId = "workshop";
+  const effectCard = "p1:restore"; const filler = "p1:filler";
+  state.cards[effectCard] = { instanceId: effectCard, definitionId: "card.restore-seal", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+  state.cards[filler] = { instanceId: filler, definitionId: "card.filler", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.hand = [effectCard, filler];
+  const result = commitStandardAttack(state, "p1", [effectCard, filler], [], definitions);
+  assert.deepEqual(result.playEffectRequests, [{ sourceInstanceId: effectCard, effect: { kind: "restore-command-seal", amount: 1 } }]);
+});
+
+test("口袋达·芬奇仅在部署于魔术工房时获得1点魔力", () => {
+  const skillId = "servant.davinci.skill.sc-davinci-4";
+  const skills = new SkillRegistry();
+  skills.register({
+    id: skillId,
+    name: "口袋达·芬奇",
+    ownerType: "servant",
+    ownerId: "servant.davinci",
+    activation: "passive",
+    windows: [],
+    cost: 0,
+    text: "当你部署于魔术工房时，获得1点魔力。",
+    supportLevel: "FULL",
+    handlerId: "core.deploy-workshop-gain-mana",
+    passiveEventTypes: ["player.deployed"],
+    locationId: "workshop",
+    manaGain: 1,
+  });
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  const state = createGameState({ gameInstanceId: "davinci-workshop-passive", players: [{ id: "p1", name: "达·芬奇" }], seed: 41 });
+  state.status = "playing";
+  state.phase = "outpost";
+  state.step = "player-window";
+  state.activePlayerId = "p1";
+  state.players.p1.servantId = "servant.davinci";
+  state.players.p1.mana = 10;
+
+  const result = engine.execute(state, makeCommand(state, "davinci-deploy", CommandType.DeployPlayer, "p1", { locationId: "workshop" }));
+  // The first workshop deployment grants the normal +2 deployment bonus; the
+  // skill contributes exactly one additional mana from the deployed event.
+  assert.equal(result.state.players.p1.mana, 13);
+  assert.equal(result.events.some((event) => event.type === "player.deployed"), true);
+});
+
+test("杰基尔形态可使用开发版确认的气息遮断，海德形态不开放响应", () => {
+  const setup = makeCombatResponseState("presence-jekyll", [5, 10, 10]);
+  const jekyllSkillId = "servant.jekyll.skill.sc-jekyll-3";
+  setup.responseSkills.register({
+    id: jekyllSkillId,
+    name: "气息遮断（Assassin Class）",
+    ownerType: "servant",
+    ownerId: "servant.jekyll",
+    activation: "phase",
+    windows: ["combat"],
+    steps: ["post-power-response"],
+    cost: 3,
+    abilityCost: 0,
+    basePower: 4,
+    typeLabel: "迅捷",
+    text: "刺杀-战斗阶段：战力结算后",
+    supportLevel: "FULL",
+    handlerId: "core.presence-concealment",
+    limit: "once-per-round",
+    tags: ["assassin-class"],
+  });
+  setup.state.players.p1.servantId = "servant.jekyll";
+  setup.state.players.p1.form = "jekyll";
+  setup.state.cards["p1:attack"].definitionId = jekyllSkillId;
+  const engine = new StandardMatchEngine({ cards: setup.cards, situations, events, skills: setup.responseSkills, playerDecks: { p1: [], p2: [], p3: [] } });
+  const start = engine.execute(setup.state, makeCommand(setup.state, "resolve-jekyll", CommandType.ResolveCombat, "p1", { locationId: "mountain" }));
+  assert.equal(start.state.activePlayerId, "p1");
+  const used = engine.execute(start.state, makeCommand(start.state, "use-jekyll-presence", CommandType.UseSkill, "p1", { skillId: jekyllSkillId }));
+  assert.equal(used.state.players.p2.defeated, true);
+  assert.equal(used.state.players.p3.defeated, true);
+
+  const hyde = makeCombatResponseState("presence-jekyll-hyde", [5, 10, 10]);
+  hyde.responseSkills.register({
+    id: jekyllSkillId,
+    name: "气息遮断（Assassin Class）",
+    ownerType: "servant",
+    ownerId: "servant.jekyll",
+    activation: "phase",
+    windows: ["combat"],
+    steps: ["post-power-response"],
+    cost: 3,
+    abilityCost: 0,
+    basePower: 4,
+    typeLabel: "迅捷",
+    text: "刺杀-战斗阶段：战力结算后",
+    supportLevel: "FULL",
+    handlerId: "core.presence-concealment",
+    limit: "once-per-round",
+    tags: ["assassin-class"],
+  });
+  hyde.state.players.p1.servantId = "servant.jekyll";
+  hyde.state.players.p1.form = "hyde";
+  hyde.state.players.p1.flags.skillUseForbiddenTag = "assassin-class";
+  hyde.state.cards["p1:attack"].definitionId = jekyllSkillId;
+  const hydeEngine = new StandardMatchEngine({ cards: hyde.cards, situations, events, skills: hyde.responseSkills, playerDecks: { p1: [], p2: [], p3: [] } });
+  const noResponse = hydeEngine.execute(hyde.state, makeCommand(hyde.state, "resolve-jekyll-hyde", CommandType.ResolveCombat, "p1", { locationId: "mountain" }));
+  assert.equal(noResponse.state.step, "settlement");
+  assert.equal(noResponse.state.modeState.pendingCombatResolution, undefined);
+});
+
 test("两人战斗或存在中间战力时不开放气息遮断响应", () => {
   const two = makeCombatResponseState("presence-two", [5, 10, 1]);
   two.state.board.locations.mountain = ["p1", "p2"];
@@ -1215,7 +1585,7 @@ test("两人战斗或存在中间战力时不开放气息遮断响应", () => {
   assert.equal(noResponse.events.some((event) => event.type === "combat.power-calculated"), false);
 });
 
-test("第11回合结束时按最高战果确定圣杯胜者", () => {
+test("第11回合结束时并列第一且深山町仍平局则圣杯溢出", () => {
   const state = createGameState({ gameInstanceId: "final-winner", players: [{ id: "p1", name: "一" }, { id: "p2", name: "二" }, { id: "p3", name: "三" }], seed: 47 });
   const engine = new StandardMatchEngine({ cards, situations, events, playerDecks: { p1: [], p2: [], p3: [] } });
   state.status = "playing"; state.round = 11; state.phase = "combat"; state.step = "settlement"; state.modeState = { resolvedCombats: ["mountain", "city"] };
@@ -1226,7 +1596,97 @@ test("第11回合结束时按最高战果确定圣杯胜者", () => {
   const result = engine.execute(state, makeCommand(state, "finish-11", CommandType.EndRound, "p1"));
   assert.equal(result.state.status, "finished");
   const finished = result.events.find((event) => event.type === "game.finished");
-  assert.deepEqual((finished?.payload as { winnerIds: string[] }).winnerIds.sort(), ["p2", "p3"]);
+  assert.deepEqual((finished?.payload as { winnerIds: string[] }).winnerIds, []);
+  assert.equal((finished?.payload as { reason: string }).reason, "grail-overflow");
+});
+
+test("杰基尔处于海德形态时禁止使用气息遮断", () => {
+  const setup = makeCombatResponseState("presence-hyde", [5, 10, 10]);
+  const skill = setup.responseSkills.get("servant.hassan.skill.sc-hassan-1");
+  setup.state.players.p1.servantId = "servant.jekyll";
+  setup.state.players.p1.form = "hyde";
+  setup.state.players.p1.flags.skillUseForbiddenTag = "assassin-class";
+  setup.state.step = "post-power-response";
+  setup.state.activePlayerId = "p1";
+  setup.state.modeState.pendingCombatResolution = {
+    snapshot: {
+      locationId: "mountain",
+      participantIds: ["p1", "p2", "p3"],
+      powers: { p1: 5, p2: 10, p3: 10 },
+      attributes: { p1: [], p2: [], p3: [] },
+      round: 1,
+    },
+    responderIds: ["p1"],
+    nextResponderIndex: 0,
+  };
+  assert.equal(isPresenceConcealmentLegal(setup.state, "p1", { ...skill, ownerId: "servant.jekyll", tags: ["assassin-class"] }), false);
+});
+
+test("卫宫切嗣固有时制御暗置一张手牌并抽牌，且不计入常规攻击组合", () => {
+  const skillId = "master.kiritsugu.skill.s2";
+  const skills = new SkillRegistry();
+  skills.register({
+    id: skillId, name: "固有时制御", ownerType: "master", ownerId: "master.kiritsugu",
+    activation: "phase", windows: ["action"], cost: 0, text: "暗置打出一张牌，然后抽一张牌。",
+    supportLevel: "FULL", handlerId: "core.kiritsugu-time-control",
+  });
+  const state = createGameState({ gameInstanceId: "kiritsugu-time-control", players: [{ id: "p1", name: "切嗣" }], seed: 17 });
+  state.status = "playing"; state.phase = "action"; state.step = "player-window"; state.activePlayerId = "p1"; state.round = 1;
+  state.players.p1.masterId = "master.kiritsugu"; state.players.p1.mana = 0;
+  state.cards["p1:hand"] = { instanceId: "p1:hand", definitionId: "card.low-1", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+  state.cards["p1:draw"] = { instanceId: "p1:draw", definitionId: "card.low-2", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "deck", face: "down", active: false, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.hand = ["p1:hand"]; state.players.p1.deck = ["p1:draw"];
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  let result = engine.execute(state, makeCommand(state, "time-control-open", CommandType.UseSkill, "p1", { skillId }));
+  assert.equal(result.state.pendingDecision?.kind, "kiritsugu-time-control-card");
+  const decisionId = result.state.pendingDecision!.decisionId;
+  result = engine.execute(result.state, makeCommand(result.state, "time-control-resolve", CommandType.ResolveDecision, "p1", { decisionId, selections: ["p1:hand"] }));
+  assert.equal(result.state.pendingDecision, null);
+  assert.deepEqual(result.state.players.p1.attack, ["p1:hand"]);
+  assert.equal(result.state.cards["p1:hand"].face, "down");
+  assert.deepEqual(result.state.players.p1.hand, ["p1:draw"]);
+  assert.equal(result.state.cards["p1:draw"].zone, "hand");
+});
+
+test("雨生龙之介死之艺术放弃地利后可选择魔力并关闭地利", () => {
+  const skillId = "master.ryuunosuke.skill.s2";
+  const skills = new SkillRegistry();
+  skills.register({
+    id: skillId, name: "死之艺术", ownerType: "master", ownerId: "master.ryuunosuke",
+    activation: "phase", windows: ["action"], cost: 0, text: "放弃你的地利位置，获得2点战果或等于该地利位置数+2的魔力，然后关闭【死之艺术】。",
+    supportLevel: "FULL", handlerId: "core.ryuunosuke-death-art",
+  });
+  const state = createGameState({ gameInstanceId: "death-art", players: [{ id: "p1", name: "龙之介" }], seed: 19 });
+  state.status = "playing"; state.phase = "action"; state.step = "player-window"; state.activePlayerId = "p1"; state.round = 1;
+  state.players.p1.masterId = "master.ryuunosuke"; state.players.p1.locationId = "mountain"; state.players.p1.mana = 1;
+  state.players.p1.flags.deploymentBonusActive = true; state.players.p1.flags.deploymentBonus = 3;
+  state.cards["p1:death-art"] = { instanceId: "p1:death-art", definitionId: skillId, ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "master-skills", face: "up", active: false, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.masterSkills = ["p1:death-art"];
+  const engine = new StandardMatchEngine({ cards, situations, events, skills, playerDecks: { p1: [] } });
+  let result = engine.execute(state, makeCommand(state, "death-art-open", CommandType.UseSkill, "p1", { skillId }));
+  const decisionId = result.state.pendingDecision!.decisionId;
+  result = engine.execute(result.state, makeCommand(result.state, "death-art-mana", CommandType.ResolveDecision, "p1", { decisionId, selections: ["mana"] }));
+  assert.equal(result.state.players.p1.mana, 6);
+  assert.equal(result.state.players.p1.victoryPoints, 0);
+  assert.equal(result.state.players.p1.flags.deploymentBonusActive, false);
+  assert.equal(result.state.players.p1.flags.deploymentBonus, 0);
+  assert.deepEqual(result.state.players.p1.masterSkills, ["p1:death-art"]);
+  assert.equal(result.state.cards["p1:death-art"].active, false);
+});
+
+test("第11回合结束命令读取深山町唯一胜者作为并列战果裁定", () => {
+  const state = createGameState({ gameInstanceId: "final-mountain-tiebreak", players: [{ id: "p1", name: "一" }, { id: "p2", name: "二" }, { id: "p3", name: "三" }], seed: 48 });
+  const engine = new StandardMatchEngine({ cards, situations, events, playerDecks: { p1: [], p2: [], p3: [] } });
+  state.status = "playing"; state.round = 11; state.phase = "combat"; state.step = "settlement";
+  state.modeState = { resolvedCombats: ["mountain", "city"], combatWinnerIdsByLocation: { mountain: ["p2"], city: ["p1"] } };
+  state.board.situationDeck = [];
+  state.players.p1.victoryPoints = 10;
+  state.players.p2.victoryPoints = 10;
+  state.players.p3.victoryPoints = 4;
+  const result = engine.execute(state, makeCommand(state, "finish-11-tiebreak", CommandType.EndRound, "p1"));
+  const finished = result.events.find((event) => event.type === "game.finished");
+  assert.deepEqual((finished?.payload as { winnerIds: string[] }).winnerIds, ["p2"]);
+  assert.equal((finished?.payload as { reason: string }).reason, "deep-mountain-tiebreak");
 });
 
 test("原始之龙残留期间不能常规打出基础攻击", () => {
@@ -1272,4 +1732,52 @@ test("效果队列拒绝重复 effectId 和无效帧", async () => {
   queue.enqueue(state, frame);
   assert.throws(() => queue.enqueue(state, frame), /EFFECT_ID_DUPLICATE/);
   assert.throws(() => queue.enqueue(state, { ...frame, effectId: "", handlerId: "" }), /EFFECT_FRAME_INVALID/);
+});
+test("戈耳工每回合首次对手宝具获得按人数计算的魔力", () => {
+  const state = createGameState({ gameInstanceId: "gorgon-passive", players: [
+    { id: "gorgon", name: "戈耳工" }, { id: "p2", name: "二" }, { id: "p3", name: "三" },
+  ], seed: 1 });
+  state.status = "playing"; state.round = 1; state.players.gorgon.mana = 0;
+  useGorgonNoblePhantasmWatch({ state, player: state.players.gorgon, skill: { id: "servant.gorgon.skill.sc-gorgon-1" } as never });
+  assert.equal(state.players.gorgon.mana, 2);
+  useGorgonNoblePhantasmWatch({ state, player: state.players.gorgon, skill: { id: "servant.gorgon.skill.sc-gorgon-1" } as never });
+  assert.equal(state.players.gorgon.mana, 2);
+});
+
+test("戈耳工在超过5名存活玩家时首次宝具只获得1点魔力", () => {
+  const state = createGameState({ gameInstanceId: "gorgon-passive-large", players: [
+    { id: "gorgon", name: "戈耳工" }, { id: "p2", name: "二" }, { id: "p3", name: "三" },
+    { id: "p4", name: "四" }, { id: "p5", name: "五" }, { id: "p6", name: "六" },
+  ], seed: 1 });
+  state.status = "playing"; state.round = 2; state.players.gorgon.mana = 0;
+  useGorgonNoblePhantasmWatch({ state, player: state.players.gorgon, skill: { id: "servant.gorgon.skill.sc-gorgon-1" } as never });
+  assert.equal(state.players.gorgon.mana, 1);
+});
+
+test("间桐慎二战败时失去一枚令咒且不会低于零", () => {
+  const state = createGameState({ gameInstanceId: "shinji-defeat-seal", players: [{ id: "p1", name: "慎二" }], seed: 1 });
+  state.players.p1.commandSeals = 3;
+  useDefeatLoseCommandSeal({ state, player: state.players.p1, skill: { id: "master.shinji.skill.s3" } as never });
+  assert.equal(state.players.p1.commandSeals, 2);
+  state.players.p1.commandSeals = 0;
+  useDefeatLoseCommandSeal({ state, player: state.players.p1, skill: { id: "master.shinji.skill.s3" } as never });
+  assert.equal(state.players.p1.commandSeals, 0);
+});
+
+test("言峰绮礼执行者在战斗阶段增加2点总威力", () => {
+  const state = createGameState({ gameInstanceId: "kirei-combat-bonus", players: [{ id: "p1", name: "绮礼" }], seed: 1 });
+  state.status = "playing"; state.round = 1; state.phase = "combat"; state.step = "player-window";
+  useCombatPowerBonus({ state, player: state.players.p1, skill: { id: "master.kirei.skill.s3", combatPowerBonus: 2 } as never });
+  assert.equal(state.players.p1.flags.roundPowerBonus, 2);
+});
+
+test("戈耳工每回合标记在新回合开始时清理", () => {
+  const state = createGameState({ gameInstanceId: "gorgon-marker-reset", players: [{ id: "gorgon", name: "戈耳工" }], seed: 1 });
+  state.status = "playing"; state.modeState = { "gorgon-np:1": true, keep: "ok" };
+  const situations = Array.from({ length: 13 }, (_, i) => ({ id: `s${i}`, mana: 0, climax: i >= 10 }));
+  const events = [{ id: "e1", victoryPoints: 0 }, { id: "e2", victoryPoints: 0 }];
+  initializeEventDeck(state, events, () => 0);
+  startStandardRound(state, situations, events, () => 0);
+  assert.equal(state.modeState["gorgon-np:1"], undefined);
+  assert.equal(state.modeState.keep, "ok");
 });

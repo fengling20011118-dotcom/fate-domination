@@ -70,6 +70,33 @@ test("事件生命周期拒绝非法地点和不在场事件", () => {
   assert.throws(() => removeEventFromLocation(state, "mountain", "missing"), /EVENT_NOT_IN_LOCATION/);
 });
 
+test("事件替换会在牌堆为空时将刚移除的事件重洗后抽回", () => {
+  const state = makeState();
+  state.board.currentEvents = { mountain: ["event.fuyuki.1"], city: [] };
+  state.board.eventVisibility = { "event.fuyuki.1": "up" };
+  state.board.eventDeck = [];
+  state.board.eventDiscard = [];
+  assert.equal(replaceEventAtLocation(state, "mountain", "event.fuyuki.1", () => 0), "event.fuyuki.1");
+  assert.deepEqual(state.board.currentEvents, { mountain: ["event.fuyuki.1"], city: [] });
+  assert.deepEqual(state.board.eventDiscard, []);
+});
+
+test("事件牌堆初始化拒绝重复 ID 和非法事件字段", () => {
+  const state = createGameState({ gameInstanceId: "event-deck-validation", players: [{ id: "p1", name: "一" }], seed: 3 });
+  assert.throws(
+    () => initializeEventDeck(state, [{ id: "event.same", victoryPoints: 1 }, { id: "event.same", victoryPoints: 1 }], () => 0),
+    /EVENT_ID_DUPLICATE:event\.same/,
+  );
+  assert.throws(
+    () => initializeEventDeck(state, [{ id: "event.bad-points", victoryPoints: -1 }], () => 0),
+    /EVENT_VICTORY_POINTS_INVALID:event\.bad-points/,
+  );
+  assert.throws(
+    () => initializeEventDeck(state, [{ id: "event.bad-location", victoryPoints: 1, locationId: "workshop" as never }], () => 0),
+    /EVENT_LOCATION_INVALID:event\.bad-location/,
+  );
+});
+
 test("标准回合开始会抽局势、放置两处事件并补足手牌", () => {
   const state = makeState();
   startStandardRound(state, situations, events, (max) => max - 1);
@@ -80,6 +107,33 @@ test("标准回合开始会抽局势、放置两处事件并补足手牌", () =>
   assert.equal(state.board.currentEvents.city.length, 1);
   assert.equal(state.players.p1.hand.length, 3);
   assert.equal(state.players.p1.mana, 2);
+});
+
+test("考列斯资质平庸只限制非高潮局势牌的本次魔力", () => {
+  const state = createGameState({ gameInstanceId: "caules-situation-mana", players: [{ id: "p1", name: "考列斯" }], seed: 17 });
+  state.status = "playing";
+  state.players.p1.flags.nonClimaxSituationManaCap = 1;
+  state.board.situationDeck = ["sit-high"];
+  state.board.eventDeck = [];
+  startStandardRound(
+    state,
+    [{ id: "sit-high", mana: 3, eventPlacement: { mountain: 0, city: 0 } }],
+    [],
+    () => 0,
+  );
+  assert.equal(state.players.p1.mana, 1);
+
+  const climax = createGameState({ gameInstanceId: "caules-climax-mana", players: [{ id: "p1", name: "考列斯" }], seed: 17 });
+  climax.status = "playing";
+  climax.players.p1.flags.nonClimaxSituationManaCap = 1;
+  climax.board.situationDeck = ["sit-climax"];
+  startStandardRound(
+    climax,
+    [{ id: "sit-climax", mana: 4, climax: true, eventPlacement: { mountain: 0, city: 0 } }],
+    [],
+    () => 0,
+  );
+  assert.equal(climax.players.p1.mana, 4);
 });
 
 test("局势牌按结构化事件区配置放置，而不是固定每区一张", () => {
@@ -122,7 +176,7 @@ test("部署、单向移动和常规两张攻击在规则模块中原子完成",
     "card.high-1": { id: "card.high-1", name: "高位一", cost: 2, basePower: 4, typeLabel: "迅捷" },
     "card.high-2": { id: "card.high-2", name: "高位二", cost: 2, basePower: 5, typeLabel: "魔术" },
   };
-  drawCards(state, "p1", 2, (max) => max - 1);
+  drawCards(state, "p1", 2, (max) => max - 1, definitions);
   const selected = state.players.p1.hand.slice(0, 2);
   const result = commitStandardAttack(state, "p1", selected, [], definitions);
   assert.equal(result.paidMana, 2);
@@ -182,7 +236,7 @@ test("结构化卡牌属性只接受规则确认值并统一同义词", () => {
   assert.deepEqual(normalizeCardAttributes([]), []);
 });
 
-test("卡牌实例使用限制按实体记录每局、每回合和每阶段状态", () => {
+test("卡牌实例使用限制按实体记录每局、每回合、每回合两次和每阶段状态", () => {
   const instance = { instanceId: "p1:limited", definitionId: "card.limited", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "hand" as const, face: "down" as const, active: false, residual: false, temporary: false, modifiers: [] };
   assert.equal(isCardUsageAvailable(instance, "once-per-game", 1, "action"), true);
   markCardUsage(instance, "once-per-game", 1, "action");
@@ -194,6 +248,17 @@ test("卡牌实例使用限制按实体记录每局、每回合和每阶段状�
   assert.equal(isCardUsageAvailable(round, "once-per-round", 3, "action"), true);
   resetReusableCardUsage(round);
   assert.equal(round.usedRound, undefined);
+
+  const twice = { ...instance, used: undefined };
+  markCardUsage(twice, "twice-per-round", 3, "action");
+  assert.equal(twice.usedCount, 1);
+  assert.equal(isCardUsageAvailable(twice, "twice-per-round", 3, "combat"), true);
+  markCardUsage(twice, "twice-per-round", 3, "combat");
+  assert.equal(twice.usedCount, 2);
+  assert.equal(isCardUsageAvailable(twice, "twice-per-round", 3, "action"), false);
+  assert.equal(isCardUsageAvailable(twice, "twice-per-round", 4, "action"), true);
+  resetReusableCardUsage(twice);
+  assert.equal(twice.usedCount, undefined);
 
   const phase = { ...instance, used: undefined };
   markCardUsage(phase, "once-per-turn", 4, "action");
@@ -321,6 +386,98 @@ test("战斗威力组件只计算明置激活牌并按地点应用部署修正",
   assert.deepEqual(collectCombatAttributes(state, state.players.p1, definitions), ["力量"]);
 });
 
+test("事件不足时回合开始保持状态原子性", () => {
+  const state = createGameState({ gameInstanceId: "event-atomicity", players: [{ id: "p1", name: "一" }], seed: 4 });
+  state.status = "playing";
+  state.round = 3;
+  state.phase = "action";
+  state.step = "play-batch-draft";
+  state.activePlayerId = "p1";
+  state.board.situationDeck = ["sit2"];
+  state.board.eventDeck = ["event.only"];
+  state.board.eventDiscard = [];
+  const before = structuredClone(state);
+  assert.throws(
+    () => startStandardRound(state, [{ id: "sit2", mana: 2, eventPlacement: { mountain: 1, city: 1 } }], [{ id: "event.only", victoryPoints: 1 }], () => 0),
+    /EVENT_DECK_EMPTY/,
+  );
+  assert.deepEqual(state, before);
+});
+
+test("事件放置数量必须是非负整数", () => {
+  const state = createGameState({ gameInstanceId: "event-placement-validation", players: [{ id: "p1", name: "一" }], seed: 5 });
+  state.status = "playing";
+  state.board.situationDeck = ["sit-invalid"];
+  state.board.eventDeck = ["event.only"];
+  const before = structuredClone(state);
+  assert.throws(
+    () => startStandardRound(state, [{ id: "sit-invalid", mana: 1, eventPlacement: { mountain: -1, city: 1 } }, { id: "sit-invalid", mana: 1, eventPlacement: { mountain: -1, city: 1 } }], [{ id: "event.only", victoryPoints: 1 }], () => 0),
+    /EVENT_PLACEMENT_INVALID/,
+  );
+  assert.deepEqual(state, before);
+});
+
+test("局势 sit4-sit6 只在深山町和新都为匹配属性攻击加成", () => {
+  const cases = [
+    { id: "situation.sit4", attribute: "力量", other: "迅捷", bonus: 2 },
+    { id: "situation.sit5", attribute: "迅捷", other: "魔术", bonus: 2 },
+    { id: "situation.sit6", attribute: "魔术", other: "力量", bonus: 2 },
+  ] as const;
+  for (const item of cases) {
+    const state = makeState();
+    const instanceId = `p1:${item.id}`;
+    state.cards[instanceId] = { instanceId, definitionId: "card.match", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+    state.players.p1.attack = [instanceId];
+    state.modeState = { situationRestrictions: { combatPower: { cardAddByAttribute: { [item.attribute]: item.bonus }, locations: ["mountain", "city"] } } };
+    const definitions = { "card.match": { id: "card.match", name: "匹配", cost: 0, basePower: 4, typeLabel: item.attribute }, "card.other": { id: "card.other", name: "不匹配", cost: 0, basePower: 4, typeLabel: item.other } };
+    assert.equal(calculateCombatPower(state, state.players.p1, definitions, "mountain"), 4 + item.bonus);
+    assert.equal(calculateCombatPower(state, state.players.p1, definitions, "city"), 4 + item.bonus);
+    assert.equal(calculateCombatPower(state, state.players.p1, definitions, "workshop"), 4);
+  }
+});
+
+test("局势 sit7-sit9 为指定属性攻击提供1点战力", () => {
+  const cases = [
+    { id: "situation.sit7", attribute: "魔术" },
+    { id: "situation.sit8", attribute: "迅捷" },
+    { id: "situation.sit9", attribute: "力量" },
+  ] as const;
+  for (const item of cases) {
+    const state = makeState();
+    const instanceId = `p1:${item.id}`;
+    state.cards[instanceId] = { instanceId, definitionId: "card.match", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+    state.players.p1.attack = [instanceId];
+    state.modeState = { situationRestrictions: { combatPower: { cardAddByAttribute: { [item.attribute]: 1 }, locations: ["mountain", "city"] } } };
+    const definitions = { "card.match": { id: "card.match", name: "匹配", cost: 0, basePower: 3, typeLabel: item.attribute } };
+    assert.equal(calculateCombatPower(state, state.players.p1, definitions, "mountain"), 4);
+    assert.equal(calculateCombatPower(state, state.players.p1, definitions, "city"), 4);
+  }
+});
+
+test("局势 sit10 仅在至少两张明置激活攻击拥有共同属性时增加3点", () => {
+  const state = makeState();
+  const first = "p1:first";
+  const second = "p1:second";
+  state.cards[first] = { instanceId: first, definitionId: "card.first", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.cards[second] = { instanceId: second, definitionId: "card.second", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack", face: "up", active: true, residual: false, temporary: false, modifiers: [] };
+  state.players.p1.attack = [first, second];
+  state.modeState = { situationRestrictions: { combatPower: { aggregateAddBySharedAttribute: 3, locations: ["mountain", "city"] } } };
+  const definitions = {
+    "card.first": { id: "card.first", name: "第一张", cost: 0, basePower: 2, typeLabel: "力量/特殊" },
+    "card.second": { id: "card.second", name: "第二张", cost: 0, basePower: 3, typeLabel: "力量" },
+  };
+  assert.equal(calculateCombatPower(state, state.players.p1, definitions, "mountain"), 8);
+  assert.equal(calculateCombatPower(state, state.players.p1, definitions, "city"), 8);
+  state.cards[second].face = "down";
+  state.cards[second].active = false;
+  assert.equal(calculateCombatPower(state, state.players.p1, definitions, "mountain"), 2);
+  state.cards[second].face = "up";
+  state.cards[second].active = true;
+  definitions["card.second"].typeLabel = "迅捷";
+  assert.equal(calculateCombatPower(state, state.players.p1, definitions, "mountain"), 5);
+  assert.equal(calculateCombatPower(state, state.players.p1, definitions, "workshop"), 5);
+});
+
 test("卡牌生命周期组件统一决定关闭后的归属区域", () => {
   const instance = { instanceId: "p1:skill", definitionId: "servant.skill", ownerPlayerId: "p1", controllerPlayerId: "p1", zone: "attack" as const, face: "up" as const, active: true, residual: false, temporary: false, modifiers: [] };
   assert.equal(getClosedCardZone({ id: "servant.skill", name: "技能", cost: 0, basePower: 0, typeLabel: "特殊", isSkill: true }, instance), "servant-skills");
@@ -373,4 +530,28 @@ test("临时攻击回合结束时移除，不会因残留标记继续保留", ()
   assert.equal(state.cards[temporary].zone, "removed");
   assert.equal(state.cards[temporary].active, false);
   assert.deepEqual(state.players.p1.attack, []);
+});
+
+test("回合结束严格按六步顺序执行通用清理", () => {
+  const state = makeState();
+  state.board.activeSituations = ["sit.active"];
+  state.board.currentEvents = { mountain: ["event.up"], city: ["event.down"] };
+  state.players.p1.locationId = "mountain";
+  const trace: string[] = [];
+  endStandardRound(state, {}, {
+    resolveAfterCombat: (current) => {
+      trace.push(`after:${current.players.p1.locationId}`);
+      assert.deepEqual(current.board.activeSituations, ["sit.active"]);
+      assert.deepEqual(current.board.currentEvents.mountain, ["event.up"]);
+    },
+    resolveAtRoundEnd: (current) => {
+      trace.push(`end:${current.players.p1.locationId}`);
+      assert.equal(current.players.p1.locationId, null);
+      assert.deepEqual(current.board.activeSituations, []);
+      assert.deepEqual(current.board.currentEvents, { mountain: [], city: [] });
+    },
+  });
+  assert.deepEqual(trace, ["after:mountain", "end:null"]);
+  assert.deepEqual(state.board.situationDiscard, ["sit.active"]);
+  assert.deepEqual(state.board.eventDiscard, ["event.up", "event.down"]);
 });

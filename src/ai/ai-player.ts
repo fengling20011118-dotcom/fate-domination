@@ -77,7 +77,7 @@ export const conservativeAiPolicy: AiPolicy = Object.freeze({
       if (!pendingDecision.chooserPlayerIds.includes(view.playerId)) return null;
       const submitted = pendingDecision.submissions[view.playerId];
       if (submitted) return null;
-      const option = pendingDecision.options.find((candidate) => !candidate.disabled);
+      const option = pendingDecision.options.find((candidate) => !candidate.disabled && (candidate.chooserPlayerIds === undefined || candidate.chooserPlayerIds.includes(view.playerId)));
       if (option && pendingDecision.min <= 1) return { kind: "resolve-decision", decisionId: pendingDecision.decisionId, selections: [option.id] };
       if (pendingDecision.allowCancel) return { kind: "cancel-decision", decisionId: pendingDecision.decisionId };
       return null;

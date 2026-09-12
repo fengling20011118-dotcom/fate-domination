@@ -1,0 +1,3547 @@
+{
+  "schemaVersion": 1,
+  "sourcePriority": [
+    "base-rules",
+    "fqa",
+    "rule-answers",
+    "turn-keywords",
+    "three-x"
+  ],
+  "documents": [
+    {
+      "id": "base-rules",
+      "file": "Fate_Domination 基础规则【墨水修订1版】.docx",
+      "entryCount": 170,
+      "entries": [
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:1",
+          "text": "Fate/Domination规则介绍"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:3",
+          "text": "1.游戏背景（3-7 名玩家)"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:5",
+          "text": "在 Fate/Domination 中，您将作为一名魔术师，在一场争夺圣杯（据说能够实现任何一个愿望的魔法装置）的秘密战争中战斗，您将召唤人类历史上的传奇英雄作为您的从者。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:6",
+          "text": "作为他们的主人，他们将服从您的意志和理性，为您对圣杯的争夺献出自己的忠诚乃至生命。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:7",
+          "text": "圣杯选定了七位御主。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:8",
+          "text": "七名从者响应了他们的召唤。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:9",
+          "text": "一场盛大恢弘的战斗揭开序幕。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:10",
+          "text": "2.如何进行游戏"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:12",
+          "text": "圣杯战争将持续11天【回合】。 每个夜晚【战力结算】，玩家将有机会与其他玩家战斗，以便在冬木市各地占领不同的目标，从而获得超越对手的优势。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:13",
+          "text": "他们在战斗中的取胜以及其他增加他们在圣杯战争中获胜机会的行动，如进行侦察，将具体地转化为战果点数 (VP) 用以衡量。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:14",
+          "text": "在第 8 天【回合结束时】，除 VP 前 4 名的玩家外，所有玩家都被淘汰出局。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:15",
+          "text": "在第 9 天【回合结束时】，除 VP 前 3 名的玩家外，所有玩家都被淘汰出局。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:16",
+          "text": "在第 10 天【回合结束时】，除了 VP 的前 2 名的玩家外，所有玩家都被淘汰出局。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:17",
+          "text": "如果要vp之间有平局（如分数相同，或分数较低者因效果避免了淘汰），则这些玩家都不会被淘汰。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:18",
+          "text": "在第 11 天【回合结束时】，拥有最多 VP 的玩家将获得圣杯并赢得游戏。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:19",
+          "text": "如果游戏结束时有多名玩家并列第一，则本轮在深山町战斗获胜的玩家获胜。 如果比赛仍以平局结束，则圣杯会因承载的愿望过多而溢出，毁灭整座城市，所有人都会输掉游戏。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:20",
+          "text": "3.游戏元素组成"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:21",
+          "text": "一．棋盘"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:22",
+          "text": "冬木市分为4个地点以供玩家前往：分别为1.【魔术工房】、战场2.【深山町】，战场3.【新都】以及4.【侦察】。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:23",
+          "text": "【魔术工房】的玩家限制为4人。【侦察】的玩家限制为1人。战场上的空间是无限的。 如果您部署于【深山町】或【新都】并且地形位置（D）未被占用，需将您的立牌放置于其上方。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:24",
+          "text": "A1 –局势牌库区（天气）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:25",
+          "text": "将剩余的局势牌暗置于此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:26",
+          "text": "A2 –局势牌激活区"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:27",
+          "text": "将激活的局势牌放置于此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:28",
+          "text": "B1 –事件牌库区（战场）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:29",
+          "text": "将剩余的事件牌暗置于此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:30",
+          "text": "B2 –深山町事件牌区"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:31",
+          "text": "将激活于深山町的事件牌放置于此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:32",
+          "text": "B3 –新都事件牌区"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:33",
+          "text": "将激活于新都的事件牌放置于此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:34",
+          "text": "C –工房区"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:35",
+          "text": "玩家若选择部署于此，由数字的由高到低依次部署并立即获得等于其数字的魔力值。工房区具有人数上限（一般为4），当所有工房位被占满时，便不能于前哨阶段部署于此处，也不能移动至此处。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:36",
+          "text": "D –地利区"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:37",
+          "text": "玩家若选择部署于此，由数字的由高到低依次部署并获得等于其数字的基础地利值，地利值将在计算战力时增加您的合计威力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:38",
+          "text": "E - 移动成本"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:39",
+          "text": "玩家若离开或经过此地点，所需花费的魔力值。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:40",
+          "text": "F –竞争战果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:41",
+          "text": "当您在此处与至少一名对手进行争夺战并获得胜利时，获得等于其数字的战果点数。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:42",
+          "text": "G –侦查"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:43",
+          "text": "战力结算时位于侦查的所有玩家，一同获得2点战果点数。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:44",
+          "text": "H –战果表"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:45",
+          "text": "于此放置标记以记录玩家们的战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:46",
+          "text": "御主"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:47",
+          "text": "御主立牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:48",
+          "text": "用以表明您在棋盘中所处的位置。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:49",
+          "text": "战果标记"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:52",
+          "text": "用以在战果表 (H)上记录您的战果点数."
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:53",
+          "text": "能力卡牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:55",
+          "text": "这些卡牌列出了您御主的特殊能力，这些效果是常驻的，因此，您的被动能力于游戏开始时激活或保持激活，并可以在其上标注的具体时点来使用您的相应能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:56",
+          "text": "未写明加入技能区的升华技若解锁，也属于此类别；部分从者也会赋予您的御主此类能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:57",
+          "text": "魔力标记"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:58",
+          "text": "每个玩家通常拥有从 0 到 12 的魔力值。若您玩的是实体版，建议您使用 12 面骰子（朝下以表示两位数）或两个 6 面骰子。 如果您在 桌游模拟器 上游玩，每个玩家面前都会有一个魔力表。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:59",
+          "text": "令咒"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:61",
+          "text": "通常每名玩家在游戏开始时拥有 3 枚令咒；每枚令咒在每局游戏中都可以使用一次，以在深山町或新都进行移动、或是获得 4 点法力值、或是获得2 点合计威力以及获胜后获得 2 点战果点数。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:62",
+          "text": "令咒并非卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:63",
+          "text": "令咒一词通常指代您以令咒命令从者或使用魔术（您使用令咒来命令从者或使用魔术，令咒是卡牌，魔术是它们用于的能力）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:64",
+          "text": "升华技"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:65",
+          "text": "升华技是特殊的御主卡牌，它们目前只会因扩展从者“莎士比亚”的技能所激活，莎士比亚以这种方式增强他的御主来代替他进行战斗。升华技通常不能通过其他任何方式获得。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:66",
+          "text": "加入技能区的升华技，或因升华技加入你的技能区的技能视为你的御主技能。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:67",
+          "text": "从者"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:68",
+          "text": "概览卡牌【从者塔罗】"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:71",
+          "text": "这张卡牌列出了您从者的职阶、名称以及牌库。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:72",
+          "text": "攻击卡牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:73",
+          "text": "攻击牌有魔力消耗 (J) 和基本威力 (K)。 大多数攻击具有一个或多个属性 (I)。 这些属性本身没有任何效果，但会因其他卡牌受到影响。 游戏中有5种不同的属性：力量、敏捷、魔术、特殊和宝具。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:74",
+          "text": "通常而言，您的从者总共有 15 张卡牌：12张组成牌库的攻击卡牌，以及8点魔力以上才可以随时使用的3张技能卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:75",
+          "text": "[力量攻击]、[敏捷攻击]、[魔术攻击]、[远隔操作]、[疾行]和[幸运]卡被称为基础攻击卡牌（卡牌右下角会标有Basic Attack）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:76",
+          "text": "使用能力：攻击/技能卡牌上的能力只能在您激活（通常而言，是打出或加入攻击）此卡牌时才可以使用，所以如果您想使用任何印在攻击/技能卡牌上的能力，比如“行动阶段：”或“战斗阶段：”能力，您首先需要将该卡作为常规出牌的一部分使用。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:77",
+          "text": "唯一的例外是带有“被动/行动阶段：”，“被动/战斗阶段”等关键字的能力。这种被动能力不需激活卡牌也可使用，但仍需遵循其他限制。（例如：您无法在局势牌禁止宝具使用时，使用宝具卡牌上的被动/行动阶段能力。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:78",
+          "text": "其他卡牌前缀："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:79",
+          "text": "“被动：” -带有“被动：”的能力满足条件即强制生效，也是您必须遵循的规则（即使印刷此文本的卡牌未被展示），但只在其满足条件需要结算效果时进行展示，选择发动的效果则不会受到其他任何能力的影响，且不视为使用能力或卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:80",
+          "text": "“打出时：”-可以理解为在您打出此牌时必须遵循的“被动：”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:81",
+          "text": "没有任何前缀的能力文本 -可以理解为此牌在您激活后必须遵循的“被动：”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:82",
+          "text": "“残留：”- 此牌在激活后持续计算战力且不会因为回合结束返回您的相应区域，直至满足某种条件，“残留：”后的文本等同于此牌在您激活后必须遵循的“被动：”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:83",
+          "text": "“唯一：” - 如果玩家控制多个具有相同规则文本的能力且这些能力具有“唯一：”，则在激活或使用此能力时，视为只存在一张相应卡牌进行结算。 对于可激活的能力（如“唯一/行动阶段：”），这意味着您无法多次激活此能力（即使拥有可以进行多次激活的特殊能力）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:85",
+          "text": "对于所有上述能力，若描述中带有“你可以”字样，则可选择是否发动字样后续的效果，即使不发动，依旧视为遵循了规则。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:86",
+          "text": "局势"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:87",
+          "text": "在每一回合开始时，将抽取一张局势牌并展示，所有玩家立即获得印刷在该局势牌上的魔力值 (L)。 有些局势牌具有即时效果（如抽取事件牌放置于某处），有些局势牌对相应地点持续产生影响（如上面的“魔术攻击于所有战场获得+2威力。”）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:88",
+          "text": "事件"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:90",
+          "text": "在每一回合开始时，为深山町抽取一张明置的事件牌、并为新都抽取一张暗置的事件牌。 若玩家于事件牌被放置的位置赢得战斗，事件牌会为玩家提供 战果 (M)。 大多数目标还会对其战场上的战斗产生某种影响或规则更改。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:91",
+          "text": "决定回合顺位"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:92",
+          "text": "以合适的方式来决定第一名开始进行回合的玩家。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:93",
+          "text": "准备牌堆"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:94",
+          "text": "将所有事件牌洗混为事件牌堆暗置于B1。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:95",
+          "text": "将10张非高潮局势牌洗混为牌堆，然后抽取2张将其暗置移除游戏，这些局势牌称为“被烧毁的局势牌”。然后将剩余8张局势牌暗置于A1，并根据回合按以下的顺序展示局势牌："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:97",
+          "text": "选择御主"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:98",
+          "text": "令每名玩家选择自己想要使用的御主，若所有人同意，也可以以其他方式抽取御主。（中文版推荐方式：3X，每名玩家抽取3名随机御主，选择一名之后，根据其强度水平抽取对应数量的从者进行选择）这之后，所有玩家将御主盒内的所有物品取出并摆放至相应的位置，你们应当按回合顺位来向其他玩家介绍与解释你的御主及其能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:99",
+          "text": "并于此阶段触发并处理你御主的“游戏开始时”类能力。若此能力提及从者，则延后至抽取从者后处理。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:101",
+          "text": "游戏开始时，将御主的初始魔力值设置为4。（部分御主不同）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:102",
+          "text": "NPCs"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:103",
+          "text": "若进行游戏的玩家人数少于3人，添加一名NPC。选择一名未被使用的御主，将其每回合交替部署于【深山町】和【新都】的+3地利位置。无论如何，NPC会以固定为11的合计威力参与战斗且不具有任何能力或从者，他们会像普通玩家一样获得战果以及被淘汰。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:104",
+          "text": "召唤从者"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:105",
+          "text": "构筑一个可用的从者牌池并抽取。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:106",
+          "text": "（1.英文原版作者推荐从每个常规职阶[Saber, Lancer, Archer, Rider, Caster, Assassin 和 Berserker]随机选择一名从者，再从所有的非常规职阶中[Ruler, Avenger, Shielder, Foreigner 和 Moon Cancer]随机选择一名从者，以共计8名从者组成牌池，然后令每名玩家从其中随机抽取一名。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:107",
+          "text": "2.中文版推荐使用3X规则，从整个从者牌库中进行抽取或在所有人确定御主后，为每个玩家随机分发含有某职阶所有从者的职阶盒，再从该职阶盒根据御主强度抽取相应数量从者进行选择。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:108",
+          "text": "抽取后，所有玩家将从者从盒中取出，将概览牌（金色背面）暗置于一旁，将三张技能牌（红色背面）暗置于自己的技能区，然后将12张攻击牌（深蓝色背面）洗混后暗置作为自己的牌堆。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:109",
+          "text": "因为圣杯战争是秘密进行的，从者的情报隐藏也是重要的一环，所以尽量不要在游戏前和开始时向其他玩家透露任何有关于你从者的信息。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:110",
+          "text": "选取完成后，处理你御主“游戏开始时”且提及从者的效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:111",
+          "text": "回合流程"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:112",
+          "text": "每个回合由4个阶段组成：准备阶段、前哨阶段、行动阶段、战斗阶段，"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:113",
+          "text": "以及用于结算的“回合开始时”和“回合结束时”。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:114",
+          "text": "每个阶段开始时，所有玩家按回合顺位，从顺位第一的玩家开始以顺时针依次进行自己的阶段，通常而言，他们可以在自己的阶段使用御主和从者的阶段能力，进行相应阶段的行动（如部署，常规移动）等。当所有玩家进行完了一个阶段后，进入下一阶段并重复上述过程。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:115",
+          "text": "每个回合结束时，将回合顺位顺时针后移一位（也可以在游戏开始时投票改为逆时针）再开始新的回合直至第11回合游戏结束。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:117",
+          "text": "能力的使用限制以及持续时间:"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:118",
+          "text": "除非特殊说明，否则印刷于同一张牌上的，带有阶段的能力每回合仅可被使用一次且其效果持续至本回合结束。此规则不会被无效。\n如果你拥有同一能力的多张相同的牌且其不具有“唯一”（例如，3张令咒），你可以为你拥有的每张卡使用一次能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:119",
+          "text": "准备阶段"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:120",
+          "text": "按回合顺位，所有玩家从他们的牌堆中抽牌，将他们的手牌补充到上限（通常为3，此时已经有3张以上则不抽。）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:121",
+          "text": "抽取一张局势牌，将其放在激活中的局势牌区域激活（A2）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:122",
+          "text": "所有玩家获得印在局势牌上的魔力值。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:123",
+          "text": "从事件牌组中抽出2张事件牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:124",
+          "text": "将其中一张面朝上放置在深山町（B2）中，另外一张面朝下放置在新都（B3）中。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:125",
+          "text": "牌堆用尽：如果需从耗尽的牌堆中抽取牌，将其相应的弃牌堆洗混以形成新的牌堆。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:126",
+          "text": "接下来按照回合顺序，每个玩家可以激活有着【准备阶段】关键字的能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:127",
+          "text": "*印刷于攻击或技能牌上的“准备阶段”能力若不具有“被动/”，则需要将此牌激活才可使用。（激活：明置于你的攻击区）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:128",
+          "text": "前哨阶段（白天）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:129",
+          "text": "按回合顺位，玩家们将自己的御主立牌部署于魔术工房或战场（不可部署于侦查），若部署于魔术工房，该玩家立即获得部署处所标注的魔力值（C）。若部署于战场且位于地利位置（D），战力结算时，若该玩家仍位于此位置，获得等同于该地利位置标注的地利数的合计威力（地利可以被其他能力影响而增加或减少）。只有当玩家部署于这些位置时，才能获得相应效果（若玩家之后移动至这一位置则不行，摆放时会将其摆放于该位置一旁）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:130",
+          "text": "玩家可以于自己的前哨阶段的任意时候（包括部署前和部署后）使用自己的“前哨阶段”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:131",
+          "text": "*印刷于攻击或技能牌上的“前哨阶段”能力若不具有“被动/”，则需要将此牌激活才可使用。（激活：明置于你的攻击区）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:133",
+          "text": "行动阶段（夜晚）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:134",
+          "text": "展示位于新都的暗置事件牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:135",
+          "text": "然后，按回合顺位，玩家们必须以如下顺序进行行动："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:136",
+          "text": "1.进行常规移动。2.进行常规出牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:137",
+          "text": "玩家可以于自己的行动阶段的任意时刻使用自己的“行动阶段”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:138",
+          "text": "*印刷于攻击或技能牌上的“行动阶段”能力若不具有“被动/”，则需要将此牌激活才可使用。（激活：明置于你的攻击区）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:139",
+          "text": "常规移动"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:140",
+          "text": "你可以通过花费合计的移动成本（E），从一处地点移动至另一处。（移动是连续的）如你想从魔术工房移动至侦查，你需要花费2+2+1=5点魔力。你仅可沿着箭头向一个方向移动：魔术工房→神山町→新都→侦查。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:141",
+          "text": "若你与至少一名对手（包括玩家和NPC）一起位于一处会发生战斗的战场，则你处于“交战状态”，此时你无法进行常规移动。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:142",
+          "text": "你常规移动时可以经过不可进入的地点或已发生交战的战场。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:143",
+          "text": "常规出牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:144",
+          "text": "打出正好两张攻击牌作为你本回合的常规出牌。它们可以是你手中的普通攻击牌（背面为深蓝色），或是你技能区的技能攻击（背面为红色且具有魔力消耗和威力），通常你必须在出牌前拥有8点及以上的魔力才可以从技能区打出攻击。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:145",
+          "text": "然后，同时花费这些牌的魔力消耗，你无法同时打出超过你魔力上限消耗的攻击（因为你同一时间至多花费等量的魔力，但分段花费则不影响，举例，你打出了12魔力的攻击，然后其中一张攻击具有：“行动阶段：花费4点魔力，打出一张牌。”则你可以在打出后再使用某些方式[如令咒]回复魔力再使用此效果。或你免费打出了其中一张，也同样不影响。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:146",
+          "text": "被打出的攻击牌成为激活状态直至此回合结束，你可以使用他们印刷的“行动阶段”能力（被动/行动阶段不激活也可使用）。\n若你位于战场，则你的常规出牌中必须要有一张明置牌。若因其他影响无法打出或明置打出任何手牌，玩家需展示所有手牌，然后暗置进行常规出牌，也无法做到的话可以不出牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:147",
+          "text": "若你不位于战场，你可以打出两张暗置牌，暗置牌处于未被激活的状态，它们不消耗魔力，不计算威力，也不属于攻击且于回合结束时进入你的弃牌堆。通常而言，技能牌不能被暗置打出。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:148",
+          "text": "暗置牌依旧具有其印刷的所有信息，若其含有“被动：”能力，你需在满足条件时展示此暗置牌并执行其上的行动。其他情况下，仅有提及暗置牌的能力可以识别暗置牌的信息并对它们进行处理。你可以随时查看你的暗置牌。\n然后，计算你当前的合计威力并向其他玩家展示。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:150",
+          "text": "使用卡牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:151",
+          "text": "部分能力需结算或阻止你使用某些卡牌；使用卡牌的定义为打出或使用其阶段能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:152",
+          "text": "被动，打出时，残留之后的效果均不属于使用该卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:155",
+          "text": "关闭攻击"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:156",
+          "text": "某些能力可以关闭激活中的攻击，此时，令技能牌明置返回持有者技能区，令非技能的明置牌转为暗置牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:158",
+          "text": "赋予状态"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:159",
+          "text": "一些卡牌能力可以赋予你或一部分特定卡牌某种全新的文字效果或属性，其中："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:160",
+          "text": "【败北】持续至回合结束；"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:161",
+          "text": "被动，被动/之后的能力持续至回合结束；"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:162",
+          "text": "明确记有持续时间的能力（如持续至游戏结束，持续至关闭）则依照其记载处理；"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:163",
+          "text": "其余能力均仅持续至赋予此效果的卡牌离开激活状态，或回合结束，取劣。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:165",
+          "text": "真名解放"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:166",
+          "text": "有些卡牌会拥有【真名解放】词条，当你使用这些卡牌后，立即展示你的从者概览卡与所有技能牌并处于【真名解放】状态。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:167",
+          "text": "部分卡牌效果可以【隐藏】你的真名，将你的从者概览卡重新反面以表示你失去了【真名解放】状态，重新【真名隐藏】。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:169",
+          "text": "战斗阶段（夜晚）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:170",
+          "text": "首先，玩家可以在战斗阶段的任何时刻使用自己的“战斗阶段”能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:171",
+          "text": "*印刷于攻击或技能牌上的“战斗阶段”能力若不具有“被动/”，则需要将此牌激活才可使用。（激活：明置于你的攻击区）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:172",
+          "text": "然后，在所有玩家的战斗阶段结束后开始进行战力结算。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:173",
+          "text": "战力结算时，令所有位于【侦查】的玩家一同获得2点战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:174",
+          "text": "战力结算"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:175",
+          "text": "以如下的方式计算每名玩家的合计威力："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:176",
+          "text": "一名玩家激活的攻击威力+地利数+受到自己能力的影响以及局势牌和天气牌的影响。然后，分别结算每个战场中，合计威力最高的胜利者（们）。令胜利者（们） 获得该战场事件牌的战果点数之和的战果，如果该战场有一名及以上的对手与其进行了战斗，胜利者还会获得竞争战果（F），这些战果在计算时视为同时获得。若两名及以上的玩家于同一处战场一同成为了胜利者，将上述战果平分并向上取整后，令每名胜利者获得。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:177",
+          "text": "【败北】（部分译作【直接败北】）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:178",
+          "text": "一些能力会赋予玩家【败北】的状态，【败北】状态持续至回合结束。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:179",
+          "text": "被【败北】者既无法赢得战斗，也无法通过作为一场战斗中最高合计威力者来阻止其他玩家赢得战斗（战力结算时决定胜利者时，忽略被【败北】的玩家）。同时，被【败北】者无法打出牌（但不影响使用能力，也不会影响已被打出或激活的牌）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:180",
+          "text": "你可以同时具有多层【败北】状态，部分能力对此有处理。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:181",
+          "text": "回合结束时"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:182",
+          "text": "以如下顺序结算："
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:183",
+          "text": "1.结算“战斗阶段后/战斗结束后/战斗后等类似描述”效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:184",
+          "text": "2.将每名御主移除版图。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:185",
+          "text": "3.弃置所有激活的局势牌和事件牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:186",
+          "text": "4.令所有具有“残留”的且已激活的牌在攻击区保持激活直至其因效果被关闭。将所有被使用的,且不具有“残留”的<每局游戏限一次>的牌移除游戏，令被使用的<每局游戏限两次>的牌更改为<每局游戏限一次>，以此类推。5.关闭所有玩家的其余攻击牌——令技能牌明置返回其技能区并令非技能牌暗置进入其弃牌堆，你可以于任何时候查看自己的弃牌堆。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:187",
+          "text": "6.结算“回合结束时”效果。"
+        },
+        {
+          "kind": "table-row",
+          "locator": "table:1/row:1",
+          "text": "回合1-8 | 随机的，未被烧毁的非高潮局势牌 | 非高潮"
+        },
+        {
+          "kind": "table-row",
+          "locator": "table:1/row:2",
+          "text": "回合 9 | 命运之夜 | 高潮 4+"
+        },
+        {
+          "kind": "table-row",
+          "locator": "table:1/row:3",
+          "text": "回合10 | 身处地狱之门 | 高潮 3+"
+        },
+        {
+          "kind": "table-row",
+          "locator": "table:1/row:4",
+          "text": "回合 11 | 天之杯 | 高潮 2+"
+        }
+      ]
+    },
+    {
+      "id": "fqa",
+      "file": "Fate_Domination FQA.docx",
+      "entryCount": 215,
+      "entries": [
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:1",
+          "text": "通常问题"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:4",
+          "text": "1.行动阶段效果和战斗阶段效果是可选的吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:5",
+          "text": "——是的，在你自己行动阶段的任意时刻，你可以选择激活任意【行动阶段】效果，通常每个效果只能激活一次。在战斗阶段，从先手玩家开始轮流选择激活自己的【战斗阶段】效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:9",
+          "text": "2.行动阶段打出两张牌是同时的吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:10",
+          "text": "——是的，所以两张牌的合计魔力不能大于12。樱的无限魔力则不受这个限制。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:12",
+          "text": "3.如果平局，或无人交战，是否算获得了胜利？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:13",
+          "text": "——是的。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:15",
+          "text": "事件卡讨伐威胁，只有你一人时也会获得令咒奖励。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:17",
+          "text": "一人时使用远隔操作也会获得额外的战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:19",
+          "text": "如果一个效果在你获胜时需要战场上的其他对手来达到其效果，它会相应的写出。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:21",
+          "text": "无人交战的话，无法获得深山町的+2战果和新都的+3战果奖励，那要求有别的对手与你处于同一地点时才可以获得。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:23",
+          "text": "（值得注意的是，无人交战并不是一定会胜利，比如伊什塔尔的宝具可能会使你败北。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:29",
+          "text": "4.如何计算力量的各种更改？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:30",
+          "text": "——力量的计算顺序如果出现不一致，可以按以下顺序进行计算。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:32",
+          "text": "1，改变激活的攻击的基本威力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:34",
+          "text": "1.1局势卡能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:36",
+          "text": "1.2事件卡能力（12变5）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:38",
+          "text": "1.3自己的玩家能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:40",
+          "text": "1.4按顺位结算其他玩家的玩家能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:44",
+          "text": "2，改变激活的攻击的威力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:46",
+          "text": "2.1局势卡能力（局势色卡加成）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:48",
+          "text": "2.2事件卡能力（事件色卡加成）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:50",
+          "text": "2.3自己的玩家能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:52",
+          "text": "2.4按顺位结算其他玩家的玩家能力（对魔力）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:56",
+          "text": "3，地利"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:58",
+          "text": "3.1所有增加效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:60",
+          "text": "3.2所有乘法效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:62",
+          "text": "3.3所有设置效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:66",
+          "text": "4，将玩家激活的攻击的威力与地利相加"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:70",
+          "text": "5，增加或者减少合计威力的效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:72",
+          "text": "5.1局势卡能力（同色+3）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:74",
+          "text": "5.2事件卡能力（铤而走险）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:76",
+          "text": "5.3自己的玩家能力（咖喱棒）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:78",
+          "text": "5.4按顺位结算其他玩家的玩家能力（大江山鬼闹）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:82",
+          "text": "6，将玩家合计威力设置为特定值的效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:84",
+          "text": "6.1局势卡能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:86",
+          "text": "6.2事件卡能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:88",
+          "text": "6.3自己的玩家能力（病弱）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:90",
+          "text": "6.4按顺位结算其他玩家的玩家能力（勇者的不凋花）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:96",
+          "text": "被动技能"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:99",
+          "text": "——被动技能总是有效且必须发动的，即使它们没有展示出来，只要带有被动关键字的牌处于玩家的手中和技能区域（不包括攻击牌组中和弃牌），那么他们的技能就是有效的。（即，就算你没有打出过迦尔纳的【日轮啊，化作甲胄】，你依然不能使用他的其他宝具）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:101",
+          "text": "如果一个被动技能即将生效（例如，兰斯洛特御主的令咒用完了），那么相应的被动技能就会展示出来，并且发动效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:103",
+          "text": "激活的卡"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:104",
+          "text": "——除去被动技能，你只能使用当前处于【激活】状态的牌的能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:106",
+          "text": "你的御主、御主能力卡，以及你的令咒，总是处于激活状态。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:108",
+          "text": "攻击和技能卡只有当你本回合面朝上打出他们时，才被认为是激活的。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:110",
+          "text": "（例外的，【残留】卡打出后就一直处于激活状态，而且每回合都会把他加入你的攻击。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:112",
+          "text": "以及具有【被动[XX阶段]：】关键字的技能可以被使用，即使它们在手牌或者技能区这些被认为是未激活的地方。这些被动技能不需要8点魔力就能被激活。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:118",
+          "text": "【协同】事件牌与【未来的憧憬】局势牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:119",
+          "text": "——你的所有攻击都至少需要一个属性相同才能获得力量（属性包括力量，敏捷，魔术，特殊，宝具）。正面朝下和非激活的卡不算在内，但是你至少需要两张攻击卡才可以判定是否匹配了属性。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:123",
+          "text": "加入攻击、创造并激活、打出"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:124",
+          "text": "——创造并激活某项攻击，并不需要支付额外的魔力（例，伊斯坎达尔的王之军势，阿塔兰忒的诉状箭书）。将某张卡直接加入攻击，也不需要支付魔力，除非其写明要支付（例，喀戎的天蝎一射）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:126",
+          "text": "但是，打出卡牌的效果是需要支付魔力的（例，骑乘的职阶卡）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:130",
+          "text": "侦察是立刻获得战果吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:131",
+          "text": "——不，在两处战场的战斗获得战果的同时，在侦察的玩家获得两点战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:135",
+          "text": "宝具禁止"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:136",
+          "text": "宝具禁止的局势牌，会阻止你打出宝具属性的卡牌，以及使用其【阶段】能力。但是，已经激活的【残留】宝具卡的威力依然会加入你的攻击。你无法激活【残留】宝具的阶段能力，或者是有宝具属性的卡的【被动XX阶段】能力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:138",
+          "text": "（例，织田信长的第六天魔王，你可以因为【残留】效果支付维持所需的魔力，也可以在战斗时得到相应的威力，但是你无法激活你的【战斗阶段】能力去使打出了幸运的人败北。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:140",
+          "text": "残留"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:141",
+          "text": "打出之后会留在场上，并且每回合都可以激活其残留效果，或者使用其【XX阶段】的效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:143",
+          "text": "并且，每回合都视为将这张卡额外地加入你的攻击。只有第一次打出消耗魔力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:145",
+          "text": "（打出的当回合就可以使用残留效果。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:147",
+          "text": "和威力相关的效果"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:148",
+          "text": "如果一个效果激活之后会影响到你的威力，那么其必须持续整个战斗阶段才能有效。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:150",
+          "text": "如果在那之前，那张卡被关闭，那么你改变的威力会变回原状。（比如，远隔操作增加的地利，或者对魔力减少至0的魔术攻击的威力，会在远隔操作和对魔力被关闭的时候变回原样。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:152",
+          "text": "使用卡牌与打出卡牌"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:153",
+          "text": "使用卡牌，包括“打出卡牌”以及“激活卡牌上面的阶段效果”。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:155",
+          "text": "因此，宝具禁止实际上是禁止使用宝具属性卡牌，而特殊禁止只是单纯的禁止你打出特殊属性卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:157",
+          "text": "顺带一提，当你激活某个“被动XX阶段”效果时，如果这张牌写有真名解放，那么你将会真名解放。只是纯被动效果的话，不会真名解放，被动效果并不视为使用卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:163",
+          "text": "御主能力"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:164",
+          "text": "御主效果带来的技能也需要8点魔力值的前提才能打出吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:165",
+          "text": "——是的，需要。比如巴泽特和菲奥蕾的技能卡，都需要8点魔力的先决条件。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:167",
+          "text": "升华技是什么？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:168",
+          "text": "——使用从者莎士比亚的能力，你可以解锁你的升华技。否则不要将他们加入游戏。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:170",
+          "text": "异闻带御主的扩张在无人交战时依然可以进行吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:173",
+          "text": "——是的，无人交战算作胜利。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:175",
+          "text": "巴泽特"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:178",
+          "text": "逆光剑是否像干将莫邪一样可以追加打出？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:179",
+          "text": "——不，逆光剑占用你打出的两张卡之一。即使【第二天】能免费打出此卡，也不代表能追加打出。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:181",
+          "text": "第三天属于一张额外的技能卡？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:182",
+          "text": "——对，而且其自身的能力令其少于8点魔力也能打出。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:186",
+          "text": "菲奥蕾"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:187",
+          "text": "在第十一回合的天之杯局势牌中，我只能获得4点魔力吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:188",
+          "text": "——是的，抽取局势牌之后才是准备阶段，此时你可以翻转【回路不良】。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:190",
+          "text": "战场不能提供地利时，【控制论】依然可以提供地利吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:191",
+          "text": "——是的。包括事件牌的效果让战场不提供地利时，你依然会获得地利。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:195",
+          "text": "间桐雁夜"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:196",
+          "text": "如果【崩坏】选择了技能卡，而我没有8点魔力怎么办？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:197",
+          "text": "——就像正常使用卡牌一样，你可以先使用令咒补充魔力再使用。如果你没有令咒导致魔力不足，亦或者你不想使用，那么你可以将这张技能卡面朝下打出。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:199",
+          "text": "如果【崩坏】选择了一张尼禄的【皇帝特权】之类并不能打出的卡怎么办？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:200",
+          "text": "——这回合你可以无视【崩坏】的效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:204",
+          "text": "狮子劫界离"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:205",
+          "text": "狮子劫界离的能力到底是如何发挥作用的？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:206",
+          "text": "如果你在魔术工房结束回合，你可以选择一张面朝下的牌，并将它们放在一个单独的区域。在接下来的回合中，你选择一张面朝下的牌并使用它的效果，这张牌将从游戏中完全移除。每轮可以使用一个效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:208",
+          "text": "如果我移动到一个受【拾荒战】或【鲜血魔女】等将地利无效化效果影响的战场，我是否仍然可以从“心脏手榴弹”中获得地利优势？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:209",
+          "text": "是的，手榴弹的地利优势不是战场提供的，不会受到影响。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:213",
+          "text": "肯尼斯.阿其波卢德.艾尔梅洛伊"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:214",
+          "text": "月灵髓液的卡是怎么使用的？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:215",
+          "text": "一旦你使用肯尼斯的能力抽到一张月灵髓液，这张卡就变为一张常规的攻击卡，计入你的手牌数量，正常进入你英灵卡组的弃牌堆。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:217",
+          "text": "如果我使用【滔滔不绝】的被动战斗阶段效果，在战斗阶段追加打出了月灵髓液，我还能使用其行动阶段的效果，比如【斩】来+2威力吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:218",
+          "text": "一般而言，不能。除非你使用了诸如牛若丸的【喜见城·冰柱削】，李书文的【圈境】之类，写明可以使用行动阶段效果的技能的时候，才可以在战斗阶段去使用行动阶段效果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:222",
+          "text": "杀生院祈荒"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:223",
+          "text": "我如何分配秘密花园？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:224",
+          "text": "顺时针从你往后开始分配，分配时跳过你自己。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:226",
+          "text": "如果人数不足6人，有些对手会拿到2张。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:228",
+          "text": "这种情况下，你战败的时候只能翻开其中一张，获得2点战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:232",
+          "text": "对手可以查看自己分配到的秘密花园吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:233",
+          "text": "在高潮阶段之前，不能。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:237",
+          "text": "在高潮阶段中，未揭秘的秘密花园会生效吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:238",
+          "text": "是的。无论是否被翻开，高潮阶段的秘密花园都会生效。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:240",
+          "text": "在祈荒使用秘密花园的相关技能之前，秘密花园不会公开。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:242",
+          "text": "在这种情况下，你可以让玩家阅读他们自己的秘密花园，也可以让第三方被淘汰的玩家处理。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:246",
+          "text": "如果艾德蒙.唐泰斯的【岩窟王】在我的技能区内，我可以使用【天堂之孔】删除它吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:247",
+          "text": "可以。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:249",
+          "text": "【此世全部之欲】是否需要打出卡牌本身，才能激活卡牌上的能力？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:250",
+          "text": "是的，这并不是一个被动效果，需要你打出才能激活。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:254",
+          "text": "【钻石领域】的“忽略【败北】的所有其他影响”的能力是否也会影响其他玩家受【败北】影响的能力？（也就是说，如果【钻石领域】杀生院【败北】，王哈桑的8魔力10威力的卡是否获得+1威力？）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:257",
+          "text": "它不会影响其他玩家的卡牌效果。例子中的王哈桑将获得+1威力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:261",
+          "text": "卫宫切嗣"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:262",
+          "text": "卫宫切嗣通过【固有时制御】暗置打出的牌算做我这回合打出的攻击组合？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:263",
+          "text": "不。和你打出的两张牌没有关系。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:267",
+          "text": "如何计算起源弹的魔力消耗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:270",
+          "text": "它计算那名玩家在战场上“打出”的牌的所有魔力消耗，即使是在切嗣回合后打出的卡牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:272",
+          "text": "这意味着“加入攻击”的效果，如喀戎的【天蝎一射】；创造的攻击，如阿塔兰忒的【诉状箭书】所创造的基础卡复制都不会计算入内。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:274",
+          "text": "还有需要支付魔力值的效果，如莫德雷德的宝具，也不会计算，会计算的只有莫德雷德宝具本身的2点魔力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:276",
+          "text": "（讽刺的是，这意味着肯尼斯的月灵髓液可以很好的对付起源弹。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:280",
+          "text": "芥雏子"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:281",
+          "text": "始皇帝算是玩家吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:284",
+          "text": "始皇帝是一个对手，但不是玩家。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:286",
+          "text": "根据最新版的规则书，打败对手而不需要打败玩家就可以获得战胜战果奖励了。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:288",
+          "text": "所以你打败了秦始皇也可以获得深山町的+2和新都的+3战果奖励。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:290",
+          "text": "在淘汰玩家的时候，始皇帝算是对手之一吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:291",
+          "text": "对。这意味着他可以在有足够分数的时候淘汰其他人。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:293",
+          "text": "此外，一旦始皇帝被淘汰，他将不再出现在有【中国】事件卡的战场上。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:297",
+          "text": "如果我在打出【咒血尸解叹歌】的回合中败北了，我会得到【咒血尸解叹歌】吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:300",
+          "text": "不。【每局游戏一次】是在回合结束时才从游戏中移除，因此你错过了获得其的时机。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:304",
+          "text": "卡多克"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:307",
+          "text": "我可以选择通过【扩张】添加哪张事件牌吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:310",
+          "text": "对。目前只有芥雏子的扩张是随机的。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:314",
+          "text": "皇家法令是否影响所有地点？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:317",
+          "text": "是的。这意味着，当这张事件牌在场时，除非你是卡多克，否则你无法从侦察获得2点战果。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:321",
+          "text": "奥菲莉亚"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:324",
+          "text": "我可以选择通过【扩张】添加哪张事件牌吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:325",
+          "text": "对。目前只有芥雏子的扩张是随机的。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:329",
+          "text": "奥菲莉亚的魔眼会减少卡牌的威力吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:330",
+          "text": "奥菲莉亚的魔眼能阻止卡片威力超出其印刷值，因此一般而言并不会减少卡牌本身的威力。卡牌上写着多少，那就是多少。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:334",
+          "text": "魔法红宝石"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:335",
+          "text": "红宝石的能力是如何使用的？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:337",
+          "text": "像往常一样，如果可能的话，在准备阶段开始之前，你首先补到3张牌。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:339",
+          "text": "然后你决定抽一组牌，甚至可以一次抽全部12张牌（虽然你可以抽全部12张牌，但在某些情况下你可能不想抽）。而且，即使你手上的牌少于3张，你的弃牌也不会被洗回到你的抽牌堆中，直到你激活她相应的准备阶段能力。这也意味着如果你在抽牌堆中没有牌，任何强迫你抽牌的效果都不会有任何作用，因为没有足够的牌可以抽。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:343",
+          "text": "美游魔法蓝宝石"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:344",
+          "text": "我从哪里可以寻找蓝宝石的从者？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:345",
+          "text": "如果你在桌游模拟器里面玩，那么您可以从“所有从者”包中进行拿取。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:347",
+          "text": "否则，请随意设计自己的方法。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:349",
+          "text": "如果我拥有的技能中有一项是指从者的另一项技能，那么我需要这两项技能吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:351",
+          "text": "对（也就是说，如果其中一个从者是奥斯曼迪亚斯，你需要将【光辉大复合神殿】作为你的技能之一，供【丹德拉大电球】使用）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:353",
+          "text": "【降临者】是否仍将【降临者】更改为【魔法蓝宝石】？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:355",
+          "text": "是的，【降临者】是每名从者独有的，只适用于使用它的“降临者”。所以【降临者】的来源需要被视为是蓝宝石。如果出于任何原因，游戏中有两个“降临者”，那么需要跟踪哪一张【降临者】是谁的。（并不推荐这么做，因为这很麻烦。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:357",
+          "text": "如果一张技能卡恢复了另一张技能卡怎么办？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:359",
+          "text": "（如：【万符必应破戒】和【神言魔术式.灰之花嫁】）。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:361",
+          "text": "你不能恢复你并没有的技能，所以你必须选择这两个技能，然后使用【万符必应破戒】，通过【神言魔术式.灰之花嫁】来恢复它。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:363",
+          "text": "王哈桑决定使用他的【死告天使】，并【杀死】了我。现在怎么办？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:365",
+          "text": "你失去魔法蓝宝石，从普通池中抽取一个新的从者，像普通从者一样继续游戏。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:369",
+          "text": "拉尼"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:370",
+          "text": "如果在高潮回合中没有玩家被淘汰（比如在4人游戏的第8轮结束时），拉尼是否会获得她预言未被淘汰的人的战果？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:371",
+          "text": "会。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:375",
+          "text": "藤丸立香（女）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:377",
+          "text": "我可以在任何主战从者的时候，使用我某个特定从者的独特攻击卡（比如狂战士职阶卡）吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:378",
+          "text": "可以。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:380",
+          "text": "当我更换我的主战从者时，残留的技能牌会发生什么？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:382",
+          "text": "那些牌将暂时从游戏中移除，直到你再次更换回主战从者。那些牌以先前的状态重新进入游戏，残留牌依然处于已经打出的状态。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:384",
+          "text": "王哈桑决定使用他的【死告天使】，并【杀死】我的一名从者。现在怎么办？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:386",
+          "text": "把那个从者移除。逐个搜索你的牌组、弃牌和手牌，以移除该仆人对应的12张攻击牌（如果你的手牌或牌组中有同样的卡牌，请选择你希望从哪个位置移除牌）。获得一个新的从者，将他们的攻击添加并洗牌到你的攻击牌组中，将所有其他牌留在你的弃牌或手牌中。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:390",
+          "text": "间桐樱"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:391",
+          "text": "如果我处于并列第一，可以激活【被污染的圣杯】吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:392",
+          "text": "不可以。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:396",
+          "text": "如果我拥有无限魔力，我可以一次性打出消耗魔力超过12点的攻击组合吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:397",
+          "text": "可以。如字面意思，你的魔力是无限的。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:401",
+          "text": "雨生龙之介"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:402",
+          "text": "如果我部署到一个有【拾荒战】的战场，我还能使用【死之艺术】吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:404",
+          "text": "可以。【死之艺术】只关心你是否拥有地利，而不是该地利是否给你增加了威力。因此，你仍然可以从【死之艺术】中受益，只要你在那里的地利格子上部署了。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:406",
+          "text": "（另外，即使+3地利被【拾荒战】视为了提供0威力，依然会在你使用【死之艺术】时被视为+3。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:408",
+          "text": "如果我赢得了一个无人交战的战场，我会重新获得【死之艺术】吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:410",
+          "text": "对。无人交战获得的胜利也会被视为赢得战斗。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:416",
+          "text": "间桐慎二"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:417",
+          "text": "“进入”深山町是指什么？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:418",
+          "text": "无论是部署在深山町，还是使用魔力移动到深山町，甚至是使用一个令咒过去，都算作进入深山町。每轮只能从该效果中获得1点魔力值。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:424",
+          "text": "卫宫士郎"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:425",
+          "text": "如果淘汰时我和另一名玩家同分处于最末尾，会发生什么？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:426",
+          "text": "你们都不会被淘汰，【阿瓦隆】也不会被使用。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:432",
+          "text": "言峰四郎"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:433",
+          "text": "如果言峰四郎被淘汰，【派系】还会存在吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:434",
+          "text": "会。如果百貌哈桑被淘汰，像是【跟踪】这样的状态token由于失去了定义其能力的牌，将会失去效果，但是言峰四郎御主牌只是让他获得红派领袖。派系依然会存在。（当然，这只会影响高潮的第一个回合，还可以去两方战场抢夺胜利。）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:438",
+          "text": "葛木宗一郎"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:439",
+          "text": "如果我从魔术工坊前往其他地方，是否也能降低移动的魔力消耗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:440",
+          "text": "是的，你移动到新都需要2点魔力，移动到侦查需要4点魔力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:444",
+          "text": "远坂时臣"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:445",
+          "text": "时臣每回合只能送出一件物品吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:446",
+          "text": "是的，就像其他行动阶段能力一样，一回合只能使用一次。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:448",
+          "text": "【魔力储备】可以用于需要魔力的战斗阶段使用的技能吗？（比如喀戍的宝具）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:449",
+          "text": "是的，在行动阶段以后【魔力储备】也依然有效。玩家使用的“下一个”技能消耗将会降低，那可能会是一张战斗阶段打出的【天蝎一射】。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:451",
+          "text": "其他玩家淘汰后回到我手里的道具，我还能获得战果吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:452",
+          "text": "可以。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:454",
+          "text": "你被淘汰后，其他持有道具的玩家依然可以使用吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:455",
+          "text": "可以。如果百貌哈桑被淘汰，像是【跟踪】这样的状态token由于失去了定义其能力的牌，将会失去效果，但是远坂时臣御主牌只是让他分发道具卡牌。道具依然会存在。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:459",
+          "text": "间桐脏砚"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:460",
+          "text": "如果在回合开始时我的魔力值为16，局势牌提供2魔力值，我部署到魔术工房，我会失去2点战果吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:461",
+          "text": "对。你需要实际获得魔力。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:465",
+          "text": "我能成为美狄亚【万符必应破戒】的目标吗？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:466",
+          "text": "可以。你被视为一个没有令咒的御主。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:470",
+          "text": "兰斯洛特的被动导致的真名解放有什么影响？"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:471",
+          "text": "当你花费4点魔力来支付一个令咒之后，展示兰斯洛特的真名。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:475",
+          "text": "如果我没有竞争对手，但不知何故输掉了这场比赛，那该怎么办？（比如伊什塔尔的【山脉震撼明星之薪】）"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:476",
+          "text": "你仍然会获得魔力，因为你仍然是处于“无人交战”状态。"
+        },
+        {
+          "kind": "paragraph",
+          "locator": "paragraph:478",
+          "text": "（当然需要注意的是，你败北了。）"
+        }
+      ]
+    },
+    {
+      "id": "rule-answers",
+      "file": "Fate-桌游问题解答和规则说明.xlsx",
+      "entryCount": 257,
+      "entries": [
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:1",
+          "text": "序号 | 问题类型 | 涉及御主名\n(中文翻译/公认简称) | 涉及英灵名\n(中文翻译/公认简称) | 涉及卡牌名\n(中文翻译/公认简称) | 问题描述 | 结论 | 解释 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:2",
+          "text": "1 | 卡牌复制,卡牌描述歧义 | 无 | 狂兰；黑呆 | 无穷的武练；誓约胜利之剑 | 《无穷的武练》抄《誓约胜利之剑》时，能不能获得练剑的威力 | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:3",
+          "text": "2 | 卡牌描述歧义 | 无 | 无 | 气息遮断 | 战场里两人，《气息遮断》第二，可以败北第一名吗？ | 不能 | 气息遮断必须同时满足“战场人数≥3人”和“战力第二”才可以对战力第一的所有“对手”进行败北判定 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:4",
+          "text": "3 | 游戏玩法：乱斗 | 无 | BB | 月之圣杯；月杯 | 只缝BB1个技能上月杯，能触发战斗吗？ | 能 | 外国作者最近说了，美游直接获得抽到三个从者的从者职介，真名；基于这个，乱斗局改成美游缝1个技能也可以获得从者职介，真名 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:5",
+          "text": "4 | 游戏规则 | 无 | 吕布 | 军神五兵 | 《军神五兵》可以多个回合反复翻倍残留牌基本威力吗 | 不能 | 规则上，没特别写效果持续到之后回合的卡牌效果，只维持到回合结束 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:6",
+          "text": "5 | 游戏规则,NPC相关 | 芥雏子；老芥 | 无 | 无 | 秦始皇、npc能被败北嘛 | 能 | 1：npc是对手不是玩家\n2：npc会被败北 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:7",
+          "text": "6 | 游戏规则,NPC相关 | 无 | R姐 | 石化之魔眼；魔眼 | 《魔眼》能败北npc吗 | 能 | 2022.10.26：14:10群里讨论结果 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:8",
+          "text": "7 | 游戏规则,NPC相关 | 无 | 斯卡哈 | 死亡满溢的魔境之门；魔境之门 | 《魔境之门》能败北npc、黑杯小樱等不失去魔力的对手吗 | 能 | 2022.10.26：14:10群里讨论结果 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:9",
+          "text": "8 | 游戏规则,NPC相关 | 无 | 酒吞 | 百花缭乱·我爱你 | 《百花缭乱·我爱你》能败北npc吗 | 不能 | 2022.10.26：14:10群里讨论结果：《百花缭乱·我爱你》不能执行删牌库效果，所以之后的败北效果不进行判定 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:10",
+          "text": "9 | 游戏规则,NPC相关 | 无 | 脚后跟 | 勇者的不凋花 | 《勇者的不凋花》能让npc威力归零吗 | 能 | 2022.10.26：14:10群里讨论结果 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:11",
+          "text": "10 | 卡牌描述歧义 | 无 | 玉藻前；c狐；狐狸 | 水天日光天照八野外镇石 | 《水天日光天照八野外镇石》的3/6能把1/1解封的牌重新封印吗？ | 能 | 可以封印，但是需要重新选择耗魔或置入弃牌堆（等于做无用功） |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:12",
+          "text": "11 | 游戏规则 | 无 | BB | C.C.C | 《C.C.C》把月杯和一处战场合并后月杯的地利和交战分还能存在吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:13",
+          "text": "12 | 游戏规则,时点问题 | 无 | 梵高 | 星月夜 | 星月夜被/前效果获得残留效果能否残留到下个回合 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:14",
+          "text": "13 | 卡牌描述歧义 | 无 | 项羽 | 霸王之武 | 《霸王之武》每名其他玩家一回合能提供多枚标记吗? | 能 | 目标玩家的行动阶段结束后计算：使用的令咒数量，使用的技能牌数量，是否到了项羽所在战场 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:15",
+          "text": "14 | 卡牌描述歧义 | 无 | 牛若丸 | 喜见城·冰柱削 | 玩家在打出《喜见城·冰柱削》的回合能发动同一个行动阶段能力三次吗 | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:16",
+          "text": "15 | 卡牌描述歧义 | 无 | 牛若丸 | 喜见城·冰柱削 | 玩家在打出《喜见城·冰柱削》的回合能在战阶使用令咒能力吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:17",
+          "text": "16 | 卡牌描述歧义 | 无 | 牛若丸 | 坛之浦·八艘跳 | 牛若丸与部署于魔术工坊的玩家交换位置重新部署后能回复部署于魔术工坊的魔力吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:18",
+          "text": "17 | 卡牌描述歧义,游戏规则 | 无 | 酒吞童子 | 神便鬼毒酒 | 《神便鬼毒酒》能影响盖放的基础牌吗 | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:19",
+          "text": "18 | 时点问题 | 无 | 青春版C妈 | 万瑕必应修补 | “下次获得胜利”能包括这一轮吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:20",
+          "text": "19 | 游戏规则,时点问题 | 无 | 迪昂 | 百合花开豪华绚烂 | 《百合花开豪华绚烂》成功“格挡”了前置位玩家的“对魔力”后对魔力的效果还能影响到这里的蓝卡威力吗 | 不能 | 格挡掉的牌等于没打出，技能牌立刻原路返回技能区，非技能牌立刻翻面，但是不当场进弃牌堆 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:21",
+          "text": "20 | 游戏规则,时点问题 | 无 | 斯巴达克斯 | 不屈的意志 | 发动了《不屈的意志》后，到其他玩家的回合，其他玩家使用了令咒，斯巴达克斯的威力能发生变化吗 | 能 | 战力变化都是光环效果 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:22",
+          "text": "21 | 游戏规则 | 无 | 迪昂 | 百合花开豪华绚烂 | 《百合花开豪华绚烂》格挡掉的技能被动还能触发吗 | 能 | 格挡掉的牌等于没打出，技能牌立刻原路返回技能区，非技能牌立刻翻面，但是不当场进弃牌堆 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:23",
+          "text": "22 | 效果优先级不明 | 伊莉雅 | 无 | 圣杯容器 | 《圣杯容器》能让未打出的手牌和技能都魔力消耗-1吗 | 能 | 《圣杯容器》为光环效果，总是最先计算，使手牌，技能，场上已经激活的攻击魔力消耗变化为-1后的数值 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:24",
+          "text": "23 | 效果优先级不明 | 伊莉雅 | 萨里列；萨老师 | 圣杯容器；忘却补正 | 《圣杯容器》能让《忘却补正》花费2倍魔力打出的远隔魔力消耗为0吗 | 能 | 《圣杯容器》为光环效果，总是最先计算，使手牌，技能，场上已经激活的攻击魔力消耗变化为-1后的数值 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:25",
+          "text": "24 | 时点问题,卡牌描述歧义 | 岸波白野；扎比子；士郎；残疾人 | 坂本龙马；龙马 | 维新之刃；维新之龙 | 假如御主是扎比子，龙马打出红红绿，龙马能使用《维新之刃》被动，打出1张绿吗？ | 能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:26",
+          "text": "25 | 时点问题,卡牌描述歧义 | 岸波白野；扎比子；士郎；残疾人 | 坂本龙马；龙马 | 维新之刃；维新之龙 | 假如御主是扎比子，龙马打出红红红，龙马能使用《维新之刃》被动，打出1张绿吗？ | 不能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:27",
+          "text": "26 | 时点问题,卡牌描述歧义 | 岸波白野；扎比子；士郎；残疾人 | 坂本龙马；龙马 | 维新之刃；维新之龙 | 假如御主是扎比子，龙马打出红红绿，龙马使用《维新之刃》被动，打出1张绿，那么能继续使用《维新之龙》被动，打出1张红吗？ | 不能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:28",
+          "text": "27 | 时点问题,卡牌描述歧义 | 无 | 坂本龙马；龙马 | 维新之刃；维新之龙；裁决者 | 龙马的行动阶段之前，裁决者令咒使他从手里打出1张红，到了龙马回合，他可以打出红+绿触发《维新之刃》被动吗？ | 不能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:29",
+          "text": "28 | 时点问题,卡牌描述歧义 | 无 | 坂本龙马；龙马 | 维新之刃；维新之龙；裁决者 | 龙马的行动阶段之前，裁决者令咒使他从手里打出1张红，到了龙马回合，他可以打出红红触发《维新之刃》被动吗？ | 能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:30",
+          "text": "29 | 时点问题,卡牌描述歧义 | 无 | 坂本龙马；龙马 | 维新之刃；维新之龙；裁决者 | 龙马的行动阶段之后，裁决者令咒使他从手里打出1张红，此时龙马场上是红+绿，那么他可以触发《维新之刃》被动打一张牌吗？ | 不能 | 龙马打牌是1个时点，发被动是另一个时点，必须在1个时点中打出正好2张红/2张绿才可以触发被动 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:31",
+          "text": "30 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 景清不灭 | 平景清的正面攻击被关闭，能不能计算战力，能不能用《景清不灭》残留？还能视为激活的攻击吗？ | 不能 | 平景清的正面攻击，被关闭当场翻面，不计算战力，不残留，不再视为激活的攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:32",
+          "text": "31 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 景清不灭 | 平景清的背面攻击被关闭，还能继续用《景清不灭》残留吗？还能计算战力吗？还能视为激活的攻击吗？ | 不能 | 平景清的背面攻击，被关闭，当场失去残留，不计算战力，不再视为激活的攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:33",
+          "text": "32 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 景清不灭 | 黑贞宝具能败北有很多背面攻击的平景清吗 | 不能 | 《景清不灭》让平景清把背面攻击视为：激活的、无色的、印刷基础威力为0的、残留攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:34",
+          "text": "33 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 景清不灭；复仇者 | 《复仇者》能不能给《景清不灭》被动影响下的背面卡加攻击力？ | 能 | 《景清不灭》让平景清把背面攻击视为：激活的、无色的、印刷基础威力为0的、残留攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:35",
+          "text": "34 | 游戏规则,卡牌描述歧义,游戏玩法：乱斗 | 无 | 平景清；查理曼 | 景清不灭；王勇剑；展示王勇，遍历寻世的十二辉剑 | 《展示王勇，遍历寻世的十二辉剑》能不能给《景清不灭》被动影响下的背面卡染色？ | 能 | 《景清不灭》让平景清把背面攻击视为：激活的、无色的、印刷基础威力为0的、残留攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:36",
+          "text": "35 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 景清不灭 | 《景清不灭》被动影响下的背面卡能不能获得基础威力？ | 能 | 《景清不灭》让平景清把背面攻击视为：激活的、无色的、印刷基础威力为0的、残留攻击 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:37",
+          "text": "35 | 游戏规则,卡牌描述歧义 | 无 | 平景清 | 诸行无常·盛者必衰 | 《诸行无常·盛者必衰》的战阶效果激活疾行能不发动效果吗。 | 不能 | 《诸行无常·盛者必衰》激活的攻击必须发动行阶效果（仍需满足前提条件） |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:38",
+          "text": "36 | 卡牌描述歧义 | 杀生院 |  | 秘密花园 | 杀生院的花园被杀生院打开了高潮还能用吗。 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:39",
+          "text": "37 | 卡牌描述歧义 | 杀生院 |  | 秘密花园 | 被淘汰的玩家还能用花园吗 | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:40",
+          "text": "38 | 卡牌描述歧义 | 杀生院 |  |  |  | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:41",
+          "text": "39 | 卡牌描述歧义 | 杀生院 |  | 胎藏界 | 胎藏界行动阶段打过一拳，战斗阶段能自己选打不打吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:42",
+          "text": "40 | 卡牌描述歧义 | 杀生院 |  | 胎藏界 | 杀生院打出了胎葬界，她后置位的玩家行动阶段开始时，杀生院能发动胎葬界的效果吗 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:43",
+          "text": "41 | 卡牌描述歧义,游戏规则 | 无 | 弗兰肯斯坦；肯娘 | 少女贞洁；5/0 | 肯娘《少女贞洁》在使用时，其效果能不能理解为：计算同一战场上，所有当回合打出的牌（印刷魔力+使场上牌魔力增减效果）之和？ | 能 | 肯娘《少女贞洁》在使用时，其效果理解为：计算同一战场上，所有当回合打出的牌（印刷魔力+使场上牌魔力增减效果）之和 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:44",
+          "text": "42 | 卡牌描述歧义 | 无 | 奥兹曼迪亚斯；拉二 | 光辉大复合神殿 | 《光辉大复合神殿》在场时，能使“场上”已激活的宝具/特殊牌魔力增加吗？ | 能 | 中文翻译有问题，实际上能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:45",
+          "text": "43 | 卡牌描述歧义 | 无 | 酒吞童子；酒吞 | 放荡之宴 | 《放荡之宴》能使“场上”从“手牌”打出的牌魔力增加吗？ | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:46",
+          "text": "44 | 游戏玩法：乱斗,卡牌描述歧义 | 无 | 平景清；比利小子；恩奇都 | 变容、坏音霹雳（被动）、景清不灭 | 当场上通过《景清不灭》残留非绿卡背面攻击后，打出《变容》撕绿卡，能通过《坏音霹雳》将所有背面攻击残留全部激活吗？ | 不能 | ①《变容》翻译问题，《变容》只影响激活的攻击牌。②《坏音霹雳》只能激活绿色基础攻击，《景清不灭》将暗置牌设置为威力0的攻击不是基础攻击。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:47",
+          "text": "45 | 游戏玩法：乱斗,效果优先级不明,时点问题 | 无 | 马修；总司 | 病弱、守护 | 当马修把《守护》借出去后，马修战阶亮《病弱》，马修的战力能不能不归零？ |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:48",
+          "text": "46 | 游戏玩法：乱斗,效果优先级不明,时点问题 | 无 | 马修；总司 | 病弱、守护 | 当马修把《守护》借出去后，马修战阶亮《病弱》，《守护》的持有者战力能不能不归零？ |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:49",
+          "text": "47 | 游戏玩法：乱斗,效果优先级不明,时点问题 | 无 | 马修；总司 | 病弱、守护 | 当马修把《守护》借出去后，《守护》的持有者战阶亮《病弱》，《守护》的持有战力能不能不归零？ |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:50",
+          "text": "48 | 游戏玩法：乱斗,效果优先级不明,时点问题 | 无 | 马修；总司 | 病弱、守护 | 当马修把《守护》借出去后，《守护》的持有者战阶亮《病弱》，马修的战力能不能不归零？ |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:51",
+          "text": "49 | 时点问题 | 无 | 总司 | 病弱 | 如果行动阶段&战斗阶段通过某种方法弃置或移除《病弱》，能否通过这种方法避免战力归零 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:52",
+          "text": "50 | 效果优先级不明,时点问题 | 无 | 马修；阿克琉斯 | 勇者的不凋花、守护 | 当马修把《守护》借出去，《勇者的不凋花》向《守护》的持有者发动成功后，《守护》的持有者战力能不能不归零 |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:53",
+          "text": "51 | 效果优先级不明,时点问题 | 无 | 马修；阿克琉斯 | 勇者的不凋花、守护 | 当马修把《守护》借出去，《勇者的不凋花》向《守护》的持有者发动成功后，马修的战力能不能不归零 |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:54",
+          "text": "52 | 效果优先级不明,时点问题 | 无 | 马修；阿克琉斯 | 勇者的不凋花、守护 | 当马修把《守护》借出去，《勇者的不凋花》向马修发动成功后，马修的战力能不能不归零 |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:55",
+          "text": "53 | 效果优先级不明,时点问题 | 无 | 马修；阿克琉斯 | 勇者的不凋花、守护 | 当马修把《守护》借出去，《勇者的不凋花》向马修发动成功后，《守护》的持有者战力能不能不归零 |  | 如果是都处于同一时点的多个能力，就按照回合顺位结算。\n如果是同一个回合顺位，由要结算战力的那个玩家自己选择结算顺序 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:56",
+          "text": "54 | 卡牌描述歧义 | 无 | 特斯拉 | 雷电之手 | 当与你位于同一地点的其他玩家打牌时花费2蓝，发动行动阶段效果再花费2魔时，《雷电之手》能否对同一个对手多次触发？ | 能 | 对同一个对手可以多次回蓝 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:57",
+          "text": "55 | 卡牌描述歧义 | 奥菲莉娅 | 玉藻前 | 迁延之魔眼、荼枳尼天法 | 《迁延之魔眼》的行动阶段效果能否影响《荼枳尼天法》的被动 | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:58",
+          "text": "56 | 卡牌描述歧义 | 无 | 卫宫 | 无限剑制 | 《无限剑制》的中文描述是可以打出0~4张手牌，那么在打出4张手牌的情况下，能否同时打出技能牌 | 不能 | 翻译错误，是“常规攻击可以打出0-4张牌” |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:59",
+          "text": "57 | 游戏玩法：乱斗,效果优先级不明 | 言峰绮礼 | 旧剑、莎士比亚 | 风王结界 | 言峰绮礼的升华技需要真名解放然后败北人，但旧剑《风王结界》的被动描述是不能被真名解放，那么这种情况下言峰绮礼的升华技能否发动效果 | 不能 | 群主表示在这种情况下等于少一个技能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:60",
+          "text": "58 | 卡牌描述歧义 | 无 | 赫费斯提翁 | 魔天之车轮 | 对手本回合已经使用过令咒《魔天之车轮》还能关闭其一半激活的攻击吗 | 不能 | 已削弱，《魔天之车轮》现在对手只需要本回合使用过令咒就无需关闭攻击，不再需要额外支付一枚令咒。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:61",
+          "text": "59 | 卡牌描述歧义 | 无 | 美狄亚lily | 万疵必应修补 | 《万疵必应修补》对满令咒的人使用下次胜利时能共同胜利吗？ | 能 | 效果目标能否得到令咒只影响《万疵必应修补》能否+10威力，不影响共同胜利效果。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:62",
+          "text": "60 | 卡牌描述歧义 | 无 | 美狄亚lily | 万疵必应修补 | 《万疵必应修补》对自己使用下次胜利时能获得双倍战果吗？ | 能 | 可以获得当前战场事件牌和竞争分的战果，令咒和远隔等带来的额外战果只能获得一次。遏制第三方威胁的令咒可以获得两枚。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:63",
+          "text": "61 |  | 无 | 梵高 | 星月夜 | 《星月夜》获得带有“残留”的文字效果，回合结束时能残留吗？ | 能 | 直至回合结束获得残留的效果都可以残留至下回合，参考原版帝王花 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:64",
+          "text": "62 | DIY | 无 | 海伦娜 | 伟大灵魂 | 《伟大灵魂》抽两张牌并将其打出，能暗置打出吗？ | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:65",
+          "text": "63 | DIY | 无 | 莫里亚蒂 | 莱辛巴赫 | 使用蛛丝的尽头后，使用《莱辛巴赫》的行动阶段能力后，还能在战斗阶段进行常规打牌吗？ | 能 | 《莱辛巴赫》的效果只要本回合还没有进行过常规打牌就可以发动，发动后依然可以在行动阶段和战斗阶段常规打牌。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:66",
+          "text": "64 | 卡牌描述歧义 | 无 | 阿比盖尔；外星人 | 领域外生命 | 《领域外生命》因效果弃置的情况能回到创造他的降临者的弃牌堆吗？ | 不能 | 如果没有特殊说明（如阿比盖尔的技能效果等）的话不能。 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:67",
+          "text": "65 | 时点问题,卡牌复制 | 无 | 梵高；仇海 |  | 梵高临摹复制宝具后，仇海能再触发复制宝具的效果吗？ | 不能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:68",
+          "text": "66 | 游戏玩法：乱斗 | 无 | 梵高 | 黄房子 | 《黄房子》能记录“领域外生命”来带的合计威力吗？ | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:69",
+          "text": "67 | 卡牌描述歧义,DIY | 无 | 吉尔伽美什 | 王之财宝 | 《王之财宝》选择特殊攻击的回合结束能不被关闭吗？ | 不能 | 当前版本描述有问题将在下次更新修改 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:70",
+          "text": "68 | 卡牌描述歧义,DIY | 界考列斯 | 无 | 绞首刑之雷 | 《绞首刑之雷》能算做技能牌吗？ | 能 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:71",
+          "text": "69 | 游戏玩法：乱斗 |  |  | 野性法则 | 非技能牌在常规打牌后可以打出 | 能 | 当前版本描述有问题将在下次更新修改 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:72",
+          "text": "70 | 时点问题 | 老虎 |  | 伟大灵魂 | 《伟大灵魂》后可以插入老虎标记进行魔力同调吗？ | 不能 | 行动阶段能力不能插入被动结算 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:73",
+          "text": "71 | 卡牌描述歧义 |  | 土方 | 战场之鬼 | 《战场之鬼》在战场打出但没有真名解放，可以触发“否则”后面的效果吗 | 不能 | 当前版本描述有问题将在下次更新修改 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:74",
+          "text": "72 | 卡牌描述歧义 |  | 土方 | 战场之鬼、诚之旗 | 《战场之鬼》和《诚之旗》一起打出可以触发打出时真名解放的效果吗？ | 不能 | 有杰克的解体圣母的先例 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:75",
+          "text": "73 | 卡牌描述歧义 |  | 旧剑 | 《风王结界》《誓约胜利之剑》 | 《风王结界》的无法被真名解放，自己能主动开宝具吗？ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:76",
+          "text": "74 | 卡牌描述歧义 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文QA/row:77",
+          "text": "75 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | "
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:1",
+          "text": "圣杯战争桌游详细规则"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:2",
+          "text": "翻译：欧文桑97\nb站专栏链接：https://www.bilibili.com/read/cv13738037"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:3",
+          "text": "此说明书不是最新的，可能有少许错误，以QA为准"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:4",
+          "text": "Fate/Domination（3-7名玩家）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:7",
+          "text": "在Fate/Domination中，你将扮演一名魔术师，在一场隐秘进行的，争夺圣杯的战争中战斗——据说圣杯也被称为万能的许愿机，能够满足获胜者的一切愿望。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:9",
+          "text": "为了战斗，你将召唤一位来自人类历史上的传奇英雄作为你的从者。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:11",
+          "text": "圣杯已经选出了七位御主。七名从者响应了你们的召唤。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:13",
+          "text": "圣杯战争在此展开。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:15",
+          "text": "如何赢得游戏"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:16",
+          "text": "圣杯战争将持续11天（11个回合）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:18",
+          "text": "每天晚上，玩家们都有机会与其他玩家竞争，以便在冬木市各处实现不同的目标，从而获得超越对手的优势。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:20",
+          "text": "他们在战斗中的胜利，以及其他增加其在圣杯战争中获胜机会的行动（如执行侦察），都将获取一定的胜利点数（战果）来衡量其优势。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:22",
+          "text": "在第8轮结束时，除战果排名前4的玩家外，所有人都被淘汰出局。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:24",
+          "text": "在第9轮结束时，除战果中排名前三的玩家外，所有人都被淘汰出局。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:26",
+          "text": "在第10轮结束时，除战果中排名前2的玩家外，所有人都被淘汰出局。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:28",
+          "text": "如果被淘汰的玩家之间有同分的，他们都不会被淘汰。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:30",
+          "text": "在第11轮结束时，战果最多的玩家获得圣杯并赢得比赛。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:32",
+          "text": "如果在游戏结束时多个玩家并列第一，那么在这一轮深山町战战斗中获胜的玩家将赢得游戏。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:34",
+          "text": "如果比赛仍以平局结束，圣杯将无法被获取，圣杯中的“泥”将溢出，所有人都将输掉比赛。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:40",
+          "text": "游戏版图的各个地点"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:43",
+          "text": "冬木市分为4个位置，玩家可以前往：魔术工房、两个战场（深山町）和（新都）以及（侦察）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:45",
+          "text": "（魔术工房）的玩家限制为4。（侦察）的玩家限制为1。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:47",
+          "text": "战场上的位置是无限的。如果您进入（深山町）或新都并且地利优势的格子被占用，请将您的御主放置在这些格子旁边。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:51",
+          "text": "游戏版图"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:56",
+          "text": "A1-局势牌组"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:58",
+          "text": "将剩余的局势牌放在此处。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:60",
+          "text": "A2-激活中的局势卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:62",
+          "text": "将本回合的局势卡放在此处。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:64",
+          "text": "B1-事件牌组"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:66",
+          "text": "将剩余的事件卡放在此处。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:68",
+          "text": "B2-深山町的事件卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:70",
+          "text": "将本回合深山町的事件卡放在这里。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:72",
+          "text": "B3-新都的事件卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:74",
+          "text": "将本回合新都的事件卡放在这里。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:76",
+          "text": "C-魔术工房"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:78",
+          "text": "在这些格子上部署，就可以获得格子上写着的魔力值。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:80",
+          "text": "D-地利优势格子"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:82",
+          "text": "部署在这些格子上，本回合战斗中的威力就会增加上面写着的数值。有+3和+1的两个地利格子，第三个部署的人将没有地利。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:84",
+          "text": "E-移动费用"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:86",
+          "text": "离开或通过这个位置，需要支付这个数量的魔力值。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:88",
+          "text": "从魔术工房到深山町需要1点，从深山町移动到新都需要2点。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:90",
+          "text": "直接从魔术工房移动到新都则需要1+2=3点。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:92",
+          "text": "F-奖励战果"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:94",
+          "text": "你在此战场赢得战斗时，如果至少有一名其他对手与你交战，你可以获得这里的额外战果作为奖励。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:96",
+          "text": "G-侦察"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:98",
+          "text": "在回合结束时，（侦察）处的玩家获得2点战果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:100",
+          "text": "H-战果分数表"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:102",
+          "text": "在这里表示各玩家的战果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:108",
+          "text": "御主的相关配件"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:109",
+          "text": "1.御主立牌"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:110",
+          "text": "代表你玩家的棋子、标志物。你将立牌部署在各个地点，表示你当前所在的地方。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:114",
+          "text": "御主立牌"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:117",
+          "text": "2.战果标记"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:118",
+          "text": "放在战果分数表上，方便大家查看你的战果."
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:122",
+          "text": "战果标记"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:133",
+          "text": "3.御主能力"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:134",
+          "text": "这些卡片列出了你的御主的特殊能力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:135",
+          "text": "他们始终处于激活状态，因此你可以在卡上指定的阶段使用他们的能力，没有其他的限制。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:140",
+          "text": "远坂凛"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:141",
+          "text": "宝石魔术"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:146",
+          "text": "4.令咒"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:147",
+          "text": "每一位御主都在开始游戏时拥有3枚令咒，也就是3张令咒卡牌。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:149",
+          "text": "每张令咒卡牌都只能使用一次，用来获得三个效果中的一个：获得4魔力，或者本回合增加2威力且战胜时额外获得2战果，亦或者移动到任何地点。使用后的令咒会移除游戏。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:153",
+          "text": "令咒"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:156",
+          "text": "5.魔力值"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:157",
+          "text": "你可以用两个骰子记录魔力。如果在桌游模拟器上，你会拥有一条魔力条用于记录。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:159",
+          "text": "要记住，任何时候打出技能卡牌，都需要你的魔力至少在8或以上，而且魔力的上限为12点，你获得的多余12点的魔力都会消失。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:161",
+          "text": "6.升华技"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:162",
+          "text": "升华技只能在你召唤了从者【莎士比亚】的时候才可以解锁，他会给你的御主增加一个强大的能力用于战斗（不过，他自己倒是很弱）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:168",
+          "text": "宝石剑"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:169",
+          "text": "升华技"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:176",
+          "text": "从者的相关配件"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:177",
+          "text": "1.从者总览"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:178",
+          "text": "这张牌描述了你从者的12张卡构成的牌组。游戏开始时此卡背面朝下，代表真名尚未公开。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:182",
+          "text": "阿尔托莉雅"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:185",
+          "text": "2.攻击卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:186",
+          "text": "攻击卡在其右侧，有着其法力消耗（绿色的魔法阵与数字）和基础力量（白色的剑与数字）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:188",
+          "text": "大多数攻击具有一个或多个属性，在其左上角。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:190",
+          "text": "这些属性本身没有任何效果，但会被其他卡影响。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:192",
+          "text": "游戏中有5种不同的属性：力量、敏捷、魔法、特殊和宝具。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:194",
+          "text": "你总共有15张攻击卡：3张技能卡，存在于技能区，他们随时可用，只要你有8点魔力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:196",
+          "text": "一副12张的普通攻击卡。每回合玩家将打出2张攻击卡，无论是从他们的手牌还是从他们的技能区中选择，总共可以自由组合2张打出，在冬木市的两处战场中进行战斗。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:198",
+          "text": "有些卡牌被称为基本攻击卡，在其文字右下方印有（basic）。他们分别是：[物理攻击]，[精确打击]，[魔法冲击]，[远隔操作]，[急行]和[幸运]。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:200",
+          "text": "重要提示：只有当攻击/技能卡当前处于激活状态时，才能激活攻击/技能卡上的技能。因此，如果你想使用打印在攻击/技能卡上的任何类型的技能，如“行动阶段”或“战斗阶段”能力，你必须首先将该卡作为攻击组合的一部分打出来，之后才能去使用他们的能力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:202",
+          "text": "唯一的例外是带有【被动】关键字的能力。攻击卡和技能卡上的被动技能不需要将其打出，只需要翻开展示它，你就可以使用那些效果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:206",
+          "text": "普通攻击卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:207",
+          "text": "技能卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:210",
+          "text": "3.局势卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:211",
+          "text": "每回合开始时，首先会翻开一张局势卡。他们的右上角印刷有绿色的魔法阵，那个数值会让每个玩家回复相应的魔力，如图会回复2点魔力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:213",
+          "text": "而且，有些局势卡会对全场的攻击卡有着威力修正的作用，图示中会让全场的力量属性的攻击卡威力+2。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:219",
+          "text": "局势卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:230",
+          "text": "4.事件卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:231",
+          "text": "每回合开始，会在深山町正面朝上放置一张事件卡，在新都正面朝下放置一张事件卡。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:233",
+          "text": "事件卡为各自战场的获胜者提供战果，其右上角就是胜者可以得到的战果数目。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:235",
+          "text": "大多数的事件卡会对本战场中玩家们的威力进行修正，这个修正并不会影响到另一个战场。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:239",
+          "text": "事件卡"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:246",
+          "text": "游戏设置"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:247",
+          "text": "1.决定起始玩家"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:248",
+          "text": "用任意方式随机决定一名第一回合的起始玩家。起始玩家每回合结束都会更换。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:250",
+          "text": "2. 准备牌组"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:251",
+          "text": "将所有事件卡洗混（B1），组成事件牌堆。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:253",
+          "text": "将10张非高潮回合的局势卡洗混，并且移除其中任意两张。将这8张卡洗混叠放在3张高潮局势卡上，组成一个11张的局势牌堆。（A1）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:255",
+          "text": "1-8回合：随机普通局势卡，面朝下放置"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:257",
+          "text": "第9回合：停滞于命运之夜（4人高潮回合）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:259",
+          "text": "第10回合：身处地狱之门（3人高潮回合）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:261",
+          "text": "第11回合：天之杯（2人高潮回合）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:265",
+          "text": "3. 选择御主"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:266",
+          "text": "让每个玩家选择自己想扮演的御主，亦或者大家统一决定用随机选择的方式。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:268",
+          "text": "拿出你的所有卡片与配件，向其他人解释你的能力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:270",
+          "text": "将你的魔力设置在4点，这是你的初始魔力值。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:272",
+          "text": "如果玩家在4人以下，用没有加入游戏的御主的配件来加入一个npc。他在奇数回合开始时会部署在深山町的+3地利处，偶数回合开始时会部署在新都的+3地利处，并且会参与战斗，胜利也能得到战果。他的战力永远锁定为11，不会被其他效果修正，也不视为是一个玩家。战胜npc无法获得奖励战果（F）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:276",
+          "text": "4.英灵召唤"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:277",
+          "text": "用随机选择的方式抽取大家的从者。桌游模拟器的脚本默认的方式是，随机选择7个职阶的从者各一名，然后加入一名随机的额外职阶的从者，再从全英灵池里随机加入一名从者，制作一个从者池。现在玩家们从这9个从者里随机抽取从者。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:279",
+          "text": "你也可以定制你喜欢的方法，比如根据御主的强度决定能抽取从者的数量，只要大家都同意就可以。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:281",
+          "text": "每位玩家将自己的从者概览卡和三张技能卡面朝下放在桌子上，形成各自的技能区。将12张普通攻击卡洗混组成你的牌组。注意不要让别人看到你的从者的任何信息，这些都是保密的情报。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:285",
+          "text": "回合流程"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:288",
+          "text": "每回合包括4个阶段：准备阶段、前哨阶段、行动阶段和战斗阶段。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:290",
+          "text": "每个阶段，玩家都按顺时针顺序轮流进行，从该回合的起始玩家开始，激活其卡面的特定阶段能力，并采取特定阶段的行动。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:292",
+          "text": "每个阶段，每个玩家都行动过后，继续下一阶段。在一轮结束时，当前起始玩家左边的玩家成为下一轮新的起始玩家。游戏就这样进行，直到第11轮结束，游戏结束。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:296",
+          "text": "技能激活限制和持续时间：除非另有说明，否则在卡片上的技能每轮只能激活一次，且效果持续到该轮结束。如果你拥有同一技能的多张相同的卡（例如，3张令咒卡），你可以为你拥有的每张卡激活一次技能。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:300",
+          "text": "1.准备阶段"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:301",
+          "text": "所有玩家从他们的攻击牌堆中抽牌，将他们的手牌补充到3张。（已经有3张以上则不抽。）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:303",
+          "text": "抽取一张局势卡，将其放在激活中的局势卡区域（A2）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:305",
+          "text": "所有玩家获得印在局势卡上的魔力值。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:307",
+          "text": "从事件牌组中抽出2张事件卡。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:309",
+          "text": "将其中一张面朝上放置在深山町（B2）中，另外一张面朝下放置在新都（B3）中。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:311",
+          "text": "接下来按照回合顺序，每个玩家可以激活有着【准备阶段】关键字的技能。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:313",
+          "text": "牌堆用尽：如果你必须从耗尽的牌堆中抽取牌，将其相应的弃牌堆洗混以形成新的牌堆。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:317",
+          "text": "2. 前哨阶段"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:318",
+          "text": "玩家们按照回合顺序，在两个战场之一或【魔术工房】部署他们的御主立牌。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:320",
+          "text": "要注意，不能直接在【侦察】部署。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:324",
+          "text": "如果你在【魔术工房】中部署，你会立即获得在你部署的格子（C）上印有的魔力值，2点或者1点。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:326",
+          "text": "如果你部署在一个地利优势格子（D）上，只要你处于该格子上，你将在本回合战场上的战斗中，获得印在该格子上的地利优势。也就是会获得3点或者1点威力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:328",
+          "text": "除非你是直接部署在这些格子上，不然你没法获得地利优势。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:330",
+          "text": "你移动离开，就会失去这些地利，移动进入一个战场，就放在地利优势旁边的任意地点。移动进入时不能获得任何地利。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:332",
+          "text": "在将你的御主部署到版图上之前或之后，你都可以激活有着【前哨阶段】关键字的技能。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:336",
+          "text": "3. 行动阶段"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:337",
+          "text": "首先，将新都面朝下的事件卡翻面为面朝上。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:339",
+          "text": "然后，按照回合顺序，玩家都进行两步：先移动，然后攻击。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:343",
+          "text": "在你的回合中的任何时候，你都可以使用【行动阶段】关键字来激活技能。注意：只有当那张卡当前处于激活状态时，才能激活其上的技能。没有打出的攻击/技能卡，并不处于激活状态。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:347",
+          "text": "移动：你可以从一个地点移动到另一个地点，需要支付移动费用（E）数量的魔力值。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:349",
+          "text": "例如，从魔术工房到深山町需要1点，从深山町移动到新都需要2点。直接从魔术工房移动到新都则需要1+2=3点。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:351",
+          "text": "在此步骤中，你只能朝一个方向移动：从深山町到新都，从新都到侦查。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:353",
+          "text": "如果你正与其他人交战，那么你不能在此时进行移动。在两处战场有其他玩家或者npc的话，你就被视为交战中。不过，你可以移动到有其他人的战场。你可以经过其他人所在的战场，比如直接支付5魔力，从魔术工房移动到侦察。战场上的其他人并不会妨碍你。（使用急行之类的效果，可以无视交战时无法移动的限制。）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:357",
+          "text": "攻击：在本回合中，打出正好2张攻击卡，作为你的攻击组合。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:359",
+          "text": "这两张卡，可以是你手牌里的普通攻击卡，也可以是你技能区域的技能卡。要将技能区域中的牌作为攻击使用，你需要在攻击步骤开始时拥有8点或更多的魔力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:361",
+          "text": "如果你的牌有魔力消耗，现在将他们一起支付。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:363",
+          "text": "（所以，你无法打出两张总耗魔量大于12点的卡，因为魔力是在同一时间支付的。）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:365",
+          "text": "在回合结束前，所打出的攻击/技能卡将变为激活的攻击，它们的能力现在可以被激活。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:369",
+          "text": "你可以将手牌面朝下打出，面朝下打出的牌没有消耗，也无法结算任何效果，回合结束就会弃掉。如果你在战场上，你只能面朝下打两张中的一张，如果不在战场上，可以都面朝下打出。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:371",
+          "text": "当你的攻击步骤结束时，计算并且告诉大家你总共的威力是多少。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:375",
+          "text": "【真名解放】"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:377",
+          "text": "如果卡片上写有真名解放，那么打出这张卡的同时，你也要翻开你的概览卡，以及技能区的所有技能牌，给大家观看。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:379",
+          "text": "现在开始，你的真名就不是隐藏的了。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:381",
+          "text": "4. 战斗阶段"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:382",
+          "text": "首先，按照回合顺序，玩家们轮流决定是否要使用【战斗阶段】关键字来激活技能。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:386",
+          "text": "然后，战斗开始了。计算每个玩家的总威力，将他们的攻击威力加上他们的地利优势，别忘了计算所有相关的修正。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:388",
+          "text": "分别确定每场战斗的胜利者，胜利者为各自战场上总力量最高的玩家。向每位获胜的玩家奖励其所在地所有激活事件卡的战果点数。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:390",
+          "text": "如果至少有一名其他对手（新版规则修改，玩家→对手）在胜利者所处的战场上，胜利者会额外获得该战场的奖励战果（F）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:392",
+          "text": "如果两个或两个以上的玩家在一场战斗中都是威力最大的，则在他们之间平分该场战斗的战果（向上取整）。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:394",
+          "text": "最后，如果有玩家处于【侦察】，他可以获得2战果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:398",
+          "text": "回合结束"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:399",
+          "text": "回合结束时，丢弃所有激活的局势卡和事件卡。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:401",
+          "text": "玩家们各自收回自己的御主立牌。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:403",
+          "text": "关闭每位玩家激活的攻击卡，将他们打出的技能面朝上放回技能区，并将非技能攻击卡面朝下放到他们各自的弃牌堆中。你可以随时查看自己弃牌堆中的牌。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:405",
+          "text": "其他效果"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:406",
+          "text": "【败北】"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:407",
+          "text": "某些技能会造成一种称为【败北】的状态效果，持续到本回合结束。在战斗中确定胜利者时，忽略已经【败北】的对手，不管他们拥有多高的威力。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:409",
+          "text": "他们既不能获胜，也不能阻止其他玩家成为第一名而获胜。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:411",
+          "text": "此外，【败北】的玩家如果尚未打出卡牌，那么他们不能出牌。（已经打出牌的不受影响）"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:415",
+          "text": "【一局游戏限一次】"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:416",
+          "text": "如果使用了【一局游戏限一次】的卡，则其会在回合结束时从游戏中移除。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:420",
+          "text": "【残留】"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:421",
+          "text": "带有【残留】关键字的卡牌，在被卡牌效果关闭之前，将保持在场上，回合结束阶段也不会关闭，并在以后的回合中处于激活状态。这代表之后每回合，残留的卡牌都会给你提供战力，你也可以激活残留卡上的效果。残留的卡牌在之后的回合，并不会占用你每回合两张牌的出牌限额。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:423",
+          "text": "【一局游戏限一次】的残留牌也会保持激活状态，直到它们被关闭，此时那张卡从游戏中移除。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:427",
+          "text": "【被动】"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:428",
+          "text": "有着【被动：】的技能即使没有打出，也可以激活并使用。你只需要将其展示，然后就可以使用其效果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:430",
+          "text": "【被动】效果是强制发动的，只要满足条件就会强制亮出展示，并且发动效果，而【被动/XX阶段：】的效果则是可选发动的，在其指定的阶段你可以选择是否发动效果。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:432",
+          "text": "另外，因为并没有打出被动效果的卡牌，所以即使魔力不满8点也是可以使用上面的效果的。"
+        },
+        {
+          "kind": "sheet-row",
+          "locator": "sheet:中文说明书（欧文）/row:436",
+          "text": "如果还有其他问题，请查询FAQ，或者加群370616788，询问各位大佬。"
+        }
+      ]
+    },
+    {
+      "id": "turn-keywords",
+      "file": "玩家回合流程和关键词.txt",
+      "entryCount": 33,
+      "entries": [
+        {
+          "kind": "line",
+          "locator": "line:1",
+          "text": "回合流程"
+        },
+        {
+          "kind": "line",
+          "locator": "line:4",
+          "text": "每个回合开始时，每位玩家抽取手牌，抽取新的局势牌，目标牌以及恢复相应的魔力（如可能）"
+        },
+        {
+          "kind": "line",
+          "locator": "line:6",
+          "text": "准备阶段  每位玩家依次执行："
+        },
+        {
+          "kind": "line",
+          "locator": "line:7",
+          "text": "使用准备阶段的能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:9",
+          "text": "前哨阶段 每位玩家依次执行："
+        },
+        {
+          "kind": "line",
+          "locator": "line:10",
+          "text": "使用前哨阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:11",
+          "text": "1.部署"
+        },
+        {
+          "kind": "line",
+          "locator": "line:12",
+          "text": "使用前哨阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:14",
+          "text": "展示新都的目标卡牌。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:16",
+          "text": "行动阶段 每位玩家依次执行："
+        },
+        {
+          "kind": "line",
+          "locator": "line:17",
+          "text": "使用行动阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:19",
+          "text": "1：移动"
+        },
+        {
+          "kind": "line",
+          "locator": "line:20",
+          "text": "使用行动阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:22",
+          "text": "2：打出两张卡攻击"
+        },
+        {
+          "kind": "line",
+          "locator": "line:23",
+          "text": "使用行动阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:25",
+          "text": "战斗阶段 每位玩家依次执行："
+        },
+        {
+          "kind": "line",
+          "locator": "line:26",
+          "text": "使用战斗阶段能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:28",
+          "text": "最后计算总威力，结算战果。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:32",
+          "text": "关键词"
+        },
+        {
+          "kind": "line",
+          "locator": "line:35",
+          "text": "阶段：（准备，前哨，行动，战斗）"
+        },
+        {
+          "kind": "line",
+          "locator": "line:37",
+          "text": "用来确定对应卡牌的使用时机。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:39",
+          "text": "被动："
+        },
+        {
+          "kind": "line",
+          "locator": "line:41",
+          "text": "被动效果只需要你展示卡牌，无需你将卡牌打出，也可以使用，因为你并不是打出技能牌，所以亦不受8点魔力的限制。注：被动效果具有强制性，满足其使用条件后必须使用"
+        },
+        {
+          "kind": "line",
+          "locator": "line:43",
+          "text": "被动/XX阶段"
+        },
+        {
+          "kind": "line",
+          "locator": "line:45",
+          "text": "一种你可以选择在对应阶段中使用它的被动能力，与被动的效果相同但不具有使用强制性"
+        },
+        {
+          "kind": "line",
+          "locator": "line:47",
+          "text": "残留："
+        },
+        {
+          "kind": "line",
+          "locator": "line:49",
+          "text": "该种类的牌将持续存在，直到因某种效果而被关闭。它将持续为你提供战力以及其上文字描述的能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:51",
+          "text": "唯一："
+        },
+        {
+          "kind": "line",
+          "locator": "line:53",
+          "text": "拥有该字段的能力在同一时间只能选择一个发动。如：同时打出了多张（包括残留）带有“唯一/战斗阶段：XXX”的卡牌，你只能选择其中一张的“唯一/战斗阶段：XXX”去使用其描述的能力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:55",
+          "text": "真名解放"
+        },
+        {
+          "kind": "line",
+          "locator": "line:57",
+          "text": "当你使用一张包含“真名解放”的卡牌或者因某种效果而“真名解放”时，你将展示你的技能以及你的英灵卡。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:59",
+          "text": "直接败北："
+        },
+        {
+          "kind": "line",
+          "locator": "line:61",
+          "text": "被【直接败北】的玩家将无法获得本回合战斗的胜利，同时他们无法再打出卡牌。注：他们已经打出的卡牌并不会被取消"
+        }
+      ]
+    },
+    {
+      "id": "three-x",
+      "file": "3X模式规则.txt",
+      "entryCount": 25,
+      "entries": [
+        {
+          "kind": "line",
+          "locator": "line:1",
+          "text": "3X模式开局流程"
+        },
+        {
+          "kind": "line",
+          "locator": "line:3",
+          "text": "1.进行Ban选："
+        },
+        {
+          "kind": "line",
+          "locator": "line:4",
+          "text": "每名玩家从可用御主中选择X名（通常为1）禁用。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:6",
+          "text": "2.抽取御主/从者："
+        },
+        {
+          "kind": "line",
+          "locator": "line:7",
+          "text": "所有玩家抽取3名御主，选择其中一名并根据其评级获得等量的圣晶石后，抽取一名从者。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:9",
+          "text": "3.进行购点："
+        },
+        {
+          "kind": "line",
+          "locator": "line:10",
+          "text": "玩家各自使用圣晶石按以下方式购点，重复选择同一项购点时会比上一次选择额外花费1点圣晶石，以此类推。结束时未使用的圣晶石不保留。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:11",
+          "text": "花费1/2/3/4/5枚圣晶石："
+        },
+        {
+          "kind": "line",
+          "locator": "line:12",
+          "text": "1）再抽取一名从者。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:13",
+          "text": "2）在高潮回合进行淘汰时，你的分数视为比现有分数高1分。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:14",
+          "text": "3）游戏开始时，你获得1点魔力。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:15",
+          "text": "花费7枚圣晶石：游戏开始时，获得一枚令咒。该令咒不会提供额外令咒位。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:17",
+          "text": "4.开始游戏："
+        },
+        {
+          "kind": "line",
+          "locator": "line:18",
+          "text": "所有玩家完成圣晶石购点和从者抽取后，选择一名从者，决定回合顺位后开始游戏。"
+        },
+        {
+          "kind": "line",
+          "locator": "line:20",
+          "text": "御主评级："
+        },
+        {
+          "kind": "line",
+          "locator": "line:21",
+          "text": "0枚圣晶石：间桐慎二、卫宫美游"
+        },
+        {
+          "kind": "line",
+          "locator": "line:22",
+          "text": "1枚圣晶石：远坂时臣、莱妮丝·阿奇佐尔缇、远野志贵、考列斯·千界树、杀生院祈荒"
+        },
+        {
+          "kind": "line",
+          "locator": "line:23",
+          "text": "2枚圣晶石：紫苑·艾尔特纳姆、伊莉雅斯菲尔、爱丽丝菲尔、间桐雁夜、肯尼斯、提亚马特"
+        },
+        {
+          "kind": "line",
+          "locator": "line:24",
+          "text": "3枚圣晶石：两仪式、阿尔托莉雅·潘德拉贡(蓄势)、荒耶宗莲、芥雏子、言峰绮礼、远坂凛、拉尼VIII、齐格、魔法少女☆伊莉雅、远野秋叶"
+        },
+        {
+          "kind": "line",
+          "locator": "line:25",
+          "text": "4枚圣晶石：久宇舞弥、基尔什塔利亚·沃戴姆、爱尔奎特·布伦史塔德(御主)、巴泽特·弗拉加·马克雷米兹、卡莲·奥尔黛西亚、芙芙、机械翡翠、岸波白野（女）、尤里鸟斯·贝尔奇斯科·哈维、盖提亚、卫宫切嗣、狮子劫界离、斯堪的纳维亚·佩佩隆奇诺、卫宫士郎、藤丸立香（女）、远野四季、韦伯·维尔维特、藤丸立香(男)、希耶尔、菲奥蕾·弗尔维吉"
+        },
+        {
+          "kind": "line",
+          "locator": "line:26",
+          "text": "5枚圣晶石：雨生龙之介、卡多克·泽姆露普斯、罗榭·弗雷因、间桐樱、戈尔德鲁夫·穆吉克、天草士郎、雷欧纳多·比斯塔里奥·哈维、瓦拉几亚之夜、阿卡夏之蛇"
+        },
+        {
+          "kind": "line",
+          "locator": "line:27",
+          "text": "6枚圣晶石：间桐脏砚、达尼克·普雷斯通、浅上藤乃、吉娜可·加里吉利、考列斯·弗尔维吉、奥菲莉娅·法姆索罗涅、岸波白野（男）、葛木宗一郎"
+        },
+        {
+          "kind": "line",
+          "locator": "line:28",
+          "text": "7枚圣晶石：洗脑侦探·翡翠、爱丽丝、赛蕾妮可·艾斯科、特维斯·I·皮斯曼、卫宫士郎（今天的饭）、尼禄·卡欧斯、丹·布拉克莫尔"
+        },
+        {
+          "kind": "line",
+          "locator": "line:29",
+          "text": "10枚圣晶石：藤村大河"
+        },
+        {
+          "kind": "line",
+          "locator": "line:30",
+          "text": "忘记填写的默认4颗石头。"
+        }
+      ]
+    }
+  ]
+}

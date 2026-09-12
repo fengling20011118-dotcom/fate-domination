@@ -4,6 +4,7 @@ import type { SkillHandler } from "./skill-types.ts";
 import { SkillRegistry } from "./skill-registry.ts";
 import { EffectRuntime } from "../match-engine/effect-runtime.ts";
 import { moveToNonWorkshop } from "./skill-handlers.ts";
+import { gainMana } from "./resources.ts";
 
 const skillId = "servant.sanzang.skill.sc-sanzang-1";
 const choiceHandlerId = `${skillId}.choice`;
@@ -25,12 +26,12 @@ export function registerSanzangSkill(registry: SkillRegistry, effects: EffectRun
   }
 }
 
-export const sanzangGoldenCicada: SkillHandler = ({ state, player, openDecision, randomInt }) => {
+export const sanzangGoldenCicada: SkillHandler = ({ state, player, openDecision, randomInt, definitions }) => {
   if (state.phase !== "action" || state.activePlayerId !== player.id) throw new Error("SKILL_WINDOW_FORBIDDEN");
   const lucky = player.hand.find((instanceId) => state.cards[instanceId]?.definitionId === "card.cardluck");
   if (!lucky) throw new Error("LUCK_CARD_REQUIRED");
   movePlayerCard(state, player.id, lucky, "discard");
-  drawCards(state, player.id, 1, randomInt ?? (() => 0));
+  drawCards(state, player.id, 1, randomInt ?? (() => 0), definitions);
 
   const effectId = `${state.gameInstanceId}:${state.revision}:${player.id}:${skillId}:choice`;
   const decision: PendingDecision = {
@@ -66,7 +67,7 @@ const resolveGoldenCicadaChoice: SkillHandler = ({ state, player, payload, openD
   if (!result || result.status !== "resolved") return;
   const choice = result.selections[0];
   if (choice === "mana") {
-    player.mana += 3;
+    gainMana(player, 3);
     return;
   }
   if (choice === "power") {

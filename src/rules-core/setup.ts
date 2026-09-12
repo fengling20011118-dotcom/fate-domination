@@ -9,6 +9,8 @@ export function assignIdentity(state: GameState, playerId: string, masterId: str
   }
   player.masterId = masterId;
   player.servantId = servantId;
+  if (typeof player.flags.firstMasterId !== "string") player.flags.firstMasterId = masterId;
+  if (typeof player.flags.firstServantId !== "string") player.flags.firstServantId = servantId;
   player.ready = false;
 }
 

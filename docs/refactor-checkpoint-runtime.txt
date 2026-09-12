@@ -1,0 +1,10 @@
+FD角色技能重构 checkpoint
+任务: tsk_ac9ff73f63226d5d
+阶段: 批量机制分类优化
+当前角色: 公共规则层
+当前: FULL 731/944 PARTIAL 213/944
+修改文件: src/rules-core/skill-rule-program.ts
+修改内容: 扩展 lifecycle 未解析条款分类，覆盖返回技能区/回合开始窗口
+专项测试: compile/audit 待执行
+FULL/PARTIAL变化: 0/0
+验证: lifecycle 分类规则搜索确认已更新

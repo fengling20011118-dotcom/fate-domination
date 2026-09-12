@@ -1,5 +1,6 @@
 import type { EffectFrame, GameAction, GameEvent, GameState, PhasePlan, PublicModeState, VictoryStatus } from "../domain/state/types.ts";
 import type { GameModeDefinition, ModeContext } from "./modes.ts";
+import { determineStandardFinalVictory } from "../rules-core/scoring.ts";
 
 export interface StandardModeOptions {
   version?: string;
@@ -38,9 +39,10 @@ export function createStandardModeDefinition(options: StandardModeOptions = {}):
     },
     getVictoryStatus(state: GameState): VictoryStatus {
       if (state.status !== "finished") return { finished: false, winnerIds: [], reason: null };
-      const eligible = Object.values(state.players).filter((player) => !player.eliminated);
-      const highest = Math.max(0, ...eligible.map((player) => player.victoryPoints));
-      return { finished: true, winnerIds: eligible.filter((player) => player.victoryPoints === highest).map((player) => player.id), reason: "final-score" };
+      return determineStandardFinalVictory(state);
+    },
+    getFinalWinnerStatus(state: GameState): VictoryStatus {
+      return determineStandardFinalVictory(state);
     },
     projectPublicState(state: GameState): PublicModeState {
       return {

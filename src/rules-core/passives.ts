@@ -1,10 +1,15 @@
 import type { GameEvent, GameState, EffectFrame } from "../domain/state/types.ts";
 import type { SkillDefinition, SkillHandler } from "./skill-types.ts";
+import { hasRulerSealWinRewardFromSource, listRulerSealsControlledBy } from "./ruler-seals.ts";
 
 export interface PassiveTriggerDefinition {
   skill: SkillDefinition;
   eventType: string;
   mandatory: boolean;
+  /** Generated/granted physical copies may own this passive even when identity differs. */
+  allowPhysicalOwnership?: boolean;
+  /** Non-skill physical definitions that carry this catalogue skill's text. */
+  physicalDefinitionIds?: string[];
   condition?: (state: GameState, event: GameEvent, playerId: string) => boolean;
   /** Extra serializable arguments captured when the trigger becomes an effect frame. */
   payload?: (state: GameState, event: GameEvent, playerId: string) => Record<string, unknown>;
@@ -34,7 +39,23 @@ export class PassiveRuntime {
       if (!trigger.mandatory) continue;
       for (const player of Object.values(state.players)) {
         if (player.eliminated) continue;
-        const owns = trigger.skill.ownerType === "master" ? player.masterId === trigger.skill.ownerId : player.servantId === trigger.skill.ownerId;
+        const identityMatches = trigger.skill.ownerType === "master" ? player.masterId === trigger.skill.ownerId : player.servantId === trigger.skill.ownerId;
+        const identityOwns = trigger.skill.initiallyOwned !== false && identityMatches;
+        const physicalOwnershipAllowed = trigger.allowPhysicalOwnership === true || trigger.skill.initiallyOwned === false;
+        const physicalOwns = [...player.masterSkills, ...player.servantSkills, ...player.attack, ...player.hand]
+          .some((instanceId) => {
+            const instance = state.cards[instanceId];
+            const isFullTextCopy = instance?.fullSkillCopy?.sourceSkillId === trigger.skill.id;
+            const matchesPhysicalDefinition = Boolean(instance && trigger.physicalDefinitionIds?.includes(instance.definitionId));
+            return Boolean(instance && instance.ownerPlayerId === player.id && instance.zone !== "removed"
+              && !instance.skillCopyReplacement
+              && (physicalOwnershipAllowed || isFullTextCopy)
+              && (isFullTextCopy || matchesPhysicalDefinition || instance.definitionId === trigger.skill.id || instance.definitionId === `card.skill.${trigger.skill.id}`));
+          });
+        const rulerSealOwns = Boolean(trigger.skill.rulerSealControllerSourceId
+          && (listRulerSealsControlledBy(state, player.id).some((seal) => seal.sourceId === trigger.skill.rulerSealControllerSourceId)
+            || hasRulerSealWinRewardFromSource(state, player.id, trigger.skill.rulerSealControllerSourceId)));
+        const owns = identityOwns || physicalOwns || rulerSealOwns;
         if (!owns || trigger.condition && !trigger.condition(state, event, player.id)) continue;
         const uniqueGroup = trigger.skill.uniqueGroup;
         const uniqueKey = uniqueGroup ? `${player.id}:${uniqueGroup}` : undefined;

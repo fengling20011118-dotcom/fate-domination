@@ -18,13 +18,37 @@ export function validateAuthoredPackage(packageData, { resourceExists } = {}) {
   }
   for (const servant of packageData.servants ?? []) {
     validateRole(servant, "servant", add, resourceExists);
-    if (servant.deck && servant.deck.length !== 12) add(`SERVANT_DECK_SIZE:${servant.id}`);
+    if (servant.deck !== undefined) {
+      if (!Array.isArray(servant.deck)) add(`SERVANT_DECK_INVALID:${servant.id}`);
+      else {
+        if (servant.deck.length !== 12) add(`SERVANT_DECK_SIZE:${servant.id}`);
+        for (const cardId of servant.deck) {
+          if (!isStableId(cardId)) add(`SERVANT_DECK_CARD_ID_INVALID:${servant.id}`);
+        }
+      }
+    }
   }
   for (const card of packageData.cards ?? []) {
     if (!isStableId(card?.id)) add(`CARD_ID_INVALID:${card?.id ?? ""}`);
     if (typeof card?.name !== "string" && !isLocalizedText(card?.name)) add(`CARD_NAME_INVALID:${card?.id ?? ""}`);
     if (typeof card?.image !== "string") add(`CARD_IMAGE_MISSING:${card?.id ?? ""}`);
     validateAttributes(card?.attributes, `CARD_ATTRIBUTES_INVALID:${card?.id ?? ""}`, add);
+    if (card?.cardType !== undefined && !["attack", "skill", "event", "situation"].includes(card.cardType)) {
+      add(`CARD_TYPE_INVALID:${card?.id ?? ""}`);
+    }
+    if (card?.ownerType !== undefined && !["master", "servant", "common"].includes(card.ownerType)) {
+      add(`CARD_OWNER_TYPE_INVALID:${card?.id ?? ""}`);
+    }
+    if (card?.linkedSkillId !== undefined && !isStableId(card.linkedSkillId)) {
+      add(`CARD_LINKED_SKILL_ID_INVALID:${card?.id ?? ""}`);
+    }
+    if (card?.implementation !== undefined) {
+      const level = card.implementation?.level;
+      if (!level || !["FULL", "PARTIAL", "MANUAL", "DISABLED", "host_adjudicated"].includes(level)) {
+        add(`CARD_IMPLEMENTATION_INVALID:${card?.id ?? ""}`);
+      }
+    }
+    validateAuthoringRules(card?.rules, `CARD_AUTHORING_RULES_INVALID:${card?.id ?? ""}`, add);
     if (resourceExists && typeof card.image === "string" && !resourceExists(card.image)) {
       add(`CARD_IMAGE_NOT_FOUND:${card.id}:${card.image}`);
     }
@@ -103,7 +127,10 @@ function validateRole(role, kind, add, resourceExists) {
     if (skill?.combatPowerZeroAttribute !== undefined && (typeof skill.combatPowerZeroAttribute !== "string" || !KNOWN_ATTRIBUTES.has(skill.combatPowerZeroAttribute))) {
       add(`SKILL_ZERO_ATTRIBUTE_INVALID:${skill.id}`);
     }
-    for (const field of ["requiresTrueName", "requiresEightMana", "ignoresSituationRestrictions", "revealsTrueNameOnPlay", "revealsTrueNameOnSkillUse", "requiresHiddenTrueName", "singleCardPlay"]) {
+    if (skill?.hiddenTrueNameCostReduction !== undefined && (!Number.isInteger(skill.hiddenTrueNameCostReduction) || skill.hiddenTrueNameCostReduction < 0)) {
+      add(`SKILL_HIDDEN_NAME_COST_INVALID:${skill.id}`);
+    }
+    for (const field of ["requiresTrueName", "requiresEightMana", "ignoresSituationRestrictions", "revealsTrueNameOnPlay", "revealsTrueNameOnSkillUse", "requiresHiddenTrueName", "singleCardPlay", "standardAppend"]) {
       if (skill?.[field] !== undefined && typeof skill[field] !== "boolean") {
         add(`SKILL_BOOLEAN_FIELD_INVALID:${skill.id}:${field}`);
       }
@@ -114,12 +141,50 @@ function validateRole(role, kind, add, resourceExists) {
     if (skill?.implementation !== undefined && !["pending", "implemented", "manual", "disabled"].includes(skill.implementation)) {
       add(`SKILL_IMPLEMENTATION_INVALID:${skill.id}`);
     }
+    validateAuthoringRules(skill?.rules, `SKILL_AUTHORING_RULES_INVALID:${skill.id}`, add);
     const activationKind = skill?.activation?.kind;
     if (activationKind !== undefined && !["passive", "optional-trigger", "active", "play", "reaction", "residual"].includes(activationKind)) {
       add(`SKILL_ACTIVATION_INVALID:${skill.id}`);
     }
     if (skill?.activation?.windows !== undefined && (!Array.isArray(skill.activation.windows) || skill.activation.windows.some((window) => typeof window !== "string"))) {
       add(`SKILL_WINDOWS_INVALID:${skill.id}`);
+    }
+  }
+}
+
+function validateAuthoringRules(rules, errorCode, add) {
+  if (rules === undefined) return;
+  if (!rules || typeof rules !== "object" || rules.schemaVersion !== "fd-card-authoring-v1" || !Array.isArray(rules.abilities)) {
+    add(errorCode);
+    return;
+  }
+  const ids = new Set();
+  for (const ability of rules.abilities) {
+    if (!ability || typeof ability !== "object" || typeof ability.id !== "string" || !ability.id || ids.has(ability.id)) {
+      add(errorCode);
+      return;
+    }
+    ids.add(ability.id);
+    if (typeof ability.printedClause !== "string" || !ability.printedClause.trim()) {
+      add(errorCode);
+      return;
+    }
+    if (!["passive", "play_trigger", "phase_action", "response", "residual"].includes(ability.kind)) {
+      add(errorCode);
+      return;
+    }
+    if (ability.kind === "response" && typeof ability.responseWindow?.opens !== "string") {
+      add(errorCode);
+      return;
+    }
+    const mode = ability.execution?.mode ?? "automatic";
+    if (!["automatic", "handler", "host_adjudicated", "text_unconfirmed", "unsupported"].includes(mode)) {
+      add(errorCode);
+      return;
+    }
+    if (mode === "handler" && typeof ability.execution?.handlerId !== "string") {
+      add(errorCode);
+      return;
     }
   }
 }

@@ -22,6 +22,8 @@ export interface GameModeDefinition {
   getLegalActions(state: GameState, playerId: string): GameAction[];
   onEvent(event: GameEvent, state: GameState, context: ModeContext): EffectFrame[];
   getVictoryStatus(state: GameState): VictoryStatus;
+  /** Resolves a finishing state before the engine applies generic cleanup. */
+  getFinalWinnerStatus?(state: GameState): VictoryStatus;
   projectPublicState(state: GameState): PublicModeState;
 }
 

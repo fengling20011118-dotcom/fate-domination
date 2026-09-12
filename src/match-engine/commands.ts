@@ -33,6 +33,7 @@ export const CommandType = {
   CompleteCombatResponse: "combat.response.complete",
   EndRound: "round.end",
   UseSkill: "skill.use",
+  UseCommandSeal: "command-seal.use",
   AssignIdentity: "setup.assign-identity",
   SetReady: "setup.set-ready",
   ThreeXBanMaster: "three-x.ban-master",

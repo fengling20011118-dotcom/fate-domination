@@ -7,6 +7,7 @@ import { restoreSnapshot, serializeSnapshot } from "../save/snapshots.ts";
 import { assertStateInvariants } from "../domain/state/invariants.ts";
 import type { CardDefinition } from "../rules-core/content-types.ts";
 import type { AvailableAction, CalculationDetail, CommandResult } from "./integration-contract.ts";
+import { localizeActionLabel, localizePlayerFacingLabel, localizePlayerFacingText, localizeSkillActionLabel } from "../projection/presentation-localization.ts";
 
 export interface DispatchResult {
   state: GameState;
@@ -45,7 +46,7 @@ export class GameApplication {
     return this.#engine.getLegalActions(this.#state, playerId).map((action, index) => ({
       id: `${this.#state.revision}:${playerId}:${action.type}:${index}`,
       commandType: action.type,
-      label: action.label ?? action.type,
+      label: localizeAvailableActionLabel(action.label, action.type, action.payload, this.#content, this.#state.phase),
       payload: structuredClone(action.payload),
       input: toActionInput(action.type, action.payload),
     }));
@@ -53,7 +54,12 @@ export class GameApplication {
 
   /** Static definitions are safe catalog data; card instances and zones remain in MatchView. */
   cardDefinitions(): Record<string, CardDefinition> {
-    return structuredClone(this.#content.cards);
+    const definitions = structuredClone(this.#content.cards);
+    for (const definition of Object.values(definitions)) {
+      definition.name = localizePlayerFacingLabel(definition.name);
+      if (definition.text) definition.text = localizePlayerFacingText(definition.text);
+    }
+    return definitions;
   }
 
   /** Front-end transport boundary: never returns the authoritative GameState. */
@@ -88,10 +94,53 @@ export class GameApplication {
   restore(serialized: string): void { this.#state = restoreSnapshot(serialized, this.#state.gameInstanceId); }
 }
 
+function localizeAvailableActionLabel(
+  rawLabel: string | undefined,
+  type: string,
+  payload: unknown,
+  content: StandardContent,
+  phase: string,
+): string {
+  if (type === "skill.use" && payload && typeof payload === "object") {
+    const value = payload as { skillId?: unknown; data?: { abilityId?: unknown } };
+    if (typeof value.skillId === "string") {
+      try {
+        const skill = content.skills.get(value.skillId);
+        const abilityId = typeof value.data?.abilityId === "string" ? value.data.abilityId : undefined;
+        const ability = abilityId ? skill.abilities?.find((candidate) => candidate.id === abilityId) : undefined;
+        if (ability) {
+          const sameWindowAbilities = (skill.abilities ?? []).filter((candidate) => candidate.windows.some((window) => window === phase));
+          const ordinal = sameWindowAbilities.findIndex((candidate) => candidate.id === ability.id);
+          return localizeSkillActionLabel({
+            skillName: skill.name,
+            abilityName: ability.name,
+            abilityWindows: ability.windows,
+            currentPhase: phase,
+            ordinal: ordinal >= 0 ? ordinal : undefined,
+            sameWindowCount: sameWindowAbilities.length,
+          });
+        }
+        return localizeSkillActionLabel({ skillName: skill.name });
+      } catch {
+        // Non-catalog or malformed actions still use the generic presentation mapping below.
+      }
+    }
+  }
+  return localizeActionLabel(rawLabel, type);
+}
+
 function toActionInput(type: string, payload: unknown): AvailableAction["input"] {
   if (type === "decision.resolve" && payload && typeof payload === "object") {
     const value = payload as { options?: Array<{ id: string; label: string; disabled?: boolean }>; min?: number; max?: number };
-    return { kind: "multi-choice", options: value.options, min: value.min, max: value.max };
+    return {
+      kind: "multi-choice",
+      options: value.options?.map((option) => ({
+        ...structuredClone(option),
+        label: localizePlayerFacingLabel(option.label, option.id),
+      })),
+      min: value.min,
+      max: value.max,
+    };
   }
   return { kind: payload && typeof payload === "object" && Object.keys(payload).length > 0 ? "structured" : "none" };
 }

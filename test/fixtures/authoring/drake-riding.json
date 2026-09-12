@@ -1,0 +1,37 @@
+[
+  {
+    "id": "servant.drake.skill.sc-drake-1",
+    "aliases": ["servant.francis_drake.skill.riding"],
+    "ownerType": "servant",
+    "ownerId": "servant.drake",
+    "name": "骑乘（Rider Class）",
+    "printedText": "打出时：若此牌与一张基础攻击一同打出，抽一张牌。\n坐骑召唤-行动阶段：打出至多3张基本威力为3或更低的手牌。",
+    "cardFace": {
+      "typeLabel": "特殊",
+      "cost": 3,
+      "requirement": { "type": "min_mana", "value": 3 },
+      "basePower": 0,
+      "attributes": ["特殊"]
+    },
+    "abilities": [
+      {
+        "id": "play_draw",
+        "printedClause": "打出时：若此牌与一张基础攻击一同打出，抽一张牌。",
+        "kind": "play_trigger",
+        "activation": { "phase": "action" },
+        "execution": { "mode": "automatic" },
+        "effects": [{ "type": "draw_cards", "target": "controller", "amount": 1 }]
+      },
+      {
+        "id": "mount_summon",
+        "printedClause": "坐骑召唤-行动阶段：打出至多3张基本威力为3或更低的手牌。",
+        "kind": "phase_action",
+        "activation": { "phase": "action" },
+        "execution": { "mode": "handler", "handlerId": "core.riding" },
+        "effects": [{ "type": "append_from_hand", "target": "controller", "maxCount": 3, "maxBasePower": 3 }]
+      }
+    ],
+    "evidence": [{ "kind": "user-confirmed", "document": "卡牌技能标准化文档.md", "locator": "14.2" }],
+    "verification": { "status": "fixture" }
+  }
+]

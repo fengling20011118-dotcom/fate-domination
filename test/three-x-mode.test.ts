@@ -24,12 +24,12 @@ test("3X 模式包只为当前设置阶段产生标准命令动作", () => {
   assert.equal(mode.getLegalActions(state, "outsider").length, 0);
 });
 
-test("3X 模式包的胜利判定使用高潮购点修正而不读取隐藏候选", () => {
+test("3X 模式包的最终胜利判定不使用高潮淘汰购点修正", () => {
   const state = createGameState({ gameInstanceId: "three-x-victory", mode: "three-x", players: [{ id: "p1", name: "一" }, { id: "p2", name: "二" }, { id: "p3", name: "三" }], seed: 3 });
   state.status = "finished";
   const threeX = state.modeState.threeX as import("../src/rules-core/three-x-state.ts").ThreeXModeState;
   for (const id of threeX.playerIds) threeX.budgets[id] = createThreeXBudget(0);
   threeX.budgets.p2.climaxTiebreakBonus = 1;
-  state.players.p1.victoryPoints = 4; state.players.p2.victoryPoints = 4; state.players.p3.victoryPoints = 1;
-  assert.deepEqual(createThreeXModeDefinition().getVictoryStatus(state).winnerIds, ["p2"]);
+  state.players.p1.victoryPoints = 5; state.players.p2.victoryPoints = 4; state.players.p3.victoryPoints = 1;
+  assert.deepEqual(createThreeXModeDefinition().getVictoryStatus(state).winnerIds, ["p1"]);
 });

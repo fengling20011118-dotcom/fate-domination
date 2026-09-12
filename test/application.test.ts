@@ -74,8 +74,60 @@ test("待决策时 AvailableAction 由后端提供选项和数量边界", () => 
   const restored = new GameApplication({ state, content });
   const [action] = restored.availableActionsFor("p1");
   assert.equal(action.commandType, CommandType.ResolveDecision);
+  assert.equal(action.label, "确认选择");
   assert.equal(action.input?.kind, "multi-choice");
   assert.equal(action.input?.min, 1);
   assert.equal(action.input?.max, 2);
   assert.deepEqual(action.input?.options?.map((option) => option.id), ["card-a", "card-b"]);
+});
+
+test("前端投影将内部英文地点与操作标签中文化但保留选项ID", () => {
+  const app = GameApplication.create({ gameInstanceId: "zh-contract", players: [{ id: "p1", name: "一" }], seed: 1, content });
+  const state = app.state;
+  state.pendingDecision = {
+    decisionId: "zh-choice",
+    ownerPlayerId: "p1",
+    chooserPlayerIds: ["p1"],
+    kind: "internal-location-choice",
+    options: [
+      { id: "mountain", label: "Mountain" },
+      { id: "decline", label: "Decline" },
+      { id: "mana", label: "Gain 3 mana" },
+    ],
+    min: 1,
+    max: 1,
+    allowCancel: false,
+    submissions: {},
+  };
+  const restored = new GameApplication({ state, content });
+  const view = restored.viewFor("p1");
+  assert.deepEqual(view.pendingDecision?.options.map((option) => option.id), ["mountain", "decline", "mana"]);
+  assert.deepEqual(view.pendingDecision?.options.map((option) => option.label), ["深山町", "不发动", "获得3点魔力"]);
+  const [action] = restored.availableActionsFor("p1");
+  assert.equal(action.label, "确认选择");
+  assert.deepEqual(action.input?.options?.map((option) => option.label), ["深山町", "不发动", "获得3点魔力"]);
+});
+
+test("前端卡牌定义使用中文展示名且不修改权威内容定义", () => {
+  const rawContent = {
+    ...content,
+    cards: {
+      "card.queenside": {
+        id: "card.queenside",
+        version: 1,
+        name: "Queenside Castle",
+        text: "Saber必须死！职阶为Saber。将NPC加入游戏。（Deck变体）",
+        cardType: "skill",
+        ownerType: "master",
+        cost: 5,
+        basePower: 1,
+        typeLabel: "魔术",
+      },
+    },
+  };
+  const app = GameApplication.create({ gameInstanceId: "card-display-zh", players: [{ id: "p1", name: "一" }], seed: 1, content: rawContent });
+  assert.equal(app.cardDefinitions()["card.queenside"].name, "王城奇袭");
+  assert.equal(app.cardDefinitions()["card.queenside"].text, "剑士必须死！职阶为剑士。将非玩家角色加入游戏。（牌库变体）");
+  assert.equal(rawContent.cards["card.queenside"].name, "Queenside Castle");
+  assert.equal(rawContent.cards["card.queenside"].text, "Saber必须死！职阶为Saber。将NPC加入游戏。（Deck变体）");
 });

@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createGameState } from "../src/domain/state/createGameState.ts";
 import { SkillRegistry } from "../src/rules-core/skill-registry.ts";
-import { moveToNonWorkshop, registerCoreSkillHandlers } from "../src/rules-core/skill-handlers.ts";
+import { moveToNonWorkshop, registerCorePassiveHandlers, registerCoreSkillHandlers } from "../src/rules-core/skill-handlers.ts";
+import { PassiveRuntime, enqueuePassiveEffects } from "../src/rules-core/passives.ts";
+import { EffectRuntime } from "../src/match-engine/effect-runtime.ts";
 import { resolveCombat } from "../src/rules-core/combat.ts";
 import { createUsageRecord, isUsageAvailable } from "../src/rules-core/usage-limits.ts";
 
@@ -15,6 +17,80 @@ test("技能支持等级边界不会把未实现能力伪装成 FULL", async () 
     { id: "skill.disabled", name: "禁用", implementation: "disabled", activation: { kind: "phase", windows: ["action"] } },
   ] }] });
   assert.deepEqual(skills.map((skill) => skill.supportLevel), ["FULL", "PARTIAL", "MANUAL", "DISABLED"]);
+});
+
+test("游戏开始加入技能区的能力使用明确目标且幂等", () => {
+  const registry = new SkillRegistry();
+  registry.register({
+    id: "master.shiki-ryougi.skill.s1",
+    name: "死线",
+    ownerType: "master",
+    ownerId: "master.shiki-ryougi",
+    activation: "passive",
+    windows: [],
+    cost: 0,
+    text: "游戏开始时，将【生・切断】加入你的技能区。",
+    supportLevel: "FULL",
+    handlerId: "core.game-start-add-skill",
+    passiveEventTypes: ["game.started"],
+    addSkillDefinitionId: "master.shiki-ryougi.skill.s2",
+  });
+  const passives = new PassiveRuntime();
+  const effects = new EffectRuntime();
+  registerCorePassiveHandlers(registry, passives, effects);
+  const state = createGameState({ gameInstanceId: "game-start-skill", players: [{ id: "p", name: "P" }], seed: 1 });
+  state.status = "playing";
+  state.players.p.masterId = "master.shiki-ryougi";
+  const event = { eventId: "start:0", type: "game.started", revision: 1, sourceCommandId: "start", payload: {} };
+  enqueuePassiveEffects(state, passives, event);
+  effects.drain(state);
+  assert.equal(state.players.p.masterSkills.filter((instanceId) => state.cards[instanceId]?.definitionId === "master.shiki-ryougi.skill.s2").length, 1);
+  enqueuePassiveEffects(state, passives, event);
+  effects.drain(state);
+  assert.equal(state.players.p.masterSkills.filter((instanceId) => state.cards[instanceId]?.definitionId === "master.shiki-ryougi.skill.s2").length, 1);
+});
+
+test("游戏开始获得多张技能牌会全部进入技能区且重复触发不复制", () => {
+  const registry = new SkillRegistry();
+  registry.register({
+    id: "master.fiore.skill.s1",
+    name: "菲奥蕾·弗尔维吉",
+    ownerType: "master",
+    ownerId: "master.fiore",
+    activation: "passive",
+    windows: [],
+    cost: 0,
+    text: "菲奥蕾拥有【瘫痪】，【温顺】与【回路不良】",
+    supportLevel: "FULL",
+    handlerId: "core.game-start-add-skill",
+    passiveEventTypes: ["game.started"],
+    addSkillDefinitionIds: [
+      "master.fiore.skill.s2",
+      "master.fiore.skill.s3",
+      "master.fiore.skill.s4",
+    ],
+  });
+  const passives = new PassiveRuntime();
+  const effects = new EffectRuntime();
+  registerCorePassiveHandlers(registry, passives, effects);
+  const state = createGameState({ gameInstanceId: "game-start-multi-skill", players: [{ id: "p", name: "P" }], seed: 1 });
+  state.status = "playing";
+  state.players.p.masterId = "master.fiore";
+  const event = { eventId: "start:0", type: "game.started", revision: 1, sourceCommandId: "start", payload: {} };
+
+  enqueuePassiveEffects(state, passives, event);
+  effects.drain(state);
+  const granted = state.players.p.masterSkills.map((instanceId) => state.cards[instanceId]);
+  assert.deepEqual(granted.map((card) => card.definitionId).sort(), [
+    "master.fiore.skill.s2",
+    "master.fiore.skill.s3",
+    "master.fiore.skill.s4",
+  ]);
+  assert.ok(granted.every((card) => card.ownerPlayerId === "p" && card.controllerPlayerId === "p" && card.zone === "master-skills" && card.face === "up"));
+
+  enqueuePassiveEffects(state, passives, event);
+  effects.drain(state);
+  assert.equal(state.players.p.masterSkills.length, 3);
 });
 
 test("DISABLED 技能在运行时明确拒绝执行", () => {
@@ -48,12 +124,19 @@ test("待迁移技能可进入审计但FULL主动技能必须声明阶段窗口"
   assert.throws(() => registry.register({ id: "full-without-window", name: "错误完整能力", ownerType: "master", ownerId: "m", activation: "phase", windows: [], cost: 0, text: "", supportLevel: "FULL" }, () => undefined), /SKILL_WINDOW_REQUIRED/);
 });
 
-test("使用限制组件区分每局、每回合和每阶段", () => {
+test("使用限制组件区分每局、每回合、每回合两次和每阶段", () => {
   const game = createUsageRecord("once-per-game", 1, "action");
   const round = createUsageRecord("once-per-round", 1, "action");
+  const twiceFirst = createUsageRecord("twice-per-round", 1, "action");
+  const twiceSecond = createUsageRecord("twice-per-round", 1, "combat", twiceFirst);
   const turn = createUsageRecord("once-per-turn", 1, "action");
   assert.equal(isUsageAvailable(game, "once-per-game", 2, "action"), false);
   assert.equal(isUsageAvailable(round, "once-per-round", 2, "action"), true);
+  assert.equal(twiceFirst.count, 1);
+  assert.equal(isUsageAvailable(twiceFirst, "twice-per-round", 1, "combat"), true);
+  assert.equal(twiceSecond.count, 2);
+  assert.equal(isUsageAvailable(twiceSecond, "twice-per-round", 1, "action"), false);
+  assert.equal(isUsageAvailable(twiceSecond, "twice-per-round", 2, "action"), true);
   assert.equal(isUsageAvailable(turn, "once-per-turn", 1, "combat"), true);
   assert.equal(isUsageAvailable(turn, "once-per-turn", 1, "action"), false);
 });

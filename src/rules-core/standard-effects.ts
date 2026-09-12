@@ -3,9 +3,12 @@ import { EffectRuntime } from "../match-engine/effect-runtime.ts";
 import { StateRandom } from "../match-engine/random.ts";
 import { drawCards } from "./decks.ts";
 import type { SkillHandler } from "./skill-types.ts";
+import { gainMana, gainVictoryPoints } from "./resources.ts";
+import { gainCommandSeals } from "./command-seals.ts";
 
 export const GAIN_RESOURCES_EFFECT = "core.effect.gain-resources";
 export const DRAW_CARDS_EFFECT = "core.effect.draw-cards";
+export const RESTORE_COMMAND_SEAL_EFFECT = "core.effect.restore-command-seal";
 
 export interface GainResourcesPayload {
   mana?: number;
@@ -20,6 +23,7 @@ export interface DrawCardsPayload {
 export function registerStandardEffectHandlers(runtime: EffectRuntime): void {
   registerOnce(runtime, GAIN_RESOURCES_EFFECT, gainResources);
   registerOnce(runtime, DRAW_CARDS_EFFECT, drawCardsEffect);
+  registerOnce(runtime, RESTORE_COMMAND_SEAL_EFFECT, restoreCommandSealEffect);
 }
 
 export function createEffectFrame(input: {
@@ -48,15 +52,21 @@ export const gainResources: SkillHandler = ({ player, payload }) => {
   const victoryPoints = values?.victoryPoints ?? 0;
   assertNonNegativeInteger(mana, "RESOURCE_MANA_INVALID");
   assertNonNegativeInteger(victoryPoints, "RESOURCE_VICTORY_POINTS_INVALID");
-  player.mana += mana;
-  player.victoryPoints += victoryPoints;
+  gainMana(player, mana);
+  gainVictoryPoints(player, victoryPoints);
 };
 
-export const drawCardsEffect: SkillHandler = ({ state, player, payload }) => {
+export const drawCardsEffect: SkillHandler = ({ state, player, payload, definitions }) => {
   const count = (payload as DrawCardsPayload | undefined)?.count;
   assertNonNegativeInteger(count, "DRAW_COUNT_INVALID");
   const random = new StateRandom();
-  drawCards(state, player.id, count, (maxExclusive) => random.integer(state, maxExclusive));
+  drawCards(state, player.id, count, (maxExclusive) => random.integer(state, maxExclusive), definitions);
+};
+
+export const restoreCommandSealEffect: SkillHandler = ({ state, player, payload }) => {
+  const amount = (payload as { amount?: unknown } | undefined)?.amount;
+  assertNonNegativeInteger(amount, "COMMAND_SEAL_AMOUNT_INVALID");
+  gainCommandSeals(state, player.id, amount);
 };
 
 function assertNonNegativeInteger(value: unknown, error: string): asserts value is number {

@@ -1,6 +1,8 @@
 import type { CardDefinition } from "./content-types.ts";
 import type { GameState } from "../domain/state/types.ts";
 import type { CardAbilityRegistry } from "./card-abilities.ts";
+import { defeatPlayerByEffect } from "./defeat.ts";
+import { gainVictoryPoints } from "./resources.ts";
 
 export const MISFORTUNE_CARD_ID = "card.x-misfortune";
 export const MISFORTUNE_ABILITY_ID = "misfortune-battle-loss";
@@ -12,7 +14,7 @@ export const MISFORTUNE_ABILITY_ID = "misfortune-battle-loss";
  */
 export function registerMisfortuneCardAbility(registry: CardAbilityRegistry): void {
   if (registry.has(MISFORTUNE_ABILITY_ID)) return;
-  registry.register(MISFORTUNE_ABILITY_ID, ({ state, playerId, instanceId }) => {
+  registry.register(MISFORTUNE_ABILITY_ID, ({ state, playerId, instanceId, emitEvent, definitions }) => {
     const pending = state.modeState.pendingCombatResolution as { snapshot?: { locationId?: string; participantIds?: string[]; powers?: Record<string, number> } } | undefined;
     const snapshot = pending?.snapshot;
     if (!snapshot || snapshot.locationId !== "mountain" && snapshot.locationId !== "city") throw new Error("MISFORTUNE_RESPONSE_WINDOW_REQUIRED");
@@ -32,10 +34,10 @@ export function registerMisfortuneCardAbility(registry: CardAbilityRegistry): vo
     card.zone = "discard";
     card.face = "down";
     card.active = false;
-    player.victoryPoints += 3;
+    gainVictoryPoints(player, 3);
     for (const opponentId of state.board.locations[snapshot.locationId] ?? []) {
       if (opponentId !== playerId && state.players[opponentId] && !state.players[opponentId].eliminated) {
-        state.players[opponentId].defeated = true;
+        defeatPlayerByEffect(state, opponentId, playerId, definitions, emitEvent, { reason: "misfortune", sourceInstanceId: instanceId });
       }
     }
   }, { allowedZones: ["hand"], allowInactive: true });

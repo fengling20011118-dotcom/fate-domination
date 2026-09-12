@@ -49,12 +49,9 @@ export function createThreeXModeDefinition(options: ThreeXModeOptions = {}): Gam
     },
     getVictoryStatus(state: GameState): VictoryStatus {
       if (state.status !== "finished") return { finished: false, winnerIds: [], reason: null };
-      const mode = state.modeState.threeX as ThreeXModeState | undefined;
-      const budgets = mode?.budgets ?? {};
       const eligible = Object.values(state.players).filter((player) => !player.eliminated);
-      const score = (player: { id: string; victoryPoints: number }): number => player.victoryPoints + (budgets[player.id]?.climaxTiebreakBonus ?? 0);
-      const highest = Math.max(0, ...eligible.map(score));
-      return { finished: true, winnerIds: eligible.filter((player) => score(player) === highest).map((player) => player.id), reason: "final-score" };
+      const highest = Math.max(0, ...eligible.map((player) => player.victoryPoints));
+      return { finished: true, winnerIds: eligible.filter((player) => player.victoryPoints === highest).map((player) => player.id), reason: "final-score" };
     },
     projectPublicState(state: GameState): PublicModeState {
       const mode = state.modeState.threeX as ThreeXModeState | undefined;

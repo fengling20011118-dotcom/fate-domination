@@ -122,7 +122,18 @@ for (const servant of content.servants ?? []) {
   const source = exactSources.get(servant.id);
   if (!source) continue;
   for (const skill of servant.skills ?? []) {
-    skill.sourceRefs = [structuredClone(source)];
+    // An exact CHM mapping is the preferred fallback for servants. Keep the
+    // development-image provenance, but replace a generated legacy fallback so
+    // each skill has one primary image source plus one independent fallback.
+    const fallbackRefs = (skill.sourceRefs ?? []).filter((ref) => ref.kind !== "chm" && ref.kind !== "legacy");
+    if (fallbackRefs.length === 0 && typeof skill.legacyId === "string" && skill.legacyId) {
+      fallbackRefs.push({
+        kind: "legacy",
+        document: "legacy-content.json",
+        locator: `servant/${servant.id}/${skill.legacyId}`,
+      });
+    }
+    skill.sourceRefs = [structuredClone(source), ...fallbackRefs];
     sourceRefsApplied += 1;
   }
 }

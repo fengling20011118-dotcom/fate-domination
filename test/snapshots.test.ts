@@ -37,11 +37,11 @@ test("旧版快照缺少杰基尔形态字段时迁移为中性状态", () => {
   assert.equal(restored.players.p1.form, null);
 });
 
-test("快照拒绝非法或错误归属的形态状态", () => {
-  const state = createGameState({ gameInstanceId: "invalid-form", players: [{ id: "p1", name: "一" }] });
+test("快照接受通用形态标识并拒绝空形态状态", () => {
+  const state = createGameState({ gameInstanceId: "generic-form", players: [{ id: "p1", name: "一" }] });
   state.players.p1.form = "hyde";
-  assert.throws(() => restoreSnapshot(serializeSnapshot(state)), /SNAPSHOT_STATE_INVALID/);
-  state.players.p1.form = "invalid" as never;
+  assert.doesNotThrow(() => restoreSnapshot(serializeSnapshot(state)));
+  state.players.p1.form = "" as never;
   assert.throws(() => assertStateInvariants(state), /PLAYER_FORM_INVALID/);
 });
 
@@ -83,6 +83,16 @@ test("状态不变量拒绝重复场上事件和孤立可见性记录", () => {
   const violations = findStateInvariantViolations(state);
   assert.ok(violations.includes("EVENT_DUPLICATE:event.same"));
   assert.ok(violations.includes("EVENT_VISIBILITY_ORPHAN:event.orphan"));
+});
+
+test("状态不变量拒绝同一事件同时存在于牌堆、弃牌堆或场上", () => {
+  const state = createGameState({ gameInstanceId: "event-zone-invariant", players: [{ id: "p1", name: "P1" }], seed: 1 });
+  state.board.eventDeck = ["event.same"];
+  state.board.eventDiscard = ["event.same"];
+  state.board.currentEvents = { mountain: ["event.same"], city: [] };
+  state.board.eventVisibility = { "event.same": "up" };
+  const violations = findStateInvariantViolations(state);
+  assert.equal(violations.filter((item) => item === "EVENT_ZONE_DUPLICATE:event.same").length, 2);
 });
 
 test("待决策状态不变量拒绝无效参与者与越界选择范围", () => {

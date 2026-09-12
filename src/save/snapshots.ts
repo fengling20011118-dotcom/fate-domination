@@ -49,10 +49,14 @@ export function restoreSnapshot(serialized: string, expectedGameInstanceId?: str
 /** Adds fields introduced by the V2 setup flow while preserving old room saves. */
 function migrateSnapshotState(state: GameState): GameState {
   const migrated = structuredClone(state);
+  if (migrated.scheduledEffects === undefined) migrated.scheduledEffects = [];
+  if (migrated.activeRuleModifiers === undefined) migrated.activeRuleModifiers = [];
+  if (migrated.board.eventRemoved === undefined) migrated.board.eventRemoved = [];
   // `form` was added after the first V2 snapshots. Missing values represent
   // the neutral state; never leave an undefined form in the authoritative save.
   for (const player of Object.values(migrated.players ?? {})) {
     if (player.form === undefined) player.form = null;
+    if (player.cardRuleModifiers === undefined) player.cardRuleModifiers = [];
   }
   if (migrated.mode !== "three-x") return migrated;
   const mode = migrated.modeState.threeX as Record<string, unknown> | undefined;

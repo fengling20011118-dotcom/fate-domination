@@ -6,7 +6,8 @@ export class DecisionManager {
     if (!decision || typeof decision.decisionId !== "string" || !decision.decisionId || typeof decision.kind !== "string" || !decision.kind) throw new Error("DECISION_INVALID");
     if (!Array.isArray(decision.chooserPlayerIds) || decision.chooserPlayerIds.length === 0 || new Set(decision.chooserPlayerIds).size !== decision.chooserPlayerIds.length || decision.chooserPlayerIds.some((id) => typeof id !== "string" || !state.players[id])) throw new Error("DECISION_CHOOSER_INVALID");
     if (typeof decision.ownerPlayerId !== "string" || !state.players[decision.ownerPlayerId]) throw new Error("DECISION_OWNER_INVALID");
-    if (!Array.isArray(decision.options) || decision.options.some((option) => !option || typeof option.id !== "string" || !option.id || typeof option.label !== "string")) throw new Error("DECISION_OPTIONS_INVALID");
+    if (!Array.isArray(decision.options) || decision.options.some((option) => !option || typeof option.id !== "string" || !option.id || typeof option.label !== "string"
+      || (option.chooserPlayerIds !== undefined && (!Array.isArray(option.chooserPlayerIds) || option.chooserPlayerIds.some((id) => typeof id !== "string" || !decision.chooserPlayerIds.includes(id)))))) throw new Error("DECISION_OPTIONS_INVALID");
     if (!Number.isInteger(decision.min) || !Number.isInteger(decision.max) || decision.min < 0 || decision.max < decision.min) throw new Error("DECISION_SELECTION_RANGE_INVALID");
     if (decision.max > decision.options.length) throw new Error("DECISION_SELECTION_RANGE_INVALID");
     if (typeof decision.allowCancel !== "boolean" || !decision.submissions || typeof decision.submissions !== "object" || Array.isArray(decision.submissions)) throw new Error("DECISION_STATE_INVALID");
@@ -15,6 +16,7 @@ export class DecisionManager {
     const optionSet = new Set(decision.options.filter((option) => !option.disabled).map((option) => option.id));
     for (const [playerId, selections] of Object.entries(decision.submissions)) {
       if (!chooserSet.has(playerId) || !Array.isArray(selections)) throw new Error("DECISION_SUBMISSIONS_INVALID");
+      const optionSet = new Set(decision.options.filter((option) => !option.disabled && (option.chooserPlayerIds === undefined || option.chooserPlayerIds.includes(playerId))).map((option) => option.id));
       if (new Set(selections).size !== selections.length || selections.length < decision.min || selections.length > decision.max || selections.some((selection) => !optionSet.has(selection))) {
         throw new Error("DECISION_SUBMISSIONS_INVALID");
       }
@@ -36,7 +38,7 @@ export class DecisionManager {
       input.selections.length < decision.min ||
       input.selections.length > decision.max
     ) throw new Error("DECISION_SELECTION_COUNT");
-    const allowed = new Set(decision.options.filter((option) => !option.disabled).map((option) => option.id));
+    const allowed = new Set(decision.options.filter((option) => !option.disabled && (option.chooserPlayerIds === undefined || option.chooserPlayerIds.includes(input.actorId))).map((option) => option.id));
     if (input.selections.some((selection) => !allowed.has(selection))) throw new Error("DECISION_OPTION_INVALID");
     decision.submissions[input.actorId] = [...input.selections];
     const allSubmitted = decision.chooserPlayerIds.every((playerId) => Object.prototype.hasOwnProperty.call(decision.submissions, playerId));
