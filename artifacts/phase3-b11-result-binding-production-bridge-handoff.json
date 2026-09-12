@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "fd-phase3-runtime-handoff-v1",
+  "generatedAt": "2026-09-12T00:00:00.000Z",
+  "owner": "Codex B",
+  "task": "P3-B11",
+  "status": "READY",
+  "branch": "codex/b-p3-b11-result-binding-production-bridge",
+  "baseline": {
+    "branch": "codex/b-p3-b10-setup-create-to-skill",
+    "commit": "9fba6d9"
+  },
+  "preconditions": {
+    "b10AcceptedByR05": true,
+    "a03SyncBlocksStart": false,
+    "resourceNumericRuntimeBlocker": false,
+    "cardZoneRuntimeBlocker": false,
+    "runtimeHotFilesExclusiveToB": true
+  },
+  "scope": {
+    "mechanicFamily": "RESULT_BINDING_PRODUCTION_BRIDGE",
+    "representatives": [
+      {
+        "cardId": "master.irisviel.skill.conversion-magic",
+        "abilityId": "conversion-magic.preparation",
+        "role": "NO_INTERACTION_CONTROL"
+      },
+      {
+        "cardId": "servant.kintoki.skill.sc-kintoki-3",
+        "abilityId": "sc-kintoki-3.golden-eater",
+        "role": "STAGED_INTERACTION_MIGRATION"
+      }
+    ],
+    "expandCardPool": false,
+    "sharedExactClassifier": false,
+    "automaticGateInheritance": false
+  },
+  "requiredContracts": [
+    "compiler_validated_semantic_graph",
+    "server_derived_typed_results",
+    "pending_interaction_continuation",
+    "dispatch_local_transaction_rollback",
+    "resolution_failed_fail_closed",
+    "no_legacy_resolve_effect_bypass"
+  ],
+  "forbidden": [
+    "card_or_ability_id_routing",
+    "broad_interaction_gateway",
+    "trigger_lifecycle_battle_modifier_or_hidden_runtime_expansion",
+    "coverage_classifier_or_kpi_changes",
+    "additional_card_migration",
+    "implementer_gate_promotion"
+  ],
+  "hotFiles": [
+    "packages/rules/src/ability/interpreter.ts",
+    "packages/rules/src/ability/executable-card-pack.ts",
+    "packages/rules/src/ability/resolution-dataflow.ts"
+  ],
+  "requiredEvidence": {
+    "gateA": [
+      "typed_result_schema",
+      "binding_dependency_validation",
+      "invalid_binding_and_target_reference_negatives"
+    ],
+    "gateB": [
+      "real_executable_pack",
+      "match_session_dispatch_for_both_representatives",
+      "first_and_second_stage_rollback",
+      "legacy_bypass_proof"
+    ],
+    "gateC": [
+      "conversion_magic_actual_moved_count",
+      "golden_eater_pending_reconnect_projection",
+      "golden_eater_stale_replay",
+      "golden_eater_insufficient_payment"
+    ]
+  },
+  "requiredMetrics": [
+    "legacyResolveEffect_before_after",
+    "newRuntimeSemanticRouted_before_after",
+    "dualRuntime_before_after",
+    "local_eligible_migrated_skipped_before_after",
+    "unchanged_skipped_abilities"
+  ],
+  "allowedCompletionStatus": "IMPLEMENTATION_COMPLETE_CANDIDATE"
+}
