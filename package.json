@@ -17,6 +17,10 @@
     "scaffold:skills": "node tools/scaffold-skill-authoring.mjs",
     "index:development-images": "node tools/build-development-image-index.mjs",
     "index:servants": "node tools/build-servant-source-index.mjs",
-    "import:legacy": "node tools/import-legacy-content.mjs"
+    "import:legacy": "node tools/import-legacy-content.mjs",
+    "ui:preview": "node tools/serve-ui-preview.mjs"
+  },
+  "dependencies": {
+    "animejs": "^4.5.0"
   }
 }

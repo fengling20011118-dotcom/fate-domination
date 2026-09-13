@@ -8,6 +8,8 @@
 
 npm test ； npm run validate ； npm run audit:skills
 
+UI 预览：`npm run ui:preview`，浏览器打开 `http://127.0.0.1:4173/`。
+
 完整发布条件仍包括基础流程、角色能力、3X、存档、联机和投影回归全部通过；当前仍有 PARTIAL 技能，不应作为完整发布版使用。
 
 这是与旧开发版完全隔离的 V2 工程。旧版只作为规则行为、内容数据和美术资源的迁移来源，不会被本工程修改。当前正式运行时骨架采用 TypeScript 领域模型；早期 JavaScript 文件仅保留为迁移期间的对照实现。
