@@ -206,6 +206,7 @@ function render(host,options={}){
         if(desc)desc.innerHTML='御主：'+h(masterData.name)+'<br>当前位于深山町';
       }
     }
+    let openingHand=[];
     function expandDeckCards(deck){return (deck||[]).flatMap(card=>Array.from({length:Math.max(1,Number(card.count)||1)},(_,copy)=>({...card,copy}))) }
     function handCardHtml(card){return '<div class="card" data-card-id="'+h(card.id||card.name)+'" data-power="'+h(card.basePower??0)+'" data-info="'+h(card.name)+'|'+h(card.type||'攻击')+' · 魔耗 '+h(card.cost??0)+' · 威力 '+h(card.basePower??0)+'\n'+h(card.text||'')+'"><img src="'+h(card.image||'')+'" alt="'+h(card.name)+' 卡图"><div class="tag">'+h(card.name)+'</div></div>'}
     function handCards(){return [...root.querySelectorAll('.hand .card')]}
@@ -234,7 +235,7 @@ function render(host,options={}){
       const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(reduced){card.classList.remove('draw-pending');return Promise.resolve()}
       return new Promise(resolve=>window.setTimeout(()=>{
-        const source=root.querySelector('.situation-deck')?.getBoundingClientRect(),target=card.getBoundingClientRect(),flight=document.createElement('div');
+        const source=(root.querySelector('.player .meters>div:last-child')||root.querySelector('.situation-deck'))?.getBoundingClientRect(),target=card.getBoundingClientRect(),flight=document.createElement('div');
         if(!source||!target.width){card.classList.remove('draw-pending');resolve();return}
         const startX=source.left+source.width/2-target.width/2,startY=source.top+source.height/2-target.height/2;
         flight.className='draw-card-flight';flight.style.cssText='left:'+startX+'px;top:'+startY+'px;width:'+target.width+'px;height:'+target.height+'px';
@@ -249,7 +250,8 @@ function render(host,options={}){
       const added=cards.map(card=>{const template=document.createElement('template');template.innerHTML=handCardHtml(card);const node=template.content.firstElementChild;node.classList.add('draw-pending');hand.append(node);return node});
       updateHandLayout();refreshPlaySelection();
       return Promise.all(added.map((card,index)=>animateDrawCard(card,index*105))).then(()=>added);
-    }    function bindSelectedCharacters(){
+    }
+    function bindSelectedCharacters(){
       if(!masterData||!servantData)return;
       const masterImg=asset(masterData.image,'master',masterData.name),servantImg=asset(servantData.image,'servant',servantData.name),klass=servantData.class||'Servant';
       const portraits=root.querySelectorAll('.player .portrait img');
@@ -270,7 +272,7 @@ function render(host,options={}){
       if(tabs[0])tabs[0].textContent='御主能力 · '+(masterData.skills||[]).filter(s=>s.type!=='牌库牌').length;
       if(tabs[1])tabs[1].textContent='从者技能 · '+(servantData.skills||[]).filter(s=>s.type!=='牌库牌').length;
       const hand=root.querySelector('.hand');
-      if(hand){const cards=expandDeckCards(servantData.deck).slice(0,4);hand.innerHTML=cards.map(handCardHtml).join('');updateHandLayout()}
+      if(hand){openingHand=expandDeckCards(servantData.deck).slice(0,4);hand.replaceChildren();updateHandLayout()}
       const logName=root.querySelector('.log-item:last-child b');if(logName)logName.textContent=masterData.name;
     }
     bindSelectedCharacters();
@@ -489,6 +491,7 @@ function render(host,options={}){
     api.reflowHand=updateHandLayout;
     window.fdDrawPlayerCards=count=>drawCards(count);
     playBattleEntrance();
+    window.setTimeout(()=>{if(root.isConnected)drawCards(openingHand)},650);
 
  return api;
 }
