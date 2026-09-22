@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -1383,7 +1383,7 @@
 .battle-screen{position:relative;overflow:hidden;background:#090b0f;color:#eee}.battle-host{position:absolute;inset:0;width:100%;height:100%;display:block}
 .battle-entry-transition{position:fixed;z-index:99999;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 44%,rgba(34,38,52,.9),rgba(2,3,6,.985) 64%);opacity:0;pointer-events:all}
 .battle-entry-transition::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 44%,transparent 22%,rgba(0,0,0,.22) 58%,rgba(0,0,0,.62) 100%);pointer-events:none}
-.battle-entry-stage{position:relative;display:grid;grid-template-columns:minmax(160px,230px) 74px minmax(160px,230px);align-items:center;gap:24px;width:min(760px,88vw);perspective:1200px}
+.battle-entry-stage{position:relative;display:grid;grid-template-columns:minmax(160px,230px) 74px minmax(160px,230px);align-items:center;gap:24px;width:min(582px,88vw);perspective:1200px}
 .battle-entry-card{position:relative;aspect-ratio:.714;overflow:hidden;border:1px solid rgba(214,174,82,.55);border-radius:10px;background:#0b0e14;box-shadow:0 28px 70px rgba(0,0,0,.62),0 0 24px rgba(214,174,82,.12);opacity:0;transform:translateY(34px) scale(.9)}
 .battle-entry-card img{width:100%;height:100%;display:block;object-fit:contain;background:linear-gradient(180deg,#11151d,#080a0e)}
 .battle-entry-card span{position:absolute;left:10px;right:10px;bottom:10px;padding:8px 10px;border:1px solid rgba(214,174,82,.24);border-radius:6px;background:rgba(5,7,11,.82);color:#f1d891;text-align:center;font-size:13px;font-weight:800;letter-spacing:.04em;backdrop-filter:blur(5px)}
@@ -1393,8 +1393,9 @@
 .battle-entry-copy{position:absolute;left:50%;top:calc(100% + 26px);transform:translateX(-50%);width:max-content;max-width:86vw;text-align:center;opacity:0}
 .battle-entry-copy small{display:block;color:#8f96a1;font:700 10px Georgia,serif;letter-spacing:.34em;text-indent:.34em}
 .battle-entry-copy strong{display:block;margin-top:6px;color:#f1d891;font:700 20px Georgia,serif;letter-spacing:.08em;text-shadow:0 0 18px rgba(214,174,82,.2)}
+.route-bg-bridge{position:absolute;z-index:1;inset:0;background-color:#090b0f;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:inset 0 0 0 100vmax rgba(4,6,10,.22);pointer-events:none;transform-origin:center}
 
-@media(max-width:720px){.battle-entry-stage{grid-template-columns:minmax(120px,180px) 42px minmax(120px,180px);gap:12px}.battle-entry-mark i{height:62px}.battle-entry-mark strong{font-size:14px}}
+@media(max-width:720px){.battle-entry-stage{grid-template-columns:minmax(120px,180px) 42px minmax(120px,180px);gap:12px;width:min(426px,88vw)}.battle-entry-mark i{height:62px}.battle-entry-mark strong{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.battle-entry-transition,.battle-entry-card,.battle-entry-mark,.battle-entry-copy{animation:none!important;transition:none!important}}
 
 
@@ -1432,7 +1433,7 @@
 <script src="./vendor/anime.umd.min.js"></script>
 <script src="./character-preview-data.js"></script>
 <script src="./codex-detail-data.js"></script>
-<script src="./battle-ui.js"></script>
+<script src="./battle-ui.js?v=20260916-attack-panel-8"></script>
 <script>
 (function(){
 const app=document.getElementById('app');
@@ -1445,11 +1446,12 @@ let avatarPickerOpen=false,settingsBackgroundOpen=false;
 const profileAvatarFiles=Array.from({length:12},(_,i)=>'avatar-'+String(i+1).padStart(2,'0')+'.png');
 function normalizeProfileAvatar(value){return profileAvatarFiles.includes(value)?value:''}
 function avatarPath(file){return '../assets/ui/avatars/'+file}
-const defaultPlayerProfile={name:'御主',avatar:'',totalGames:0,wins:0,masters:{},servants:{}};
-function loadPlayerProfile(){try{const profile={...defaultPlayerProfile,...JSON.parse(localStorage.getItem('fd-player-profile')||'{}')};profile.avatar=normalizeProfileAvatar(profile.avatar);return profile}catch{return {...defaultPlayerProfile}}}
+const defaultPlayerProfile={name:'御主',avatar:'',totalGames:0,topFour:0,wins:0,masters:{},servants:{}};
+function normalizeUsageRecords(records){return Object.fromEntries(Object.entries(records||{}).map(([name,record])=>[name,{...record,games:Number(record.games||0),topFour:Number(record.topFour??record.wins??0),wins:Number(record.wins||0)}]))}
+function loadPlayerProfile(){try{const stored=JSON.parse(localStorage.getItem('fd-player-profile')||'{}'),profile={...defaultPlayerProfile,...stored};profile.avatar=normalizeProfileAvatar(profile.avatar);profile.totalGames=Number(profile.totalGames||0);profile.topFour=Number(profile.topFour??profile.wins??0);profile.wins=Number(profile.wins||0);profile.masters=normalizeUsageRecords(profile.masters);profile.servants=normalizeUsageRecords(profile.servants);return profile}catch{return {...defaultPlayerProfile}}}
 function savePlayerProfile(){localStorage.setItem('fd-player-profile',JSON.stringify(playerProfile))}
-function addUsage(bucket,name,won){if(!name)return;const current=bucket[name]||{games:0,wins:0};current.games+=1;if(won)current.wins+=1;bucket[name]=current}
-function recordMatch(masterName,servantName,won){playerProfile.totalGames=Number(playerProfile.totalGames||0)+1;if(won)playerProfile.wins=Number(playerProfile.wins||0)+1;addUsage(playerProfile.masters,masterName,won);addUsage(playerProfile.servants,servantName,won);savePlayerProfile()}
+function addUsage(bucket,name,topFour,won){if(!name)return;const current=bucket[name]||{games:0,topFour:0,wins:0};current.games=Number(current.games||0)+1;if(topFour)current.topFour=Number(current.topFour||0)+1;if(won)current.wins=Number(current.wins||0)+1;bucket[name]=current}
+function recordMatch(masterName,servantName,result){const explicitPlacement=typeof result==='number'||!!(result&&typeof result==='object'&&result.placement!==undefined),placement=explicitPlacement?Number(typeof result==='number'?result:result.placement):NaN,topFour=Number.isFinite(placement)?placement>=1&&placement<=4:!!(result&&typeof result==='object'&&result.topFour!==undefined?result.topFour:result),won=Number.isFinite(placement)?placement===1:!!(result&&typeof result==='object'&&result.won!==undefined?result.won:result);playerProfile.totalGames=Number(playerProfile.totalGames||0)+1;if(topFour)playerProfile.topFour=Number(playerProfile.topFour||0)+1;if(won)playerProfile.wins=Number(playerProfile.wins||0)+1;addUsage(playerProfile.masters,masterName,topFour,won);addUsage(playerProfile.servants,servantName,topFour,won);savePlayerProfile()}
 let playerProfile=loadPlayerProfile();
 window.FDPlayerStats={recordMatch};
 function esc(v){return String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
@@ -1490,8 +1492,14 @@ function renderBackgroundSettings(){const presets=BATTLE_BG_PRESETS.map(p=>'<but
 function importBattleBackground(file){if(!file||!file.type||!file.type.startsWith('image/'))return;const objectUrl=URL.createObjectURL(file),img=new Image();img.onload=()=>{const maxW=1920,maxH=1200,scale=Math.min(1,maxW/img.naturalWidth,maxH/img.naturalHeight),w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale)),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);URL.revokeObjectURL(objectUrl);customBattleBackground=canvas.toDataURL('image/jpeg',.84);battleBackgroundId='custom';writeLocal('fd-battle-background-custom',customBattleBackground);writeLocal('fd-battle-background','custom');if(screen==='settings')render()};img.onerror=()=>URL.revokeObjectURL(objectUrl);img.src=objectUrl}
 function bg(){return '<div class="bg"></div><div class="ambient-light"></div><div class="ambient-mist"></div><div class="veil"></div><div class="grain"></div>'}
 function logo(){return '<div class="logo"><span class="fate">FATE</span><span class="slash">/</span><span class="dom">DOMINATION</span></div>'}
-function usageRows(records){const rows=Object.entries(records||{}).sort((a,b)=>(b[1].games||0)-(a[1].games||0));if(!rows.length)return '<div class="usage-empty">暂无使用记录</div>';return rows.map(([name,r])=>{const games=Number(r.games||0),wins=Number(r.wins||0),rate=games?Math.round(wins/games*100):0;return '<div class="usage-row"><strong>'+esc(name)+'</strong><span>使用 '+games+' 次</span><span>胜场 '+wins+'</span><span>胜率 '+rate+'%</span></div>'}).join('')}
-function renderPlayerProfile(){const games=Number(playerProfile.totalGames||0),wins=Number(playerProfile.wins||0),rate=games?Math.round(wins/games*100):0;app.innerHTML='<main class="screen profile-screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>PLAYER PROFILE</span><h1>个人档案</h1></div></header><section class="player-profile-page"><div class="profile-identity"><div class="avatar-editor"><button class="profile-avatar-large profile-avatar-button" type="button" data-avatar-toggle>'+avatarContent()+'<span class="avatar-edit-hint">更换</span></button><small>点击头像更换</small></div><div><small>PLAYER NAME</small><div class="profile-name-edit"><input id="playerNameInput" maxlength="16" value="'+esc(playerProfile.name)+'"><button type="button" data-save-profile>保存名字</button></div><p>这里记录你的 Fate / Domination 对局与角色使用数据。</p></div></div><div class="profile-stats"><div><small>总对局</small><strong>'+games+'</strong></div><div><small>胜场</small><strong>'+wins+'</strong></div><div><small>胜率</small><strong>'+rate+'%</strong></div></div><div class="usage-columns"><section class="usage-panel"><header><span>MASTER</span><h2>御主使用记录</h2></header>'+usageRows(playerProfile.masters)+'</section><section class="usage-panel"><header><span>SERVANT</span><h2>从者使用记录</h2></header>'+usageRows(playerProfile.servants)+'</section></div></section><div class="avatar-picker-modal '+(avatarPickerOpen?'open':'')+'" data-avatar-backdrop><section class="avatar-picker-dialog"><header class="avatar-picker-head"><div><small>PLAYER ICON</small><strong>选择头像</strong><span>选择后立即应用</span></div><button type="button" data-avatar-close aria-label="关闭">×</button></header><div class="avatar-choice-grid">'+avatarChoicesHtml()+'</div></section></div></main>'}
+function usageRows(records){const rows=Object.entries(records||{}).sort((a,b)=>(b[1].games||0)-(a[1].games||0));if(!rows.length)return '<div class="usage-empty">暂无使用记录</div>';return rows.map(([name,r])=>{const games=Number(r.games||0),topFourRate=games?Math.round(Number(r.topFour||0)/games*100):0,winRate=games?Math.round(Number(r.wins||0)/games*100):0;return '<div class="usage-row"><strong>'+esc(name)+'</strong><span>使用 '+games+' 次</span><span>前四率 '+topFourRate+'%</span><span>登顶率 '+winRate+'%</span></div>'}).join('')}
+function renderPlayerProfile(){const games=Number(playerProfile.totalGames||0),topFourRate=games?Math.round(Number(playerProfile.topFour||0)/games*100):0,winRate=games?Math.round(Number(playerProfile.wins||0)/games*100):0;app.innerHTML='<main class="screen profile-screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>PLAYER PROFILE</span><h1>个人档案</h1></div></header><section class="player-profile-page"><div class="profile-identity"><div class="avatar-editor"><button class="profile-avatar-large profile-avatar-button" type="button" data-avatar-toggle>'+avatarContent()+'<span class="avatar-edit-hint">更换</span></button><small>点击头像更换</small></div><div><small>PLAYER NAME</small><div class="profile-name-edit"><input id="playerNameInput" maxlength="16" value="'+esc(playerProfile.name)+'"><button type="button" data-save-profile>保存名字</button></div><p>这里记录你的 Fate / Domination 对局与角色使用数据。</p></div></div><div class="profile-stats"><div><small>总对局</small><strong>'+games+'</strong></div><div><small>前四率</small><strong>'+topFourRate+'%</strong></div><div><small>登顶率</small><strong>'+winRate+'%</strong></div></div><div class="usage-columns"><section class="usage-panel"><header><span>MASTER</span><h2>御主使用记录</h2></header>'+usageRows(playerProfile.masters)+'</section><section class="usage-panel"><header><span>SERVANT</span><h2>从者使用记录</h2></header>'+usageRows(playerProfile.servants)+'</section></div></section><div class="avatar-picker-modal '+(avatarPickerOpen?'open':'')+'" data-avatar-backdrop><section class="avatar-picker-dialog"><header class="avatar-picker-head"><div><small>PLAYER ICON</small><strong>选择头像</strong><span>选择后立即应用</span></div><button type="button" data-avatar-close aria-label="关闭">×</button></header><div class="avatar-choice-grid">'+avatarChoicesHtml()+'</div></section></div></main>'}
+function playHomeEntrance(){
+  const home=app.querySelector('.home-screen');
+  if(!home)return;
+  home.classList.add('home-from-splash');
+  window.setTimeout(()=>home.classList.remove('home-from-splash'),760);
+}
 function enterHomeFromSplash(){
   if(isSwitching||screen!=='splash')return;
   const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1502,14 +1510,17 @@ function enterHomeFromSplash(){
   window.setTimeout(()=>{
     screen='home';
     render();
-    const home=app.querySelector('.home-screen');
-    if(home){home.classList.add('home-from-splash');window.setTimeout(()=>home.classList.remove('home-from-splash'),760)}
+    playHomeEntrance();
     window.setTimeout(()=>{isSwitching=false},520);
   },260);
 }
 function animateRouteIn(){
  const motion=window.anime;if(!motion||typeof motion.animate!=='function')return;
  const stagger=motion.stagger?motion.stagger:((v)=>0);
+ if(screen==='home'){
+   playHomeEntrance();
+   return;
+ }
  if(app.querySelector('.ready-screen')){
    const main=app.querySelector('.ready-screen');
    motion.animate(main,{opacity:[0,1],y:[20,0],scale:[.96,1],duration:430,ease:'outBack'});
@@ -1555,10 +1566,27 @@ function transitionToScreen(next){
  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,motion=window.anime;
  if(reduce||!motion||typeof motion.animate!=='function'){screen=next;render();return}
  isSwitching=true;
- const outgoing=app.querySelector('.sub-header,.multi-lobby-panel,.room-panel,.ready-screen,.settings-hub,.player-profile-page,.threex-page,.lol-draft,.mode-grid,.tutorial-grid,.codex-grid');
- if(outgoing)motion.animate(outgoing,{opacity:[1,0],duration:145,ease:'inQuad'});
- window.setTimeout(()=>{screen=next;render();animateRouteIn()},145);
- window.setTimeout(()=>{isSwitching=false},560);
+ const goingHome=next==='home',current=app.querySelector('.screen');
+ const battleRoot=current?.querySelector('#battle-host')?.shadowRoot?.querySelector('.battle-root'),bridge=battleRoot?document.createElement('div'):null;
+ if(bridge){bridge.className='route-bg-bridge';bridge.style.backgroundImage=getComputedStyle(battleRoot).backgroundImage}
+ const outgoing=current?[...current.children].filter(node=>!node.matches('.bg,.ambient-light,.ambient-mist,.veil,.grain')):[];
+ const positionedOutgoing=outgoing.filter(node=>getComputedStyle(node).transform!=='none');
+ const movableOutgoing=outgoing.filter(node=>getComputedStyle(node).transform==='none');
+ const battlePieces=battleRoot?[...battleRoot.querySelectorAll('.topbar,.top-tools,.status,.opponents,.board,.player,.hand,.actions,.ability-modal.open,.log-drawer.open')]:[];
+ if(battlePieces.length)motion.animate(battlePieces,{opacity:[1,0],filter:['blur(0px)','blur(2px)'],duration:280,ease:'inCubic'});
+ else if(outgoing.length&&goingHome)motion.animate(outgoing,{opacity:[1,0],filter:['blur(0px)','blur(2px)'],duration:280,ease:'inCubic'});
+ else{
+   if(positionedOutgoing.length)motion.animate(positionedOutgoing,{opacity:[1,0],filter:['blur(0px)','blur(1px)'],duration:190,ease:'inCubic'});
+   if(movableOutgoing.length)motion.animate(movableOutgoing,{opacity:[1,0],x:[0,-22],y:[0,4],duration:190,ease:'inCubic'});
+ }
+ window.setTimeout(()=>{
+   screen=next;
+   render();
+   const incoming=app.querySelector('.screen');
+   if(bridge&&incoming){incoming.prepend(bridge);motion.animate(bridge,{opacity:[1,0],scale:[1,1.018],duration:480,ease:'outCubic'});window.setTimeout(()=>bridge.remove(),490)}
+   animateRouteIn();
+ },goingHome?270:185);
+ window.setTimeout(()=>{isSwitching=false},goingHome?820:650);
 }
 function go(next){
  if(next!=='settings')settingsBackgroundOpen=false;
