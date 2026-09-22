@@ -47,8 +47,23 @@ function render(host,options={}){
     .draw-card-flight { position:fixed; z-index:80; overflow:hidden; border:2px solid var(--gold); background:#11151d; box-shadow:0 18px 38px rgba(0,0,0,.72),0 0 22px rgba(214,174,82,.26); pointer-events:none; transform-style:preserve-3d; will-change:transform,opacity; }
     .draw-card-flight img { width:100%; height:100%; display:block; object-fit:contain; background:#0c1119; }
     .card.draw-pending { visibility:hidden; }
+    /* Make deployed masters and their location rewards readable at a glance. */
+    .land-slots { right:14px; bottom:12px; gap:12px; }
+    .land-slot { gap:5px; font-size:12px; font-weight:800; line-height:1.15; }
+    .land-slot .slot-face { width:52px; height:52px; border-width:3px; box-shadow:0 6px 15px rgba(0,0,0,.82),0 0 10px rgba(214,174,82,.2); }
+    .land-slot b { padding:2px 4px; border-radius:4px; background:rgba(4,7,12,.68); font-size:11px; letter-spacing:.02em; }
+    .workshop-slots { right:12px; gap:8px; }
+    .workshop-slots .slot-face { width:46px; height:46px; }
+    .workshop-slots .land-slot b { font-size:10px; }
+    /* Deck-to-location deal overlay: the real target stays hidden until the flying card lands. */
+    .map-deal-pending { visibility:hidden; }
+    .map-card-flight { position:fixed; z-index:90; pointer-events:none; perspective:1200px; transform-origin:0 0; will-change:transform,filter; }
+    .map-card-flight-inner { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
+    .map-flight-face { position:absolute; inset:0; overflow:hidden; border:2px solid #777d89; border-radius:3px; background:#11151d center/cover no-repeat; box-shadow:0 18px 38px rgba(0,0,0,.8),0 0 24px rgba(214,174,82,.28); backface-visibility:hidden; }
+    .map-flight-face.front { transform:rotateY(180deg); border-color:var(--gold); }
+    .map-flight-face img { width:100%; height:100%; display:block; object-fit:cover; }
     @media(max-width:1200px) { .hand.fan { width:min(650px,calc(100vw - 48px)); } }
-    @media(prefers-reduced-motion:reduce) { .hand.fan .card { transition:none; } }
+    @media(prefers-reduced-motion:reduce) { .hand.fan .card { transition:none; } .map-deal-pending { visibility:visible; } }
     .portraits { grid-template-columns:clamp(104px,6vw,128px) clamp(104px,6vw,128px) minmax(0,1fr); height:clamp(150px,17vh,184px); min-height:0; }
     .card { width:clamp(112px,6.3vw,128px); height:clamp(158px,8.9vw,181px); }
     .opponent { position:relative; display:block; overflow:visible; border:0; background:transparent; box-shadow:none; }
@@ -341,6 +356,40 @@ function render(host,options={}){
       if(actions)motion.animate(actions,{opacity:[0,1],x:[24,0],delay:380,duration:420,ease:'outCubic'});
       if(handCards.length){motion.animate(handCards,{opacity:[0,1],y:[42,0],scale:[.94,1],delay:motion.stagger?motion.stagger(65,{from:'center'}):420,duration:520,ease:'outBack'});window.setTimeout(()=>handCards.forEach(card=>{card.style.removeProperty('transform');card.style.removeProperty('opacity');card.style.removeProperty('translate');card.style.removeProperty('scale')}),1050)}
     }
+    function prepareMapDeals(){
+      const deals=[
+        {source:'.situation-deck',target:'.situation-active',back:'../assets/map/situations/situation-back.png',reveal:true,delay:0},
+        {source:'.event-deck',target:'.mountain .map-event-card:not(.facedown)',back:'../assets/map/events/event-back.png',reveal:true,delay:210},
+        {source:'.event-deck',target:'.city .map-event-card.facedown',back:'../assets/map/events/event-back.png',reveal:false,delay:420}
+      ].map(item=>({...item,sourceNode:root.querySelector(item.source),targetNode:root.querySelector(item.target)})).filter(item=>item.sourceNode&&item.targetNode);
+      deals.forEach(item=>item.targetNode.classList.add('map-deal-pending'));
+      return deals;
+    }
+    function animateMapDeal(item){
+      const {sourceNode,targetNode,back,reveal,delay}=item;
+      if(!sourceNode?.isConnected||!targetNode?.isConnected)return Promise.resolve();
+      const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduced){targetNode.classList.remove('map-deal-pending');return Promise.resolve()}
+      const sourceRect=sourceNode.getBoundingClientRect(),targetRect=targetNode.getBoundingClientRect();
+      if(!sourceRect.width||!targetRect.width){targetNode.classList.remove('map-deal-pending');return Promise.resolve()}
+      const flight=document.createElement('div'),inner=document.createElement('div'),backFace=document.createElement('div'),frontFace=document.createElement('div');
+      flight.className='map-card-flight';inner.className='map-card-flight-inner';backFace.className='map-flight-face back';frontFace.className='map-flight-face front';
+      const backImg=document.createElement('img');backImg.src=back;backImg.alt='牌背';backFace.append(backImg);
+      const faceImg=targetNode.querySelector('img')?.cloneNode(true)||backImg.cloneNode(true);frontFace.append(faceImg);
+      inner.append(backFace,frontFace);flight.append(inner);root.append(flight);
+      Object.assign(flight.style,{left:sourceRect.left+'px',top:sourceRect.top+'px',width:sourceRect.width+'px',height:sourceRect.height+'px'});
+      const dx=targetRect.left-sourceRect.left,dy=targetRect.top-sourceRect.top,sx=targetRect.width/sourceRect.width,sy=targetRect.height/sourceRect.height,turn=dx>=0?4:-4;
+      const travel=flight.animate([
+        {transform:'translate3d(0,0,0) scale(1,1) rotateZ(0deg)',filter:'brightness(.9)'},
+        {offset:.52,transform:`translate3d(${dx*.56}px,${dy*.56-54}px,100px) scale(${1+(sx-1)*.55},${1+(sy-1)*.55}) rotateZ(${turn}deg)`,filter:'brightness(1.2)'},
+        {transform:`translate3d(${dx}px,${dy}px,0) scale(${sx},${sy}) rotateZ(0deg)`,filter:'brightness(1)'}
+      ],{duration:760,delay,easing:'cubic-bezier(.2,.72,.18,1)',fill:'both'});
+      inner.animate(reveal?[
+        {transform:'rotateY(0deg)'},{offset:.38,transform:'rotateY(0deg)'},{offset:.72,transform:'rotateY(180deg)'},{transform:'rotateY(180deg)'}
+      ]:[{transform:'rotateY(0deg)'},{transform:'rotateY(0deg)'}],{duration:760,delay,easing:'ease-in-out',fill:'both'});
+      return travel.finished.catch(()=>{}).then(()=>{targetNode.classList.remove('map-deal-pending');flight.remove()});
+    }
+    function playMapOpeningSequence(deals){return Promise.all(deals.map(animateMapDeal))}
     function openAnimatedModal(modal,panel){
       if(!modal)return;
       modal.classList.add('open');
@@ -356,17 +405,35 @@ function render(host,options={}){
       motion.animate(target,{opacity:[1,0],y:[0,10],scale:[1,.975],duration:165,ease:'inQuad'});
       window.setTimeout(()=>{modal.classList.remove('open');target.style.removeProperty('opacity');target.style.removeProperty('transform');target.style.removeProperty('translate');target.style.removeProperty('scale')},175);
     }
-    window.fdRevealOpponentSkill=function(opponentIndex,slotIndex,frontSrc,title){const cards=root.querySelectorAll('.opp-skill-card[data-opponent="'+opponentIndex+'"][data-skill-slot="'+slotIndex+'"]'),player=battleRoster[opponentIndex+1],skill=player?.servant?.skills?.[slotIndex];if(!cards.length||!player)return false;player.revealedSkillSlots=[...new Set([...(player.revealedSkillSlots||[]),slotIndex])];const actualSrc=frontSrc||(skill?.image?asset(skill.image,'servant',player.servant.name):'');const actualTitle=title||skill?.name||'已公开从者技能';cards.forEach(card=>{card.innerHTML=actualSrc?'<img src="'+h(actualSrc)+'" alt="'+h(actualTitle)+'">':'<span class="skill-name-face">'+h(actualTitle)+'</span>';card.title=actualTitle;card.classList.add('revealed')});return true};
-    window.fdHideOpponentSkill=function(opponentIndex,slotIndex){const cards=root.querySelectorAll('.opp-skill-card[data-opponent="'+opponentIndex+'"][data-skill-slot="'+slotIndex+'"]'),player=battleRoster[opponentIndex+1];if(!cards.length)return false;if(player)player.revealedSkillSlots=(player.revealedSkillSlots||[]).filter(slot=>slot!==slotIndex);cards.forEach(card=>{card.innerHTML='<img src="../assets/cards/skills/skill-back.png" alt="技能牌背面">';card.title='技能未公开';card.classList.remove('revealed')});return true};
+    window.fdRevealOpponentSkill=function(opponentIndex,slotIndex,frontSrc,title){const cards=root.querySelectorAll('.opp-skill-card[data-opponent="'+opponentIndex+'"][data-skill-slot="'+slotIndex+'"]'),player=battleRoster[opponentIndex+1],skill=player?.servant?.skills?.[slotIndex];if(!cards.length||!player)return false;player.revealedSkillSlots=[...new Set([...(player.revealedSkillSlots||[]),slotIndex])];const actualSrc=frontSrc||(skill?.image?asset(skill.image,'servant',player.servant.name):'');const actualTitle=title||skill?.name||'已公开从者技能';cards.forEach(card=>{card.innerHTML=actualSrc?'<img src="'+h(actualSrc)+'" alt="'+h(actualTitle)+'">':'<span class="skill-name-face">'+h(actualTitle)+'</span>';card.dataset.info=actualTitle+'|已公开从者技能';card.removeAttribute('title');card.classList.add('revealed')});return true};
+    window.fdHideOpponentSkill=function(opponentIndex,slotIndex){const cards=root.querySelectorAll('.opp-skill-card[data-opponent="'+opponentIndex+'"][data-skill-slot="'+slotIndex+'"]'),player=battleRoster[opponentIndex+1];if(!cards.length)return false;if(player)player.revealedSkillSlots=(player.revealedSkillSlots||[]).filter(slot=>slot!==slotIndex);cards.forEach(card=>{card.innerHTML='<img src="../assets/cards/skills/skill-back.png" alt="技能牌背面">';card.dataset.info='技能未公开|真名解放前保持背面。';card.removeAttribute('title');card.classList.remove('revealed')});return true};
     window.fdSetOpponentStatuses=function(opponentIndex,statuses){const player=battleRoster[opponentIndex+1],opponent=root.querySelectorAll('.opponent')[opponentIndex];if(!player||!opponent||!Array.isArray(statuses))return false;player.statuses=statuses.slice();const detail=opponent.querySelector('.opp-detail-content');if(detail)detail.outerHTML=opponentBackHtml(player,opponentIndex,player.nameRevealed!==false);return true};
     window.fdSetOpponentPower=function(opponentIndex,power){const player=battleRoster[opponentIndex+1],opponent=root.querySelectorAll('.opponent')[opponentIndex],value=Number(power);if(!player||!opponent||!Number.isFinite(value))return false;player.power=value;opponent.querySelectorAll('[data-opponent-power]').forEach(node=>node.textContent=String(value));opponent.querySelectorAll('.opp-power-badge,.opp-detail-power').forEach(node=>{node.classList.remove('changed');void node.offsetWidth;node.classList.add('changed')});return true};
     window.fdSetOpponentTrueName=function(opponentIndex,revealed){const player=battleRoster[opponentIndex+1],opponent=root.querySelectorAll('.opponent')[opponentIndex];if(!player||!opponent)return false;player.nameRevealed=!!revealed;const servantCard=opponent.querySelector('img[data-card-kind="servant"]'),classLine=opponent.querySelector('.opp-info .class'),subtitle=opponent.querySelector('.opp-detail-subtitle'),detail=opponent.querySelector('.opp-detail-content'),classText=revealed?((player.servant.class||'Servant')+' · '+player.servant.name):'从者未解放';if(servantCard){servantCard.src=revealed?servantImg(player.servant):'../assets/ui/card-backs/servant-hidden.png';servantCard.alt=revealed?player.servant.name:'从者未解放'}if(classLine)classLine.textContent=classText;if(subtitle)subtitle.textContent=classText;if(detail)detail.outerHTML=opponentBackHtml(player,opponentIndex,!!revealed);return true};
+    function stripNativeTitles(scope=root){
+      const nodes=[];
+      if(scope?.nodeType===1&&scope.hasAttribute('title'))nodes.push(scope);
+      scope?.querySelectorAll?.('[title]').forEach(node=>nodes.push(node));
+      nodes.forEach(node=>{
+        const tip=node.getAttribute('title')?.trim();
+        if(!tip)return node.removeAttribute('title');
+        if(node.matches('.turn-token,.mini-card')&&!node.dataset.info)node.dataset.info=tip.includes('|')?tip:tip+'|';
+        if(!node.getAttribute('aria-label'))node.setAttribute('aria-label',tip.split('|')[0]);
+        node.removeAttribute('title');
+      });
+    }
+    stripNativeTitles();
+    const nativeTitleObserver=new MutationObserver(records=>records.forEach(record=>{
+      if(record.type==='attributes')stripNativeTitles(record.target);
+      else record.addedNodes.forEach(node=>stripNativeTitles(node));
+    }));
+    nativeTitleObserver.observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['title']});
     const preview = root.getElementById('preview'),previewGallery=document.createElement('div');
     previewGallery.className='preview-card-gallery';preview.append(previewGallery);
     function publicSkillText(owner){const skills=(owner?.skills||[]).filter(s=>s.type!=='牌库牌');return skills.length?skills.map((s,i)=>(i+1)+'. 【'+s.name+'】'+(s.type?' · '+s.type:'')+'\n'+(s.text||'')).join('\n\n'):'暂无公开技能资料。'}
     function positionPreview(event){const r=preview.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;let x=event.clientX+18,y=event.clientY-Math.min(100,r.height*.22);if(x+r.width>vw-12)x=event.clientX-r.width-18;if(y+r.height>vh-12)y=vh-r.height-12;preview.style.left=Math.max(10,x)+'px';preview.style.top=Math.max(10,y)+'px'}
     root.addEventListener('pointerover', event => {
-      const target = event.target.closest('[data-info], .mini-card[title], .opp-panel-front > img, .opp-skill-card, .hand .card');
+      const target = event.target.closest('[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card');
       if (!target) return;
       preview.classList.remove('attack-stack');previewGallery.replaceChildren();
       let img = target.matches('img') ? target.src : target.querySelector('img')?.src;
@@ -398,7 +465,7 @@ function render(host,options={}){
     });
     root.addEventListener('pointermove', event => {if(preview.classList.contains('show'))positionPreview(event)});
     root.addEventListener('pointerout', event => {
-      if (event.target.closest('[data-info], .mini-card[title], .opp-panel-front > img, .opp-skill-card, .hand .card')) preview.classList.remove('show');
+      if (event.target.closest('[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card')) preview.classList.remove('show');
     });
     const abilityModal = root.getElementById('ability-modal'),abilityPanel=abilityModal?.querySelector('.ability-panel');
     root.getElementById('open-ability').addEventListener('click', () => openAnimatedModal(abilityModal,abilityPanel));
@@ -489,9 +556,11 @@ function render(host,options={}){
     if (confirmExit) confirmExit.addEventListener('click', () => options.onExit?.());
     api.drawCards=drawCards;
     api.reflowHand=updateHandLayout;
+    api.playMapDealSequence=()=>playMapOpeningSequence(prepareMapDeals());
     window.fdDrawPlayerCards=count=>drawCards(count);
+    const openingMapDeals=prepareMapDeals();
     playBattleEntrance();
-    window.setTimeout(()=>{if(root.isConnected)drawCards(openingHand)},650);
+    window.setTimeout(()=>{if(root.isConnected)playMapOpeningSequence(openingMapDeals).then(()=>drawCards(openingHand))},650);
 
  return api;
 }
