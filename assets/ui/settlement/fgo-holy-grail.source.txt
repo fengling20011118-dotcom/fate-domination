@@ -1,0 +1,5 @@
+Source: https://fgo.wiki/w/文件:素材图标-无框-圣杯.png
+Direct asset: 
+https://media.fgo.wiki/6/67/%E7%B4%A0%E6%9D%90%E5%9B%BE%E6%A0%87-%E6%97%A0%E6%A1%86-%E5%9C%A3%E6%9D%AF.png
+Asset: Fate/Grand Order Holy Grail material icon, 128x128 PNG.
+Copyright: TYPE-MOON / FGO PROJECT. Used in this local fan UI preview for identification and mockup reference.
