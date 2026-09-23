@@ -143,7 +143,7 @@ function render(host,options={}){
       const match=texts.match(/魔力上限(?:为|是)?\s*(\d+)/);
       return match?Number(match[1]):12;
     }
-    function skillCards(list,kind,ownerImage){return (list||[]).filter(s=>s.type!=='牌库牌').map((s,i)=>{const passive=purePassive(s),phase=phaseSkill(s),choices=choiceLines(s),ownerName=kind==='master'?masterData.name:servantData.name,hasSkillArt=!!s.image,img=asset(s.image||ownerImage,kind,ownerName),button=passive?'':('<button data-normal-skill="'+h(s.name)+'" data-skill-kind="'+kind+'" data-skill-index="'+i+'" '+(choices.length?'data-choice-skill="1"':'')+'>'+(phase?'发动能力':'使用技能')+'</button>');return '<article class="ability-card"><div class="ability-art '+(hasSkillArt?'has-skill-art':'')+'"><img src="'+h(img)+'" alt="'+h(hasSkillArt?s.name:ownerName)+'"><span>'+h(hasSkillArt?'技能卡':(kind==='master'?'御主':'从者'))+'</span></div><div class="ability-text"><span class="ability-type">'+h(s.type||'技能')+'</span><h3>'+h(s.name)+'</h3><p>'+h(s.text||'').replace(/\n/g,'<br>')+'</p>'+button+'</div></article>'}).join('')}
+    function skillCards(list,kind,ownerImage){return (list||[]).filter(s=>s.type!=='牌库牌').map((s,i)=>{const passive=purePassive(s),phase=phaseSkill(s),choices=choiceLines(s),ownerName=kind==='master'?masterData.name:servantData.name,hasSkillArt=!!s.image,img=asset(s.image||ownerImage,kind,ownerName),button=passive?'':('<button data-normal-skill="'+h(s.name)+'" data-skill-kind="'+kind+'" data-skill-index="'+i+'" '+(choices.length?'data-choice-skill="1"':'')+'>'+(phase?'发动能力':'使用技能')+'</button>');return '<article class="ability-card"><div class="ability-art '+(hasSkillArt?'has-skill-art':'')+'"><img src="'+h(img)+'" alt="'+h(hasSkillArt?s.name:ownerName)+'">'+(hasSkillArt?'<span>技能卡</span>':'')+'</div><div class="ability-text"><span class="ability-type">'+h(s.type||'技能')+'</span><h3>'+h(s.name)+'</h3><p>'+h(s.text||'').replace(/\n/g,'<br>')+'</p>'+button+'</div></article>'}).join('')}
     const extraMasterIdentities=[
       {name:'伊莉雅斯菲尔',fullName:'伊莉雅斯菲尔',class:'Master',image:'../assets/cards/masters/伊莉雅斯菲尔.png',skills:[
         {name:'人工生命体',type:'被动',text:'你的魔力初始值为6。'},
@@ -436,7 +436,7 @@ function render(host,options={}){
     function publicSkillText(owner){const skills=(owner?.skills||[]).filter(s=>s.type!=='牌库牌');return skills.length?skills.map((s,i)=>(i+1)+'. 【'+s.name+'】'+(s.type?' · '+s.type:'')+'\n'+(s.text||'')).join('\n\n'):'暂无公开技能资料。'}
     function positionPreview(event){const r=preview.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;let x=event.clientX+18,y=event.clientY-Math.min(100,r.height*.22);if(x+r.width>vw-12)x=event.clientX-r.width-18;if(y+r.height>vh-12)y=vh-r.height-12;preview.style.left=Math.max(10,x)+'px';preview.style.top=Math.max(10,y)+'px'}
     const previewSelector='[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card';
-    let previewHoverTarget=null,previewDelayTimer=0,previewPointer={clientX:0,clientY:0};
+    let previewReady=false,previewHoverTarget=null,previewDelayTimer=0,previewPointer={clientX:0,clientY:0};
     function cancelPreviewDelay(){window.clearTimeout(previewDelayTimer);previewDelayTimer=0}
     function hidePreview(){cancelPreviewDelay();preview.classList.remove('show')}
     function renderCardPreview(target,event){
@@ -469,6 +469,7 @@ function render(host,options={}){
       if(!preview.classList.contains('show'))requestAnimationFrame(()=>{if(previewHoverTarget===target)preview.classList.add('show')});
     }
     root.addEventListener('pointerover',event=>{
+      if(!previewReady){previewHoverTarget=null;hidePreview();return}
       const target=event.target.closest(previewSelector);
       if(!target||(event.relatedTarget&&target.contains(event.relatedTarget)))return;
       cancelPreviewDelay();previewHoverTarget=target;previewPointer={clientX:event.clientX,clientY:event.clientY};
@@ -575,11 +576,17 @@ function render(host,options={}){
     if (confirmExit) confirmExit.addEventListener('click', () => options.onExit?.());
     api.drawCards=drawCards;
     api.reflowHand=updateHandLayout;
+    api.isPreviewReady=()=>previewReady;
     api.playMapDealSequence=()=>playMapOpeningSequence(prepareMapDeals());
     window.fdDrawPlayerCards=count=>drawCards(count);
     const openingMapDeals=prepareMapDeals();
     playBattleEntrance();
-    window.setTimeout(()=>{if(root.isConnected)playMapOpeningSequence(openingMapDeals).then(()=>drawCards(openingHand))},650);
+    window.setTimeout(()=>{
+      if(!root.isConnected)return;
+      playMapOpeningSequence(openingMapDeals)
+        .then(()=>drawCards(openingHand))
+        .then(()=>{if(root.isConnected){previewReady=true;root.classList.add('preview-ready')}});
+    },650);
 
  return api;
 }
