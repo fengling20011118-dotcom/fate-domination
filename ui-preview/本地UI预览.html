@@ -1567,6 +1567,199 @@
   .draft-screen .lol-draft.ow-draft .ow-roster-grid .pick-card{will-change:auto!important}
 }
 
+
+/* 3X uses the same readable card scale as standard mode and fills the vertical stage. */
+.draft-screen .threex-page{grid-template-rows:58px minmax(0,1fr)!important}
+.draft-screen .threex-stepper button{
+  flex-basis:150px!important;
+  height:58px!important;
+}
+.draft-screen .threex-stepper button span{font-size:9px!important}
+.draft-screen .threex-stepper button strong{font-size:14px!important}
+.draft-screen .threex-content{
+  min-height:0!important;
+  overflow:hidden!important;
+  padding-top:20px!important;
+}
+.draft-screen .threex-content .ow-3x-draft{
+  height:100%!important;
+  min-height:0!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+}
+.draft-screen .threex-content .ow-phase-copy h2{font-size:42px!important}
+.draft-screen .threex-content .ow-phase-copy p{font-size:13px!important}
+.draft-screen .threex-content .ow-current-choice{
+  min-height:42px!important;
+  margin:2px 0 6px!important;
+  font-size:11px!important;
+}
+.draft-screen .threex-content .ow-current-choice strong{font-size:15px!important}
+.draft-screen .threex-content .ow-roster--3x{
+  display:grid!important;
+  align-items:center!important;
+  justify-items:center!important;
+  min-height:0!important;
+  overflow:auto!important;
+  padding:22px 28px 28px!important;
+}
+.draft-screen .threex-content .ow-3x-grid,
+.draft-screen .threex-content .ow-3x-grid--small{
+  width:100%!important;
+  max-width:1420px!important;
+  grid-template-columns:repeat(auto-fit,minmax(154px,176px))!important;
+  justify-content:center!important;
+  align-content:center!important;
+  gap:18px!important;
+}
+.draft-screen .threex-content .ow-3x-grid .pick-card{
+  width:100%!important;
+  height:276px!important;
+  contain:layout paint!important;
+  isolation:isolate!important;
+  transform:translate3d(0,0,0) scale(1)!important;
+  transform-origin:center center!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s ease,box-shadow .2s ease!important;
+}
+.draft-screen .threex-content .ow-3x-grid .pick-card:hover{
+  transform:translate3d(0,-8px,0) scale(1.055)!important;
+  z-index:8!important;
+  border-color:rgba(231,200,126,.72)!important;
+  box-shadow:0 18px 38px rgba(0,0,0,.42),0 0 0 1px rgba(231,200,126,.11)!important;
+}
+.draft-screen .threex-content .ow-3x-grid .pick-card-avatar{
+  height:224px!important;
+  background:rgba(4,12,20,.94)!important;
+}
+.draft-screen .threex-content .ow-3x-grid .pick-card-avatar>img,
+.draft-screen .threex-content .ow-3x-grid .pick-card:hover .pick-card-avatar>img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  transform:none!important;
+  filter:none!important;
+}
+.draft-screen .threex-content .ow-3x-grid .pick-card-info{padding:8px 9px!important}
+.draft-screen .threex-content .ow-3x-grid .pick-card-info strong{font-size:14px!important}
+.draft-screen .threex-content .ow-3x-grid .pick-card-info small{margin-top:3px;font-size:11px!important}
+.draft-screen .threex-content .ow-draft-footer--center{
+  min-height:82px!important;
+  padding-top:14px!important;
+  padding-bottom:14px!important;
+}
+.draft-screen .threex-content .ow-draft-footer--center .ow-primary{
+  min-width:190px!important;
+  height:50px!important;
+  font-size:15px!important;
+}
+
+/* 3X crystal shop distributes content across the available height. */
+.draft-screen .threex-content .purchase-screen{
+  height:100%!important;
+  min-height:0!important;
+  grid-template-rows:auto minmax(190px,.85fr) minmax(260px,1.15fr) auto!important;
+  align-content:stretch!important;
+  gap:18px!important;
+  padding:0!important;
+}
+.draft-screen .purchase-head{padding:14px 18px 18px!important}
+.draft-screen .purchase-head small,
+.draft-screen .purchase-section-title small,
+.draft-screen .purchase-master small{font-size:11px!important}
+.draft-screen .purchase-head h2{margin-top:7px!important;font-size:38px!important}
+.draft-screen .purchase-head p{font-size:13px!important}
+.draft-screen .crystal-count span{font-size:14px!important}
+.draft-screen .crystal-count b{font-size:38px!important}
+.draft-screen .purchase-candidates,
+.draft-screen .purchase-options{
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  padding:0 18px!important;
+}
+.draft-screen .purchase-section-title{margin-bottom:12px!important}
+.draft-screen .purchase-section-title h3{font-size:22px!important}
+.draft-screen .purchase-section-title>span{font-size:12px!important}
+.draft-screen .purchase-candidate-list{
+  flex:1!important;
+  min-height:0!important;
+  align-content:center!important;
+  align-items:center!important;
+  gap:16px!important;
+}
+.draft-screen .purchase-candidate{
+  width:270px!important;
+  height:150px!important;
+  grid-template-columns:106px minmax(0,1fr)!important;
+  box-shadow:0 14px 30px rgba(0,0,0,.24)!important;
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s ease,box-shadow .2s ease!important;
+}
+.draft-screen .purchase-candidate:hover{
+  transform:translateY(-5px) scale(1.025)!important;
+  border-color:rgba(231,200,126,.6)!important;
+  box-shadow:0 20px 38px rgba(0,0,0,.34)!important;
+}
+.draft-screen .purchase-candidate>div:last-child{padding:0 16px!important}
+.draft-screen .purchase-candidate strong{font-size:17px!important}
+.draft-screen .purchase-candidate small{margin-top:7px!important;font-size:12px!important}
+.draft-screen .purchase-grid{
+  flex:1!important;
+  min-height:0!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(0,1fr)!important;
+  gap:14px!important;
+}
+.draft-screen .purchase-option{
+  min-height:0!important;
+  height:100%!important;
+  padding:24px 24px 20px!important;
+}
+.draft-screen .purchase-option-main{height:100%!important;min-height:0!important}
+.draft-screen .purchase-option-top h3{font-size:25px!important}
+.draft-screen .purchase-option-top span{font-size:14px!important}
+.draft-screen .purchase-option-main p{margin-top:14px!important;font-size:15px!important;line-height:1.65!important}
+.draft-screen .purchase-option-foot small{font-size:13px!important}
+.draft-screen .purchase-option-foot button{
+  min-width:96px!important;
+  height:44px!important;
+  font-size:14px!important;
+}
+.draft-screen .purchase-footer{
+  min-height:72px!important;
+  margin:0!important;
+  padding:12px 18px!important;
+}
+.draft-screen .purchase-master strong{font-size:15px!important}
+.draft-screen .purchase-finish{
+  min-width:180px!important;
+  height:48px!important;
+  font-size:14px!important;
+}
+@media(max-width:1250px), (max-height:760px){
+  .draft-screen .threex-page{grid-template-rows:52px minmax(0,1fr)!important}
+  .draft-screen .threex-stepper button{height:52px!important;flex-basis:128px!important}
+  .draft-screen .threex-content .ow-phase-copy h2{font-size:34px!important}
+  .draft-screen .threex-content .ow-roster--3x{padding:14px 20px 18px!important}
+  .draft-screen .threex-content .ow-3x-grid,
+  .draft-screen .threex-content .ow-3x-grid--small{grid-template-columns:repeat(auto-fit,minmax(132px,150px))!important;gap:13px!important}
+  .draft-screen .threex-content .ow-3x-grid .pick-card{height:235px!important}
+  .draft-screen .threex-content .ow-3x-grid .pick-card-avatar{height:188px!important}
+  .draft-screen .threex-content .purchase-screen{grid-template-rows:auto minmax(150px,.75fr) minmax(210px,1.25fr) auto!important;gap:12px!important}
+  .draft-screen .purchase-head{padding:8px 12px 12px!important}
+  .draft-screen .purchase-head h2{font-size:31px!important}
+  .draft-screen .purchase-candidates,.draft-screen .purchase-options{padding:0 12px!important}
+  .draft-screen .purchase-candidate{width:220px!important;height:112px!important;grid-template-columns:80px minmax(0,1fr)!important}
+  .draft-screen .purchase-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+  .draft-screen .purchase-option{padding:17px 18px 15px!important}
+  .draft-screen .purchase-option-top h3{font-size:20px!important}
+  .draft-screen .purchase-option-main p{font-size:13px!important}
+}
+@media(max-width:900px){
+  .draft-screen .purchase-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .draft-screen .threex-content{overflow:auto!important}
+}
+
 </style>
 </head>
 <body>
