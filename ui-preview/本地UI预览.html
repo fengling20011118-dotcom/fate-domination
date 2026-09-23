@@ -1748,7 +1748,7 @@
 <script src="./vendor/anime.umd.min.js"></script>
 <script src="./character-preview-data.js"></script>
 <script src="./codex-detail-data.js"></script>
-<script src="./battle-ui.js?v=20260923-skill-flight-5"></script>
+<script src="./battle-ui.js?v=20260924-preview-lifecycle-6"></script>
 <script>
 (function(){
 const app=document.getElementById('app');
@@ -1921,6 +1921,7 @@ function transitionToScreen(next){
  window.setTimeout(()=>{isSwitching=false},goingHome?820:650);
 }
 function go(next){
+ resetDocumentPreviews();
  if(next!=='settings')settingsBackgroundOpen=false;
  if(next!=='profile')avatarPickerOpen=false;
  transitionToScreen(next);
@@ -2015,6 +2016,7 @@ function battleTransitionAsset(kind,name){
 }
 function startBattleTransition(){
  if(isSwitching)return;
+ resetDocumentPreviews();
  resetBattlePreview();
  const pick=currentBattleSelection(),masterSrc=battleTransitionAsset('master',pick.master),servantSrc=battleTransitionAsset('servant',pick.servant);
  const overlay=document.createElement('div');
@@ -2120,6 +2122,7 @@ function hideCharacterSkillPreview(){
  window.clearTimeout(characterSkillPreviewTimer);characterSkillPreviewTimer=0;characterSkillPreviewTarget=null;
  const box=document.getElementById('characterSkillPreview');if(box){box.classList.remove('active');box.setAttribute('aria-hidden','true')}
 }
+function resetDocumentPreviews(){hideCodexImagePreview();hideCharacterSkillPreview()}
 function showCharacterSkillPreview(target){
  const info=characterSkillPreviewData(target);if(!info||characterSkillPreviewTarget!==target||!target.matches(':hover'))return;
  const label=info.kind==='master'?'MASTER · 御主能力':((info.data.class||'SERVANT')+' · 从者技能');
@@ -2139,8 +2142,8 @@ document.addEventListener('mouseout',e=>{
  if(characterSkillPreviewTarget===target)hideCharacterSkillPreview();
 });
 document.addEventListener('pointerdown',hideCharacterSkillPreview);
-function openUiDialog(modal,panelSelector){if(!modal)return;modal.classList.add('open');const panel=modal.querySelector(panelSelector),motion=window.anime;if(panel&&motion&&typeof motion.animate==='function'){motion.animate(panel,{opacity:[0,1],y:[14,0],duration:260,ease:'outCubic'});const items=[...panel.querySelectorAll('.avatar-choice,.battle-bg-choice')];if(items.length)motion.animate(items,{opacity:[0,1],y:[7,0],delay:motion.stagger?motion.stagger(28):0,duration:220,ease:'outCubic'})}}
-function closeUiDialog(modal){if(modal)modal.classList.remove('open')}
+function openUiDialog(modal,panelSelector){if(!modal)return;resetDocumentPreviews();modal.classList.add('open');const panel=modal.querySelector(panelSelector),motion=window.anime;if(panel&&motion&&typeof motion.animate==='function'){motion.animate(panel,{opacity:[0,1],y:[14,0],duration:260,ease:'outCubic'});const items=[...panel.querySelectorAll('.avatar-choice,.battle-bg-choice')];if(items.length)motion.animate(items,{opacity:[0,1],y:[7,0],delay:motion.stagger?motion.stagger(28):0,duration:220,ease:'outCubic'})}}
+function closeUiDialog(modal){resetDocumentPreviews();if(modal)modal.classList.remove('open')}
 document.addEventListener('click',e=>{
  if(screen==='splash'){enterHomeFromSplash();return}
  const avatarToggle=e.target.closest('[data-avatar-toggle]');if(avatarToggle){avatarPickerOpen=true;openUiDialog(document.querySelector('.avatar-picker-modal'),'.avatar-picker-dialog');return}
