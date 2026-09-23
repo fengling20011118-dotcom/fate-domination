@@ -475,7 +475,7 @@ function render(host,options={}){
       cancelPreviewDelay();previewHoverTarget=target;previewPointer={clientX:event.clientX,clientY:event.clientY};
       if(target.matches('.hand .card')){
         preview.classList.remove('show');
-        previewDelayTimer=window.setTimeout(()=>{if(previewHoverTarget===target&&target.matches(':hover'))renderCardPreview(target,previewPointer)},3000);
+        previewDelayTimer=window.setTimeout(()=>{if(previewHoverTarget===target&&target.matches(':hover'))renderCardPreview(target,previewPointer)},1500);
       }else renderCardPreview(target,event);
     });
     root.addEventListener('pointermove',event=>{
