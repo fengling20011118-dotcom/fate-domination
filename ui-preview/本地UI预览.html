@@ -1314,6 +1314,7 @@
 
 /* 图鉴详情：角色卡图 / 技能 / 从者卡组 */
 .codex-detail-page{position:absolute;z-index:3;left:54px;right:54px;top:154px;bottom:28px;display:grid;grid-template-columns:minmax(250px,310px) minmax(0,1fr);gap:22px;min-height:0}
+.codex-detail-identity,.codex-detail-content{will-change:transform,opacity,filter}.codex-detail-content{transform-origin:center left}
 .codex-detail-identity{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:16px;border:1px solid rgba(151,184,204,.15);background:rgba(4,13,22,.82);box-shadow:0 18px 46px rgba(0,0,0,.24);overflow:hidden}
 .codex-detail-art{min-height:0;display:grid;place-items:center;overflow:hidden;background:linear-gradient(180deg,rgba(18,31,45,.78),rgba(5,13,22,.9));cursor:zoom-in}.codex-detail-art img{width:100%;height:100%;display:block;object-fit:contain}
 .codex-detail-id{padding:14px 4px 2px;border-top:1px solid rgba(152,184,203,.12)}.codex-detail-id small{display:block;color:#c7aa68;font:700 10px Georgia,serif;letter-spacing:.18em}.codex-detail-id strong{display:block;margin-top:6px;color:#f3f6f8;font-size:27px;line-height:1.15}.codex-detail-id span{display:block;margin-top:5px;color:#91a4b2;font-size:12px}.codex-detail-id em{display:inline-block;margin-top:8px;padding:4px 8px;border:1px solid rgba(204,173,102,.3);color:#d6bb7b;font-size:11px;font-style:normal}
@@ -1437,7 +1438,7 @@
 <script>
 (function(){
 const app=document.getElementById('app');
-let screen='splash',codexTab='all',codexClass='全部',codexDetailName='',codexDetailKind='',codexDetailTab='skills',chosenMode='free',isSwitching=false,codexSwapTimer=0;
+let screen='splash',codexTab='all',codexClass='全部',codexDetailName='',codexDetailKind='',codexDetailTab='skills',codexDetailOrigin=null,chosenMode='free',isSwitching=false,codexSwapTimer=0;
 let setupSource='single',standardPickStage='master',standardClass='全部',selectedMaster='',selectedServant='',selectionLocked=false;
 let threeXStep='ban',threeXBannedMaster='',threeXMasterCandidates=[],threeXSelectedMaster='',threeXCrystals=0,threeXPurchases={servant:0,score:0,mana:0,seal:0},threeXServantCandidates=[],threeXSelectedServant='';
 let multiplayerRoomPlayers=[],multiplayerLaunchRoster=[];
@@ -1519,6 +1520,23 @@ function animateRouteIn(){
  const stagger=motion.stagger?motion.stagger:((v)=>0);
  if(screen==='home'){
    playHomeEntrance();
+   return;
+ }
+ if(screen==='codex-detail'){
+   const header=app.querySelector('.sub-header'),identity=app.querySelector('.codex-detail-identity'),content=app.querySelector('.codex-detail-content');
+   if(header)motion.animate(header,{opacity:[0,1],y:[-10,0],duration:360,ease:'outCubic'});
+   if(identity){
+     const targetRect=identity.getBoundingClientRect(),origin=codexDetailOrigin;
+     const dx=origin?Math.max(-420,Math.min(420,origin.left-targetRect.left)):-28;
+     const dy=origin?Math.max(-260,Math.min(260,origin.top-targetRect.top)):18;
+     const scale=origin?Math.max(.48,Math.min(.86,origin.width/Math.max(1,targetRect.width))):.94;
+     identity.style.transformOrigin='top left';
+     motion.animate(identity,{opacity:[.18,1],x:[dx,0],y:[dy,0],scale:[scale,1],filter:['blur(3px)','blur(0px)'],duration:590,ease:'outCubic'});
+   }
+   if(content)motion.animate(content,{opacity:[0,1],x:[34,0],scale:[.985,1],filter:['blur(2px)','blur(0px)'],delay:70,duration:500,ease:'outCubic'});
+   const pieces=[...app.querySelectorAll('.codex-detail-tabs button,.codex-detail-section-head,.codex-skill-item,.codex-deck-card')];
+   if(pieces.length)motion.animate(pieces,{opacity:[0,1],y:[12,0],delay:stagger(34),duration:330,ease:'outCubic'});
+   codexDetailOrigin=null;
    return;
  }
  if(app.querySelector('.ready-screen')){
@@ -1801,7 +1819,7 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-threex-finish-purchase]')&&threeXStep==='purchase'){threeXCrystals=0;threeXStep='servant';renderThreeXSetup();return}
  const xs=e.target.closest('[data-threex-servant]');if(xs&&threeXStep==='servant'){threeXSelectedServant=xs.dataset.threexServant;renderThreeXSetup();return}
  if(e.target.closest('[data-threex-confirm-servant]')&&threeXSelectedServant&&threeXStep==='servant'){threeXStep='complete';renderThreeXSetup();requestAnimationFrame(animateRouteIn);return}
- const entry=e.target.closest('[data-entry]');if(entry){codexDetailName=entry.dataset.entry;codexDetailKind=entry.dataset.entryKind||'servant';codexDetailTab='skills';go('codex-detail');return}
+ const entry=e.target.closest('[data-entry]');if(entry){const originNode=entry.querySelector('.codex-portrait')||entry,originRect=originNode.getBoundingClientRect();codexDetailOrigin={left:originRect.left,top:originRect.top,width:originRect.width,height:originRect.height};codexDetailName=entry.dataset.entry;codexDetailKind=entry.dataset.entryKind||'servant';codexDetailTab='skills';go('codex-detail');return}
  const detailTab=e.target.closest('[data-codex-detail-tab]');if(detailTab&&screen==='codex-detail'){codexDetailTab=detailTab.dataset.codexDetailTab;renderCodexDetail();return}
  const t=e.target.closest('[data-tab]');if(t){codexTab=t.dataset.tab;codexClass='全部';renderCodex();return}
  const c=e.target.closest('[data-class]');if(c){codexTab='servant';codexClass=c.dataset.class;renderCodex();return}

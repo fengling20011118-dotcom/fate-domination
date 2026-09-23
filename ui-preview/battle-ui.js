@@ -62,8 +62,11 @@ function render(host,options={}){
     .map-flight-face { position:absolute; inset:0; overflow:hidden; border:2px solid #777d89; border-radius:3px; background:#11151d center/cover no-repeat; box-shadow:0 18px 38px rgba(0,0,0,.8),0 0 24px rgba(214,174,82,.28); backface-visibility:hidden; }
     .map-flight-face.front { transform:rotateY(180deg); border-color:var(--gold); }
     .map-flight-face img { width:100%; height:100%; display:block; object-fit:cover; }
+    /* Preview panels ease in and out instead of snapping open. */
+    .preview { display:grid; opacity:0; visibility:hidden; transform:translateY(12px) scale(.972); transform-origin:42% 18%; filter:blur(2px); transition:opacity .2s ease,transform .28s cubic-bezier(.16,1,.3,1),filter .2s ease,visibility 0s linear .28s; will-change:opacity,transform; }
+    .preview.show { display:grid; opacity:1; visibility:visible; transform:translateY(0) scale(1); filter:blur(0); transition-delay:0s; }
     @media(max-width:1200px) { .hand.fan { width:min(650px,calc(100vw - 48px)); } }
-    @media(prefers-reduced-motion:reduce) { .hand.fan .card { transition:none; } .map-deal-pending { visibility:visible; } }
+    @media(prefers-reduced-motion:reduce) { .hand.fan .card { transition:none; } .map-deal-pending { visibility:visible; } .preview { transition:none; filter:none; } }
     .portraits { grid-template-columns:clamp(104px,6vw,128px) clamp(104px,6vw,128px) minmax(0,1fr); height:clamp(150px,17vh,184px); min-height:0; }
     .card { width:clamp(112px,6.3vw,128px); height:clamp(158px,8.9vw,181px); }
     .opponent { position:relative; display:block; overflow:visible; border:0; background:transparent; box-shadow:none; }
@@ -432,9 +435,11 @@ function render(host,options={}){
     previewGallery.className='preview-card-gallery';preview.append(previewGallery);
     function publicSkillText(owner){const skills=(owner?.skills||[]).filter(s=>s.type!=='牌库牌');return skills.length?skills.map((s,i)=>(i+1)+'. 【'+s.name+'】'+(s.type?' · '+s.type:'')+'\n'+(s.text||'')).join('\n\n'):'暂无公开技能资料。'}
     function positionPreview(event){const r=preview.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;let x=event.clientX+18,y=event.clientY-Math.min(100,r.height*.22);if(x+r.width>vw-12)x=event.clientX-r.width-18;if(y+r.height>vh-12)y=vh-r.height-12;preview.style.left=Math.max(10,x)+'px';preview.style.top=Math.max(10,y)+'px'}
-    root.addEventListener('pointerover', event => {
-      const target = event.target.closest('[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card');
-      if (!target) return;
+    const previewSelector='[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card';
+    let previewHoverTarget=null,previewDelayTimer=0,previewPointer={clientX:0,clientY:0};
+    function cancelPreviewDelay(){window.clearTimeout(previewDelayTimer);previewDelayTimer=0}
+    function hidePreview(){cancelPreviewDelay();preview.classList.remove('show')}
+    function renderCardPreview(target,event){
       preview.classList.remove('attack-stack');previewGallery.replaceChildren();
       let img = target.matches('img') ? target.src : target.querySelector('img')?.src;
       let title='',detail='';
@@ -450,22 +455,36 @@ function render(host,options={}){
         if(target.classList.contains('revealed')&&skill){title=skill.name;detail=(skill.type||'从者技能')+'\n\n'+(skill.text||'');img=skill.image?asset(skill.image,'servant',player.servant.name):img}else{title='从者技能未公开';detail='真名解放前保持背面。'}
       }else if(target.classList.contains('opp-card-overflow')){
         const stack=[...target.querySelectorAll('[data-stack-src]')];title='攻击区';detail='另有 '+stack.length+' 张激活攻击牌';img='';
-        stack.forEach(marker=>{const card=document.createElement('img');card.src=marker.dataset.stackSrc;card.alt=marker.dataset.stackName;card.title=marker.dataset.stackName;previewGallery.append(card)});
+        stack.forEach(marker=>{const card=document.createElement('img');card.src=marker.dataset.stackSrc;card.alt=marker.dataset.stackName;previewGallery.append(card)});
         previewGallery.style.gridTemplateColumns='repeat('+stack.length+',minmax(0,1fr))';preview.classList.add('attack-stack');
       }else{
-        const raw = target.dataset.info || target.title || target.alt || '公开信息';
+        const raw = target.dataset.info || target.alt || '公开信息';
         [title,detail=''] = raw.split('|');
         if(!detail)detail=target.classList.contains('effect')?'当前持续生效的公开效果。':'点击或悬浮查看公开信息。';
       }
       const previewImg=preview.querySelector('img');previewImg.style.display=img?'block':'none';if(img)previewImg.src=img;
       preview.querySelector('h3').textContent=title;
       preview.querySelector('p').textContent=detail;
-      preview.classList.add('show');
       positionPreview(event);
+      if(!preview.classList.contains('show'))requestAnimationFrame(()=>{if(previewHoverTarget===target)preview.classList.add('show')});
+    }
+    root.addEventListener('pointerover',event=>{
+      const target=event.target.closest(previewSelector);
+      if(!target||(event.relatedTarget&&target.contains(event.relatedTarget)))return;
+      cancelPreviewDelay();previewHoverTarget=target;previewPointer={clientX:event.clientX,clientY:event.clientY};
+      if(target.matches('.hand .card')){
+        preview.classList.remove('show');
+        previewDelayTimer=window.setTimeout(()=>{if(previewHoverTarget===target&&target.matches(':hover'))renderCardPreview(target,previewPointer)},3000);
+      }else renderCardPreview(target,event);
     });
-    root.addEventListener('pointermove', event => {if(preview.classList.contains('show'))positionPreview(event)});
-    root.addEventListener('pointerout', event => {
-      if (event.target.closest('[data-info], .mini-card, .opp-panel-front > img, .opp-skill-card, .hand .card')) preview.classList.remove('show');
+    root.addEventListener('pointermove',event=>{
+      previewPointer={clientX:event.clientX,clientY:event.clientY};
+      if(preview.classList.contains('show'))positionPreview(event);
+    });
+    root.addEventListener('pointerout',event=>{
+      const target=event.target.closest(previewSelector);
+      if(!target||(event.relatedTarget&&target.contains(event.relatedTarget)))return;
+      if(previewHoverTarget===target){previewHoverTarget=null;hidePreview()}
     });
     const abilityModal = root.getElementById('ability-modal'),abilityPanel=abilityModal?.querySelector('.ability-panel');
     root.getElementById('open-ability').addEventListener('click', () => openAnimatedModal(abilityModal,abilityPanel));
