@@ -1450,12 +1450,15 @@
   height:276px!important;
   contain:layout paint!important;
   isolation:isolate!important;
-  transform:translate3d(0,0,0)!important;
+  transform:translate3d(0,0,0) scale(1)!important;
+  transform-origin:center center!important;
+  will-change:transform!important;
   backface-visibility:hidden!important;
   transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s ease,box-shadow .2s ease!important;
 }
 .draft-screen .lol-draft.ow-draft .ow-roster-grid .pick-card:hover{
-  transform:translate3d(0,-6px,0)!important;
+  transform:translate3d(0,-8px,0) scale(1.055)!important;
+  z-index:8!important;
   border-color:rgba(231,200,126,.72)!important;
   box-shadow:0 18px 38px rgba(0,0,0,.42),0 0 0 1px rgba(231,200,126,.11)!important;
 }
@@ -1481,6 +1484,87 @@
   .draft-screen .lol-draft.ow-draft .ow-roster-grid{grid-template-columns:repeat(auto-fit,minmax(132px,150px))!important;gap:13px!important}
   .draft-screen .lol-draft.ow-draft .ow-roster-grid .pick-card{height:235px!important}
   .draft-screen .lol-draft.ow-draft .ow-roster-grid .pick-card-avatar{height:188px!important}
+}
+
+
+/* Codex thumbnails fill their frames; selection previews contain text only. */
+.codex-portrait{
+  padding:0!important;
+  background:#050b12!important;
+}
+.codex-portrait>img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+}
+.character-skill-preview{
+  position:fixed;
+  z-index:260;
+  width:min(430px,calc(100vw - 28px));
+  max-height:min(68vh,620px);
+  overflow:hidden;
+  border:1px solid rgba(221,184,94,.62);
+  border-radius:10px;
+  background:
+    radial-gradient(circle at 12% 0,rgba(87,65,25,.18),transparent 34%),
+    linear-gradient(155deg,rgba(14,20,31,.985),rgba(4,9,16,.99));
+  color:#edf2f6;
+  box-shadow:0 28px 72px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.035) inset;
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+  transform:translate3d(0,10px,0) scale(.975);
+  transform-origin:center;
+  transition:opacity .18s ease,transform .24s cubic-bezier(.16,1,.3,1),visibility .18s ease;
+}
+.character-skill-preview.active{
+  opacity:1;
+  visibility:visible;
+  transform:translate3d(0,0,0) scale(1);
+}
+.character-skill-preview-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  padding:16px 18px 13px;
+  border-bottom:1px solid rgba(151,182,201,.14);
+  background:rgba(10,21,33,.72);
+}
+.character-skill-preview-head small{
+  display:block;
+  margin-bottom:4px;
+  color:#caaa61;
+  font:700 9px Georgia,serif;
+  letter-spacing:.19em;
+}
+.character-skill-preview-head strong{display:block;color:#f5f7f9;font-size:22px;line-height:1.15}
+.character-skill-preview-head>span{color:#8295a4;font-size:11px;white-space:nowrap}
+.character-skill-preview-list{
+  max-height:calc(min(68vh,620px) - 70px);
+  overflow:auto;
+  padding:8px 10px 12px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(195,162,85,.45) transparent;
+}
+.character-skill-preview-item{
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr);
+  gap:10px;
+  padding:12px 8px;
+  border-bottom:1px solid rgba(147,177,197,.11);
+}
+.character-skill-preview-item:last-child{border-bottom:0}
+.character-skill-preview-index{padding-top:3px;color:#b99c59;font:700 11px Georgia,serif}
+.character-skill-preview-copy header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.character-skill-preview-copy b{color:#eef3f6;font-size:15px}
+.character-skill-preview-copy em{color:#b69b5d;font-size:10px;font-style:normal;white-space:nowrap}
+.character-skill-preview-copy p{margin:7px 0 0;color:#b9c5cd;font-size:12px;line-height:1.6}
+.character-skill-preview-empty{padding:22px;color:#8799a7;text-align:center;font-size:12px}
+@media(prefers-reduced-motion:reduce){
+  .character-skill-preview{transition:none!important}
+  .draft-screen .lol-draft.ow-draft .ow-roster-grid .pick-card{will-change:auto!important}
 }
 
 </style>
@@ -1702,7 +1786,7 @@ function render(){
 function mode(id,tag,title,desc,multi){const image=id==='3x'?'3x.png':'standard.png';return '<button class="mode-card" data-mode="'+id+'"><div class="mode-art mode-art--image"><div class="mode-media mode-media--image"><img class="mode-card-image" src="../assets/ui/modes/'+image+'" alt="'+esc(title)+'"></div></div><div class="mode-body"><small>'+(multi?'创建联机房间':'开始单人对局')+'</small><strong>'+title+'</strong><p>'+desc+'</p></div></button>'}
 function joinMode(){return '<button class="mode-card mode-card--join" type="button" data-join-room><div class="join-card-top mode-art--image"><div class="mode-media mode-media--image"><img class="mode-card-image" src="../assets/ui/modes/join.png" alt="加入房间"></div></div><div class="mode-body"><small>已有房间码</small><strong>加入房间</strong><p>输入房主提供的房间码，加入现有联机房间。</p></div></button>'}
 function cardArt(kind,name){const folder=kind==='master'?'masters':'servants';return '<div class="pick-card-avatar"><span>'+esc(name).slice(0,1)+'</span><img src="../assets/cards/'+folder+'/'+esc(name)+'.png" alt="'+esc(name)+' 卡图" onerror="this.remove()"></div>'}
-function pickCard(kind,name,meta,active=false,extra=''){return '<button class="pick-card '+(active?'active ':'')+extra+'" type="button" data-pick-'+kind+'="'+esc(name)+'">'+cardArt(kind,name)+'<div class="pick-card-info"><strong>'+esc(name)+'</strong><small>'+esc(meta)+'</small></div></button>'}
+function pickCard(kind,name,meta,active=false,extra=''){return '<button class="pick-card '+(active?'active ':'')+extra+'" type="button" data-character-kind="'+kind+'" data-character-name="'+esc(name)+'" data-pick-'+kind+'="'+esc(name)+'">'+cardArt(kind,name)+'<div class="pick-card-info"><strong>'+esc(name)+'</strong><small>'+esc(meta)+'</small></div></button>'}
 function renderCharacterSelect(){
  if(selectionLocked){
   const modeLabel=setupSource==='multi'?'MULTIPLAYER · STANDARD':'SOLO · STANDARD';
@@ -1721,11 +1805,11 @@ function renderCharacterSelect(){
 }
 function threeXStepIndex(step){return {ban:0,master:1,purchase:2,servant:3,complete:4}[step]??0}
 function threeXStepper(){const steps=[['01','禁用'],['02','御主'],['03','圣晶石'],['04','从者']],idx=threeXStepIndex(threeXStep);return '<div class="threex-stepper">'+steps.map((x,i)=>'<button type="button" class="'+(i===idx?'active ':i<idx?'done ':'')+'"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></button>').join('')+'</div>'}
-function master3xCard(name,mode){const rating=threeXRatings[name]??4,active=(mode==='ban'?threeXBannedMaster:threeXSelectedMaster)===name;return '<button class="pick-card '+(active?'active ':'')+'" type="button" data-threex-'+mode+'="'+esc(name)+'">'+cardArt('master',name)+'<div class="pick-card-info"><strong>'+esc(name)+'</strong><small>'+rating+' 枚圣晶石</small></div></button>'}
-function servant3xCard(x){return '<button class="pick-card '+(threeXSelectedServant===x[0]?'active':'')+'" type="button" data-threex-servant="'+esc(x[0])+'">'+cardArt('servant',x[0])+'<div class="pick-card-info"><strong>'+esc(x[0])+'</strong><small>'+esc(x[1])+'</small></div></button>'}
+function master3xCard(name,mode){const rating=threeXRatings[name]??4,active=(mode==='ban'?threeXBannedMaster:threeXSelectedMaster)===name;return '<button class="pick-card '+(active?'active ':'')+'" type="button" data-character-kind="master" data-character-name="'+esc(name)+'" data-threex-'+mode+'="'+esc(name)+'">'+cardArt('master',name)+'<div class="pick-card-info"><strong>'+esc(name)+'</strong><small>'+rating+' 枚圣晶石</small></div></button>'}
+function servant3xCard(x){return '<button class="pick-card '+(threeXSelectedServant===x[0]?'active':'')+'" type="button" data-character-kind="servant" data-character-name="'+esc(x[0])+'" data-threex-servant="'+esc(x[0])+'">'+cardArt('servant',x[0])+'<div class="pick-card-info"><strong>'+esc(x[0])+'</strong><small>'+esc(x[1])+'</small></div></button>'}
 function purchaseCost(type){if(type==='seal')return 7;return Math.min(5,(threeXPurchases[type]||0)+1)}
 function purchaseCard(type,title,desc){const cost=purchaseCost(type),count=threeXPurchases[type]||0,maxed=type==='seal'?count>=1:count>=5,disabled=maxed||threeXCrystals<cost||(type==='servant'&&threeXServantCandidates.length>=servants.length);return '<div class="purchase-option '+(disabled?'is-disabled':'')+'"><div class="purchase-option-main"><div class="purchase-option-top"><h3>'+title+'</h3><span>'+(maxed?'已达上限':'下次购买 '+cost+' 枚')+'</span></div><p>'+desc+'</p><div class="purchase-option-foot"><small>'+(maxed?'已购买 '+count+' 次':'已购买 '+count+' 次 · 下次购买需要 '+cost+' 枚圣晶石')+'</small><button type="button" data-threex-buy="'+type+'" '+(disabled?'disabled':'')+'>'+ (maxed?'已满':'购买') +'</button></div></div></div>'}
-function purchaseCandidateCard(x){return '<div class="purchase-candidate"><div class="purchase-candidate-avatar"><span>'+esc(x[0]).slice(0,1)+'</span><img src="../assets/cards/servants/'+esc(x[0])+'.png" alt="'+esc(x[0])+' 卡图" onerror="this.remove()"></div><div><strong>'+esc(x[0])+'</strong><small>'+esc(x[1])+'</small></div></div>'}
+function purchaseCandidateCard(x){return '<div class="purchase-candidate" data-character-kind="servant" data-character-name="'+esc(x[0])+'"><div class="purchase-candidate-avatar"><span>'+esc(x[0]).slice(0,1)+'</span><img src="../assets/cards/servants/'+esc(x[0])+'.png" alt="'+esc(x[0])+' 卡图" onerror="this.remove()"></div><div><strong>'+esc(x[0])+'</strong><small>'+esc(x[1])+'</small></div></div>'}
 function readyCharacterPanel(kind,name){
  const bucket=kind==='master'?'masters':'servants',label=kind==='master'?'御主':'从者';
  const data=window.FDCharacterPreviewData&&window.FDCharacterPreviewData[bucket]&&window.FDCharacterPreviewData[bucket][name];
@@ -1843,6 +1927,44 @@ function hideCodexImagePreview(){const box=document.getElementById('codexImagePr
 document.addEventListener('mouseover',e=>{const target=e.target.closest&&e.target.closest('[data-codex-preview]');if(!target)return;const src=target.dataset.codexPreview;if(!src)return;const box=ensureCodexImagePreview(),img=box.querySelector('img');img.src=src;box.classList.add('active');moveCodexImagePreview(e)});
 document.addEventListener('mousemove',e=>{if(e.target.closest&&e.target.closest('[data-codex-preview]'))moveCodexImagePreview(e)});
 document.addEventListener('mouseout',e=>{const target=e.target.closest&&e.target.closest('[data-codex-preview]');if(!target)return;const next=e.relatedTarget&&e.relatedTarget.closest?e.relatedTarget.closest('[data-codex-preview]'):null;if(next===target)return;hideCodexImagePreview()});
+let characterSkillPreviewTimer=0,characterSkillPreviewTarget=null;
+function ensureCharacterSkillPreview(){let box=document.getElementById('characterSkillPreview');if(box)return box;box=document.createElement('aside');box.id='characterSkillPreview';box.className='character-skill-preview';box.setAttribute('aria-hidden','true');document.body.appendChild(box);return box}
+function characterSkillPreviewData(target){
+ const kind=target.dataset.characterKind,name=target.dataset.characterName,bucket=kind==='master'?'masters':'servants';
+ const data=window.FDCodexDetailData&&window.FDCodexDetailData[bucket]&&window.FDCodexDetailData[bucket][name];
+ if(!data)return null;
+ return {kind,name,data,skills:(data.skills||[]).filter(skill=>skill.type!=='牌库牌')};
+}
+function positionCharacterSkillPreview(target,box){
+ const rect=target.getBoundingClientRect(),gap=18,margin=14,width=box.offsetWidth||430,height=Math.min(box.offsetHeight||420,window.innerHeight-margin*2);
+ let left=rect.right+gap;if(left+width>window.innerWidth-margin)left=rect.left-width-gap;
+ left=Math.max(margin,Math.min(left,window.innerWidth-width-margin));
+ let top=rect.top+(rect.height-height)/2;top=Math.max(margin,Math.min(top,window.innerHeight-height-margin));
+ box.style.left=left+'px';box.style.top=top+'px';
+}
+function hideCharacterSkillPreview(){
+ window.clearTimeout(characterSkillPreviewTimer);characterSkillPreviewTimer=0;characterSkillPreviewTarget=null;
+ const box=document.getElementById('characterSkillPreview');if(box){box.classList.remove('active');box.setAttribute('aria-hidden','true')}
+}
+function showCharacterSkillPreview(target){
+ const info=characterSkillPreviewData(target);if(!info||characterSkillPreviewTarget!==target||!target.matches(':hover'))return;
+ const label=info.kind==='master'?'MASTER · 御主能力':((info.data.class||'SERVANT')+' · 从者技能');
+ const items=info.skills.length?info.skills.map((skill,index)=>'<article class="character-skill-preview-item"><span class="character-skill-preview-index">'+String(index+1).padStart(2,'0')+'</span><div class="character-skill-preview-copy"><header><b>'+esc(skill.name||'未命名技能')+'</b><em>'+esc(skill.type||'技能')+'</em></header><p>'+esc(skill.text||'暂无技能描述').replace(/\r?\n/g,'<br>')+'</p></div></article>').join(''):'<div class="character-skill-preview-empty">暂无技能资料</div>';
+ const box=ensureCharacterSkillPreview();box.innerHTML='<header class="character-skill-preview-head"><div><small>'+label+'</small><strong>'+esc(info.name)+'</strong></div><span>'+info.skills.length+' 个技能</span></header><div class="character-skill-preview-list">'+items+'</div>';
+ box.classList.add('active');box.setAttribute('aria-hidden','false');positionCharacterSkillPreview(target,box);
+}
+document.addEventListener('mouseover',e=>{
+ const target=e.target.closest&&e.target.closest('[data-character-kind][data-character-name]');
+ if(!target||(e.relatedTarget&&target.contains(e.relatedTarget)))return;
+ hideCharacterSkillPreview();characterSkillPreviewTarget=target;
+ characterSkillPreviewTimer=window.setTimeout(()=>showCharacterSkillPreview(target),2000);
+});
+document.addEventListener('mouseout',e=>{
+ const target=e.target.closest&&e.target.closest('[data-character-kind][data-character-name]');
+ if(!target||(e.relatedTarget&&target.contains(e.relatedTarget)))return;
+ if(characterSkillPreviewTarget===target)hideCharacterSkillPreview();
+});
+document.addEventListener('pointerdown',hideCharacterSkillPreview);
 function openUiDialog(modal,panelSelector){if(!modal)return;modal.classList.add('open');const panel=modal.querySelector(panelSelector),motion=window.anime;if(panel&&motion&&typeof motion.animate==='function'){motion.animate(panel,{opacity:[0,1],y:[14,0],duration:260,ease:'outCubic'});const items=[...panel.querySelectorAll('.avatar-choice,.battle-bg-choice')];if(items.length)motion.animate(items,{opacity:[0,1],y:[7,0],delay:motion.stagger?motion.stagger(28):0,duration:220,ease:'outCubic'})}}
 function closeUiDialog(modal){if(modal)modal.classList.remove('open')}
 document.addEventListener('click',e=>{
