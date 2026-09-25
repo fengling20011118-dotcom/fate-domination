@@ -1,0 +1,8 @@
+Fate/Domination Wiki asset sources
+Retrieved: 2026-09-24
+
+Page: https://fatedomination.fandom.com/wiki/How_to_Play
+Front: https://static.wikia.nocookie.net/fatedomination/images/d/df/Moon_Cell.png/revision/latest?cb=20230702085028
+Back: https://static.wikia.nocookie.net/fatedomination/images/5/50/Moon_Cell_back.png/revision/latest?cb=20230702085029
+
+The wiki identifies its community text as CC BY-SA unless otherwise noted. The image files may include third-party Fate artwork; preserve this source record when replacing or redistributing them.
