@@ -1,0 +1,13 @@
+Card interaction sound candidates
+Source: Kenney Casino Audio
+Source page: https://opengameart.org/content/54-casino-sound-effects-cards-dice-chips
+License: Creative Commons CC0 1.0 Universal
+Attribution is optional; source author is Kenney (kenney.nl).
+
+Mappings:
+card-draw-01.ogg <- card-slide-2.ogg
+card-pickup-01.ogg <- card-slide-1.ogg
+card-select-01.ogg <- card-place-1.ogg
+card-deselect-01.ogg <- card-place-3.ogg
+card-play-01.ogg <- card-shove-2.ogg
+card-land-01.ogg <- card-place-2.ogg

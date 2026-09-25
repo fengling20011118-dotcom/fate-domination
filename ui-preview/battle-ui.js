@@ -6,6 +6,18 @@ function render(host,options={}){
  if(!host) throw new Error('FDBattleUI host missing');
  const root=host.shadowRoot||host.attachShadow({mode:'open'});
  root.innerHTML='<style>'+css+'</style>'+markup;
+ const playSfx=(name,settings={})=>{const player=typeof options.playSfx==='function'?options.playSfx:window.fdPlaySfx;return typeof player==='function'?player(name,settings):false};
+ let sfxHoverTarget=null;
+ root.addEventListener('pointerover',event=>{
+   const card=event.target.closest?.('.hand .card'),button=event.target.closest?.('button:not(:disabled)'),target=card||button;
+   if(!target||target===sfxHoverTarget||(event.relatedTarget&&target.contains(event.relatedTarget)))return;
+   sfxHoverTarget=target;playSfx(card?'card-pickup':'ui-hover',{volume:card?.1:.38});
+ });
+ root.addEventListener('pointerout',event=>{const target=event.target.closest?.('.hand .card,button');if(target===sfxHoverTarget&&!(event.relatedTarget&&target.contains(event.relatedTarget)))sfxHoverTarget=null});
+ root.addEventListener('click',event=>{
+   const button=event.target.closest?.('button:not(:disabled)');if(!button||button.matches('#open-ability,#close-ability,#confirm-play,[data-command-seal],[data-normal-skill]'))return;
+   playSfx(button.matches('.ability-tabs button,.opp-panel-toggle')?'ui-tab':'ui-click',{volume:.5});
+ });
  root.querySelector('style').textContent+=`
     .command-seal-section { grid-column:1/-1; overflow:hidden; border:1px solid rgba(190,53,65,.52); border-radius:12px; background:radial-gradient(circle at 8% 0,rgba(177,38,51,.16),transparent 32%),linear-gradient(145deg,rgba(24,20,26,.97),rgba(12,15,21,.98)); box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.035); }
     .command-seal-head { min-height:76px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:14px 18px; border-bottom:1px solid rgba(190,53,65,.34); background:linear-gradient(90deg,rgba(127,25,36,.16),transparent 60%); }
@@ -457,6 +469,7 @@ function render(host,options={}){
       const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(reduced){card.classList.remove('draw-pending');return Promise.resolve()}
       return new Promise(resolve=>window.setTimeout(()=>{
+        playSfx('card-draw',{volume:.1});
         const source=(root.querySelector('.player .opp-deck-line')||root.querySelector('.situation-deck'))?.getBoundingClientRect(),target=card.getBoundingClientRect(),flight=document.createElement('div');
         if(!source||!target.width){card.classList.remove('draw-pending');resolve();return}
         const startX=source.left+source.width/2-target.width/2,startY=source.top+source.height/2-target.height/2;
@@ -745,9 +758,9 @@ function render(host,options={}){
     });
     root.addEventListener('pointerleave',invalidatePreview);
     const abilityModal = root.getElementById('ability-modal'),abilityPanel=abilityModal?.querySelector('.ability-panel');
-    root.getElementById('open-ability').addEventListener('click', () => openAnimatedModal(abilityModal,abilityPanel));
-    root.getElementById('close-ability').addEventListener('click', () => closeAnimatedModal(abilityModal,abilityPanel));
-    abilityModal.addEventListener('click', event => { if (event.target === abilityModal) closeAnimatedModal(abilityModal,abilityPanel); });
+    root.getElementById('open-ability').addEventListener('click', () => {playSfx('ui-panel-open',{volume:.55});openAnimatedModal(abilityModal,abilityPanel)});
+    root.getElementById('close-ability').addEventListener('click', () => {playSfx('ui-panel-close',{volume:.5});closeAnimatedModal(abilityModal,abilityPanel)});
+    abilityModal.addEventListener('click', event => { if (event.target === abilityModal){playSfx('ui-panel-close',{volume:.5});closeAnimatedModal(abilityModal,abilityPanel)} });
     root.querySelectorAll('.ability-tabs button[data-page]').forEach(button => button.addEventListener('click', () => {
       root.querySelectorAll('.ability-tabs button[data-page]').forEach(item => item.classList.toggle('active', item === button));
       root.querySelectorAll('[data-ability-page]').forEach(page => page.classList.toggle('hidden-page', page.dataset.abilityPage !== button.dataset.page));
@@ -792,13 +805,13 @@ function render(host,options={}){
       const destinationButton=event.target.closest('[data-command-seal-location]');
       if(destinationButton){const group=destinationButton.closest('.command-seal-destinations');group?.querySelectorAll('[data-command-seal-location]').forEach(item=>{const selected=item===destinationButton;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});return}
       const button=event.target.closest('[data-command-seal]');if(!button)return;
-      const player=battleRoster[0],mode=button.dataset.commandSeal;if(!player||player.seals<=0){showToast('令咒已经用尽',1500);refreshCommandSealUi();return}
+      const player=battleRoster[0],mode=button.dataset.commandSeal;if(!player||player.seals<=0){playSfx('ui-error',{volume:.58});showToast('令咒已经用尽',1500);refreshCommandSealUi();return}
       let message='';
       if(mode==='mana'){const before=Number(player.mana)||0,cap=masterManaCap(masterData);player.mana=Math.min(cap,before+4);message='使用令咒：获得 '+(player.mana-before)+' 点魔力（当前 '+player.mana+'）'}
       else if(mode==='power'){player.power=opponentPower(player)+2;player.commandSealPowerBonus=(Number(player.commandSealPowerBonus)||0)+2;player.commandSealVictoryPointBonus=(Number(player.commandSealVictoryPointBonus)||0)+2;message='使用令咒：本回合合计威力 +2；获胜后额外获得 2 点战果'}
-      else if(mode==='move'){const destination=button.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation;if(!destination||destination===player.location){showToast('请选择另一个地点',1500);return}setCurrentLocation(destination);message='使用令咒：立即移动至 '+destination}
+      else if(mode==='move'){const destination=button.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation;if(!destination||destination===player.location){playSfx('ui-error',{volume:.58});showToast('请选择另一个地点',1500);return}setCurrentLocation(destination);message='使用令咒：立即移动至 '+destination}
       else return;
-      player.seals=Math.max(0,player.seals-1);if(typeof options.onCommandSealUse==='function')options.onCommandSealUse({mode,player,destination:mode==='move'?player.location:undefined});refreshCurrentPlayerResources();refreshCommandSealUi(true);showToast(message,2200);
+      player.seals=Math.max(0,player.seals-1);playSfx('command-seal-use',{volume:.78});if(typeof options.onCommandSealUse==='function')options.onCommandSealUse({mode,player,destination:mode==='move'?player.location:undefined});refreshCurrentPlayerResources();refreshCommandSealUi(true);showToast(message,2200);
     });
     function projectedAttackPower(cards){
       if(!cards.length)return {total:0,base:0,situation:0,terrain:0,event:0};
@@ -842,12 +855,14 @@ function render(host,options={}){
         return;
       }
       card.classList.toggle('selected');
+      playSfx(card.classList.contains('selected')?'card-select':'card-deselect',{volume:.1});
       refreshPlaySelection();
     });
     confirmPlay.addEventListener('click', () => {
       const selected=handCards().filter(card=>card.classList.contains('selected'));
       if(selected.length!==2)return;
       const confirmedSkills=selected.filter(card=>card.dataset.skillName).map(card=>card.dataset.skillName);
+      playSfx('card-play',{volume:.3});
       const played=selected.map(playedCardFromElement);
       selected.forEach(card=>card.classList.remove('selected'));
       battleRoster[0].activeCards=played;
@@ -858,7 +873,7 @@ function render(host,options={}){
       confirmedSkills.forEach(resolveConfirmedSkillCard);
       selected.forEach(card=>card.remove());
       updateHandLayout();refreshPlaySelection();updateSkillButtonStates();
-      Promise.all(flights).then(()=>targets.forEach(card=>card.animate([{transform:'translateY(-5px) scale(1.08)'},{transform:'none'}],{duration:220,easing:'ease-out'})));
+      Promise.all(flights).then(()=>{playSfx('card-land',{volume:.3});targets.forEach(card=>card.animate([{transform:'translateY(-5px) scale(1.08)'},{transform:'none'}],{duration:220,easing:'ease-out'}))});
       hideToast();
     });
     const turnClock=root.getElementById('turn-clock'),roundTimeNode=root.getElementById('round-time'),bankTimeNode=root.getElementById('bank-time'),phaseTimeLabel=root.getElementById('phase-time-label');
@@ -1004,6 +1019,7 @@ function render(host,options={}){
       const card=template.content.firstElementChild,sourceNode=sourceButton?.closest('.ability-card')?.querySelector('.ability-art img,.ability-art'),rawSourceRect=sourceNode?.getBoundingClientRect(),panelRect=abilityPanel?.getBoundingClientRect(),sourceRect=rawSourceRect?.width?rawSourceRect:(panelRect?.width?{left:panelRect.left+panelRect.width*.58,top:panelRect.top+panelRect.height*.32,width:96,height:136}:null);
       card.classList.add('skill-staged','skill-stage-pending','selected');card.dataset.skillName=skill.name;card.dataset.skillKind=kind;
       root.querySelector('.hand')?.append(card);updateHandLayout();refreshPlaySelection();updateSkillButtonStates();
+      playSfx('skill-use',{volume:.68});
       closeAnimatedModal(abilityModal,abilityPanel);animateSkillCardToHand(card,sourceRect);
       showToast('【'+skill.name+'】已加入出牌区，再次点击可取消',1900);
     }
@@ -1012,6 +1028,7 @@ function render(host,options={}){
       if(typeof options.onSkillCardConfirmed==='function')options.onSkillCardConfirmed({skill,skillName,master:masterData,servant:servantData});
     }
     function executeImmediateSkill(skill){
+      playSfx('skill-use',{volume:.68});
       closeAnimatedModal(abilityModal,abilityPanel);
       if(skill.name==='无限剑制'){
         const targetHand=expandDeckCards(servantData.deck).slice(0,12),missing=targetHand.slice(handCards().length);
