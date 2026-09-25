@@ -2399,7 +2399,8 @@ document.addEventListener('pointerover',event=>{
 });
 document.addEventListener('pointerout',event=>{const target=event.target.closest?.(CHARACTER_SFX_SELECTOR+','+INTERACTIVE_SFX_SELECTOR);if(target===documentSfxHoverTarget&&!(event.relatedTarget&&target.contains(event.relatedTarget)))documentSfxHoverTarget=null});
 document.addEventListener('click',event=>{
- if(screen==='legal'||screen==='splash'){playSfx('ui-confirm',{volume:.56});return}
+ if(screen==='legal')return;
+ if(screen==='splash'){playSfx('ui-confirm',{volume:.56});return}
  const character=event.target.closest?.(CHARACTER_SFX_SELECTOR);if(character){playSfx('character-select',{volume:.62});return}
  const lock=event.target.closest?.('[data-standard-next],[data-threex-confirm-ban],[data-threex-confirm-master],[data-threex-confirm-servant]');if(lock){playSfx('character-lock',{volume:.68});return}
  const back=event.target.closest?.('.back,[data-avatar-close],[data-close-bg-settings],[data-close-bgm-settings],[data-notice-editor-close],[data-notice-detail-close]');if(back){playSfx('ui-back',{volume:.5});return}
