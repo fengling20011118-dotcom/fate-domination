@@ -6,6 +6,32 @@ function render(host,options={}){
  if(!host) throw new Error('FDBattleUI host missing');
  const root=host.shadowRoot||host.attachShadow({mode:'open'});
  root.innerHTML='<style>'+css+'</style>'+markup;
+ root.querySelector('style').textContent+=`
+    .command-seal-section { grid-column:1/-1; overflow:hidden; border:1px solid rgba(190,53,65,.52); border-radius:12px; background:radial-gradient(circle at 8% 0,rgba(177,38,51,.16),transparent 32%),linear-gradient(145deg,rgba(24,20,26,.97),rgba(12,15,21,.98)); box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.035); }
+    .command-seal-head { min-height:76px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:14px 18px; border-bottom:1px solid rgba(190,53,65,.34); background:linear-gradient(90deg,rgba(127,25,36,.16),transparent 60%); }
+    .command-seal-head small { color:#e26f78; font:700 9px/1 Georgia,serif; letter-spacing:.2em; }
+    .command-seal-head h3 { display:inline-block; margin:4px 10px 0 0; color:#f7eef0; font-size:21px; }
+    .command-seal-head p { display:inline-block; margin:0; color:#aeb2bb; font-size:11px; }
+    .command-seal-head>strong { flex:0 0 auto; min-width:100px; padding:9px 13px; border:1px solid rgba(226,111,120,.42); border-radius:6px; color:#d5a8ac; background:rgba(89,18,28,.2); text-align:center; font-size:12px; }
+    .command-seal-head>strong b { margin-left:5px; color:#ff9ca4; font:800 23px/1 Bahnschrift,"Segoe UI",sans-serif; }
+    .command-seal-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; padding:12px; }
+    .command-seal-option { min-width:0; min-height:154px; display:grid; grid-template-columns:38px minmax(0,1fr); grid-template-rows:1fr auto; gap:8px 11px; padding:13px; border:1px solid rgba(255,255,255,.09); border-radius:8px; background:rgba(19,22,29,.84); }
+    .command-seal-glyph { grid-row:1/3; width:36px; height:36px; display:grid; place-items:center; border:1px solid rgba(230,89,102,.62); border-radius:50%; color:#ffafb6; background:radial-gradient(circle,rgba(176,37,50,.36),rgba(61,16,25,.14)); font:800 15px/1 "Microsoft YaHei",sans-serif; box-shadow:0 0 16px rgba(195,46,60,.17); }
+    .command-seal-option h4 { margin:0 0 6px; color:#f0f1f4; font-size:14px; }
+    .command-seal-option p { min-height:38px; margin:0; color:#aeb2ba; font-size:11px; line-height:1.55; }
+    .command-seal-option>button { grid-column:2; width:100%; height:34px; margin:0; border-color:rgba(213,75,87,.55); color:#ffd5d8; background:linear-gradient(180deg,rgba(132,35,46,.64),rgba(76,22,30,.72)); font-size:11px; }
+    .command-seal-option>button:not(:disabled):hover { border-color:#ef7c86; color:#fff; background:linear-gradient(180deg,#a53542,#76232e); box-shadow:0 7px 18px rgba(110,25,35,.34); }
+    .command-seal-destinations { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; margin-top:8px; }
+    .command-seal-destinations button { min-width:0; height:29px; padding:0 6px; border:1px solid rgba(120,128,143,.42); border-radius:4px; color:#bac0ca; background:rgba(8,11,16,.72); box-shadow:none; font-size:10px; font-weight:600; white-space:nowrap; }
+    .command-seal-destinations button:not(:disabled):hover { transform:none; border-color:rgba(232,108,119,.64); color:#ffe1e4; background:rgba(100,28,38,.38); box-shadow:none; }
+    .command-seal-destinations button.selected { border-color:#e46b76; color:#fff0f2; background:linear-gradient(180deg,rgba(154,42,55,.7),rgba(86,24,34,.72)); box-shadow:0 0 0 1px rgba(228,107,118,.15),0 4px 10px rgba(0,0,0,.22); }
+    .command-seal-destinations button.current { opacity:1; border-color:rgba(214,174,82,.28); color:#8e8672; background:rgba(62,53,34,.18); cursor:default; }
+    .command-seal-destinations button small { display:block; color:#c9ad65; font-size:8px; line-height:1; }
+    .command-seal-section.exhausted .command-seal-options { opacity:.52; }
+    .command-seal-section.used { animation:command-seal-pulse .42s ease-out; }
+    @keyframes command-seal-pulse { 0%{box-shadow:0 0 0 rgba(212,57,70,0)} 42%{box-shadow:0 0 34px rgba(212,57,70,.46),inset 0 0 28px rgba(212,57,70,.12)} 100%{box-shadow:0 12px 30px rgba(0,0,0,.28)} }
+    @media(max-width:1100px){.command-seal-options{grid-template-columns:1fr}.command-seal-option{min-height:112px}.command-seal-option p{min-height:0}}
+  `;
   root.querySelector('style').textContent+=`
     :host { --table-h:clamp(420px,calc(100vh - 300px),620px); }
     .status { display:none; }
@@ -309,6 +335,10 @@ function render(host,options={}){
       return match?Number(match[1]):12;
     }
     function skillCards(list,kind,ownerImage){return (list||[]).filter(s=>s.type!=='牌库牌').map((s,i)=>{const passive=purePassive(s),phase=phaseSkill(s),choices=choiceLines(s),ownerName=kind==='master'?masterData.name:servantData.name,hasSkillArt=!!s.image,img=asset(s.image||ownerImage,kind,ownerName),button=passive?'':('<button data-normal-skill="'+h(s.name)+'" data-skill-kind="'+kind+'" data-skill-index="'+i+'" '+(choices.length?'data-choice-skill="1"':'')+'>'+'使用技能'+'</button>');return '<article class="ability-card"><div class="ability-art '+(hasSkillArt?'has-skill-art':'')+'"><img src="'+h(img)+'" alt="'+h(hasSkillArt?s.name:ownerName)+'">'+(hasSkillArt?'<span>技能卡</span>':'')+'</div><div class="ability-text"><span class="ability-type">'+h(s.type||'技能')+'</span><h3>'+h(s.name)+'</h3><p>'+h(s.text||'').replace(/\n/g,'<br>')+'</p>'+button+'</div></article>'}).join('')}
+    function commandSealSectionHtml(){
+      const player=battleRoster?.[0],remaining=Math.max(0,Number(player?.seals)||0),disabled=remaining?'':' disabled',locations=['魔术工坊','深山町','新都','月之圣杯','侦察'],currentLocation=player?.location||'',defaultDestination=locations.find(location=>location!==currentLocation)||'';
+      return '<section class="command-seal-section" aria-label="令咒">'+'<header class="command-seal-head"><div><small>COMMAND SPELL</small><h3>令咒</h3><p>行动阶段使用，每次消耗 1 枚令咒。</p></div><strong>剩余 <b data-command-seal-count>'+remaining+'</b></strong></header>'+'<div class="command-seal-options">'+'<article class="command-seal-option"><span class="command-seal-glyph">魔</span><div><h4>魔力补充</h4><p>立即获得 4 点魔力。</p></div><button type="button" data-command-seal="mana"'+disabled+'>使用令咒</button></article>'+'<article class="command-seal-option"><span class="command-seal-glyph">战</span><div><h4>战斗强化</h4><p>本回合合计威力 +2；若赢得战斗，额外获得 2 点战果。</p></div><button type="button" data-command-seal="power"'+disabled+'>使用令咒</button></article>'+'<article class="command-seal-option command-seal-move"><span class="command-seal-glyph">移</span><div><h4>强制移动</h4><p>立即移动至任意其他地点。</p><div class="command-seal-destinations" role="group" aria-label="选择移动地点">'+locations.map(location=>'<button type="button" class="'+(location===currentLocation?'current':location===defaultDestination?'selected':'')+'" data-command-seal-location="'+h(location)+'" aria-pressed="'+(location===defaultDestination?'true':'false')+'"'+(location===currentLocation?' disabled':'')+'><span>'+h(location)+'</span>'+(location===currentLocation?'<small>当前</small>':'')+'</button>').join('')+'</div></div><button type="button" data-command-seal="move"'+disabled+'>使用令咒</button></article>'+'</div></section>';
+    }
     const extraMasterIdentities=[
       {name:'伊莉雅斯菲尔',fullName:'伊莉雅斯菲尔',class:'Master',image:'../assets/cards/masters/伊莉雅斯菲尔.png',skills:[
         {name:'人工生命体',type:'被动',text:'你的魔力初始值为6。'},
@@ -389,13 +419,13 @@ function render(host,options={}){
         if(img){img.src=asset(masterData.image,'master',masterData.name);img.alt=masterData.name}
         if(label)label.textContent='MASTER';
         if(title)title.textContent=masterData.name;
-        if(desc)desc.innerHTML='御主能力<br>当前位于深山町';
+        if(desc)desc.innerHTML='御主能力<br>当前位于'+h(battleRoster?.[0]?.location||'深山町');
       }else{
         const klass=servantData.class||'Servant';
         if(img){img.src=asset(servantData.image,'servant',servantData.name);img.alt=servantData.name}
         if(label)label.textContent=klass;
         if(title)title.textContent=servantData.name;
-        if(desc)desc.innerHTML='御主：'+h(masterData.name)+'<br>当前位于深山町';
+        if(desc)desc.innerHTML='御主：'+h(masterData.name)+'<br>当前位于'+h(battleRoster?.[0]?.location||'深山町');
       }
     }
     let openingHand=[];
@@ -454,7 +484,7 @@ function render(host,options={}){
       const mapMe=root.querySelector('.mountain .land-slot .slot-face img');if(mapMe){mapMe.src=masterImg;mapMe.alt=masterData.name}
       updateAbilityIdentity('servant');
       const masterList=root.querySelector('[data-ability-page="master"]'),servantList=root.querySelector('[data-ability-page="servant"]');
-      if(masterList)masterList.innerHTML=skillCards(masterData.skills,'master',masterData.image);
+      if(masterList)masterList.innerHTML=skillCards(masterData.skills,'master',masterData.image)+commandSealSectionHtml();
       if(servantList)servantList.innerHTML=skillCards(servantData.skills,'servant',servantData.image);
       const tabs=root.querySelectorAll('.ability-tabs button[data-page]');
       if(tabs[0])tabs[0].textContent='御主能力 · '+(masterData.skills||[]).filter(s=>s.type!=='牌库牌').length;
@@ -750,6 +780,26 @@ function render(host,options={}){
       toast.classList.add('show');
       toastTimer=setTimeout(()=>toast.classList.remove('show'),duration);
     }
+    function refreshCommandSealUi(animate=false){
+      const oldSection=root.querySelector('.command-seal-section');if(!oldSection)return;
+      const template=document.createElement('template');template.innerHTML=commandSealSectionHtml();
+      const nextSection=template.content.firstElementChild;oldSection.replaceWith(nextSection);nextSection.classList.toggle('exhausted',battleRoster[0].seals<=0);
+      if(animate){nextSection.classList.add('used');window.setTimeout(()=>nextSection.classList.remove('used'),460)}
+    }
+    function refreshCurrentPlayerResources(){renderSelfPanel();updateAbilityIdentity(root.querySelector('.ability-tabs button.active')?.dataset.page||'master')}
+    function setCurrentLocation(location){const selectors={'魔术工坊':'.workshop','深山町':'.mountain','新都':'.city','月之圣杯':'.moon-cell','侦察':'.scout'};battleRoster[0].location=location;root.querySelectorAll('.board .place').forEach(place=>place.classList.remove('active'));root.querySelector(selectors[location]||'')?.classList.add('active')}
+    root.addEventListener('click',event=>{
+      const destinationButton=event.target.closest('[data-command-seal-location]');
+      if(destinationButton){const group=destinationButton.closest('.command-seal-destinations');group?.querySelectorAll('[data-command-seal-location]').forEach(item=>{const selected=item===destinationButton;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});return}
+      const button=event.target.closest('[data-command-seal]');if(!button)return;
+      const player=battleRoster[0],mode=button.dataset.commandSeal;if(!player||player.seals<=0){showToast('令咒已经用尽',1500);refreshCommandSealUi();return}
+      let message='';
+      if(mode==='mana'){const before=Number(player.mana)||0,cap=masterManaCap(masterData);player.mana=Math.min(cap,before+4);message='使用令咒：获得 '+(player.mana-before)+' 点魔力（当前 '+player.mana+'）'}
+      else if(mode==='power'){player.power=opponentPower(player)+2;player.commandSealPowerBonus=(Number(player.commandSealPowerBonus)||0)+2;player.commandSealVictoryPointBonus=(Number(player.commandSealVictoryPointBonus)||0)+2;message='使用令咒：本回合合计威力 +2；获胜后额外获得 2 点战果'}
+      else if(mode==='move'){const destination=button.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation;if(!destination||destination===player.location){showToast('请选择另一个地点',1500);return}setCurrentLocation(destination);message='使用令咒：立即移动至 '+destination}
+      else return;
+      player.seals=Math.max(0,player.seals-1);if(typeof options.onCommandSealUse==='function')options.onCommandSealUse({mode,player,destination:mode==='move'?player.location:undefined});refreshCurrentPlayerResources();refreshCommandSealUi(true);showToast(message,2200);
+    });
     function projectedAttackPower(cards){
       if(!cards.length)return {total:0,base:0,situation:0,terrain:0,event:0};
       const base=cards.reduce((sum,card)=>sum+(Number(card.dataset.power)||0),0);
