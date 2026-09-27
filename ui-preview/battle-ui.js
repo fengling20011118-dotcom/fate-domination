@@ -328,6 +328,27 @@ function render(host,options={}){
     .special-locations .map-played-layer{right:7px;gap:9px}.special-locations .table-play-seat{flex-basis:76px;height:72px}.special-locations .table-play-owner{width:24px;height:24px}.special-locations .table-play-cards .mini-card{width:46px;height:65px;flex-basis:46px}.moon-cell .map-played-layer{top:86px}.scout .map-played-layer{top:72px}
     @media(max-width:1500px){.board{grid-template-columns:minmax(150px,.62fr) minmax(0,1.16fr) minmax(0,1.38fr) minmax(0,1.16fr) minmax(125px,.58fr) minmax(0,1.16fr)}.situation>.deck-display,.event>.deck-display{width:34px}.situation .place-title,.event .place-title{font-size:13px}.special-locations .table-play-seat{flex-basis:65px;height:62px}.special-locations .table-play-owner{width:21px;height:21px}.special-locations .table-play-cards .mini-card{width:39px;height:55px;flex-basis:39px}.moon-cell .map-played-layer{top:75px}.scout .map-played-layer{top:65px}}
     @media(max-height:760px){.board{grid-template-columns:minmax(140px,.6fr) minmax(0,1.16fr) minmax(0,1.36fr) minmax(0,1.16fr) minmax(115px,.56fr) minmax(0,1.16fr)}.situation>.deck-display,.event>.deck-display{width:29px}.situation .place-title small,.event .place-title small{display:none}.special-locations .table-play-seat{flex-basis:56px;height:50px}.special-locations .table-play-owner{width:18px;height:18px}.special-locations .table-play-cards .mini-card{width:32px;height:45px;flex-basis:32px}.moon-cell .map-played-layer,.scout .map-played-layer{top:50px}}
+    /* Scheme 1 trial: let the selected battle backdrop show through the location board. */
+    .battle-root::before{background:rgba(4,6,10,.1)}
+    .place{isolation:isolate;background-color:rgba(7,11,17,.38);background-image:none;border-color:rgba(218,226,236,.24);box-shadow:0 8px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.025)}
+    .place::before{z-index:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:.72;filter:saturate(.9) brightness(.96)}
+    .place:not(.moon-cell)::after{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(2,5,8,.01) 0 50%,rgba(2,5,8,.46) 100%)}
+    .situation::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.18)),url("../assets/map/locations/situation.png")}
+    .event::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.18)),url("../assets/map/locations/event-deck.png")}
+    .workshop::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.14)),url("../assets/map/locations/workshop.png")}
+    .mountain::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.14)),url("../assets/map/locations/mountain.png")}
+    .city::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.14)),url("../assets/map/locations/city.png")}
+    .scout::before{background-image:linear-gradient(180deg,rgba(4,8,14,.01),rgba(4,8,14,.18)),url("../assets/map/locations/scouting.png")}
+    .moon-cell{background-color:rgba(8,14,29,.38);background-image:none}
+    .moon-cell::before{z-index:0;background-image:linear-gradient(180deg,rgba(3,13,31,.04),rgba(2,8,19,.34)),url("../assets/map/locations/moon-cell-back.png");background-position:center 46%;background-size:cover;opacity:.7;filter:saturate(.9) brightness(.96)}
+    .place-title{padding:7px 11px 7px 9px;border-left:2px solid rgba(214,174,82,.48);border-radius:2px;background:linear-gradient(90deg,rgba(3,6,10,.88),rgba(3,6,10,.58) 72%,rgba(3,6,10,0));backdrop-filter:blur(2px);text-shadow:0 2px 5px #000,0 0 12px rgba(0,0,0,.72)}
+    .place small{color:#f1f3f6;text-shadow:0 2px 4px #000}
+    .situation .place-title,.event .place-title{padding:5px 8px;border-left:2px solid rgba(214,174,82,.48);background:linear-gradient(90deg,rgba(3,6,10,.9),rgba(3,6,10,.55) 72%,transparent)}
+    .battle-root::after{background:linear-gradient(180deg,rgba(18,22,30,.91),rgba(7,10,15,.95));backdrop-filter:blur(2px)}
+    .opponents .opp-panel-face{border-color:rgba(218,226,236,.22);background:rgba(8,11,17,.68);box-shadow:0 7px 18px rgba(0,0,0,.38);backdrop-filter:blur(3px) saturate(.9)}
+    .opponents .opp-panel-front>img{opacity:.88;background-color:rgba(8,11,17,.5)}
+    .opponents .opp-panel-front .opp-info{background:linear-gradient(90deg,rgba(5,8,13,.76),rgba(8,11,17,.55))}
+    .opponents .opp-panel-back{background:rgba(8,11,17,.76)}
   `;
  const battleRoot=root.querySelector('.battle-root');
  const tablePlayZone=battleRoot;
