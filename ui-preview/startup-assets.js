@@ -51,6 +51,7 @@ window.FDStartupAssets = {
     "../assets/ui/home-backgrounds/home-09.jpg",
     "../assets/ui/home-backgrounds/home-10.jpg",
     "../assets/ui/home-backgrounds/home-11.jpg",
+    "../assets/ui/logos/fate-domination-title-v2.png",
     "../assets/ui/splash-backgrounds/splash-01.png"
   ],
   "audio": [

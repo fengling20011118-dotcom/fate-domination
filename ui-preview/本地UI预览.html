@@ -1958,52 +1958,17 @@
 
 
 
-/* 起始页恢复最初的纯文字标题，保留当前左侧位置和放大尺寸。 */
+/* 起始页使用从 PPT 素材改制的透明标题图。 */
 .splash-composition{
   left:50%;
   right:auto;
-  top:43%;
-  width:min(61vw,1120px);
-  min-width:650px;
+  top:42%;
+  width:min(54vw,1030px);
+  min-width:620px;
   translate:-50% 0;
   transform:translateY(-50%);
 }
-.splash-title.splash-title-original{
-  position:relative;
-  height:clamp(220px,20vw,330px);
-  margin-top:10px;
-  text-align:left;
-}
-.splash-title.splash-title-original .fate{
-  position:absolute;
-  left:2%;
-  top:2%;
-  display:block;
-  font:700 clamp(108px,10.8vw,188px)/.86 Georgia,serif;
-  letter-spacing:.035em;
-  text-transform:none;
-  white-space:nowrap;
-  text-shadow:0 10px 26px rgba(0,0,0,.72);
-}
-.splash-title.splash-title-original .fate i{
-  margin-left:.01em;
-  color:var(--gold);
-  font-style:normal;
-  font-weight:400;
-}
-.splash-title.splash-title-original .dom{
-  position:absolute;
-  left:25%;
-  right:auto;
-  bottom:4%;
-  display:block;
-  margin:0;
-  font:500 clamp(52px,5.4vw,94px)/1 Georgia,serif;
-  letter-spacing:.08em;
-  text-transform:none;
-  white-space:nowrap;
-  text-shadow:0 8px 22px rgba(0,0,0,.72);
-}
+.splash-title-logo{display:block;width:100%;height:auto;filter:drop-shadow(0 16px 30px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(214,185,112,.12));user-select:none;pointer-events:none}
 .splash .press-any{
   left:50%;
   right:auto;
@@ -2011,7 +1976,7 @@
   transform:translateX(-50%);
 }
 @media(max-width:1200px){
-  .splash-composition{left:50%;right:auto;width:63vw;min-width:590px}
+  .splash-composition{left:50%;right:auto;width:66vw;min-width:560px}
 }
 
 
@@ -2457,7 +2422,7 @@ function render(){
  const bgmScreen=screen;requestAnimationFrame(()=>syncBgmForScreen(bgmScreen));
  stopHomeNoticeCarousel();
  if(screen==='legal'){app.innerHTML='<main class="screen legal-screen '+(legalAssetsReady?'is-ready':'')+'"><section class="legal-copy"><small>FATE / DOMINATION</small><h1>非商业同人作品声明</h1><div class="legal-credits"><div class="legal-credit"><span>中文版作者</span><strong>亚松</strong></div><div class="legal-credit"><span>英文版作者</span><strong>Caresim</strong></div></div><p class="legal-author"><span>电子化版本制作</span><strong>风铃月 · binchen648</strong></p><p class="legal-statement">本作是由同人爱好者制作的非盈利电子化作品，仅供同好交流、规则研究与学习使用，严禁用于任何商业用途。<br>作品中涉及的角色、名称、世界观设定及相关素材，其相关权利归原作者及各权利方所有。<br>本项目与 TYPE-MOON 及相关官方机构不存在授权、合作或隶属关系。</p></section>'+legalLoaderMarkup()+'<button class="legal-continue" type="button" data-legal-continue>点击继续</button></main>';requestAnimationFrame(mountLegalProgress);return}
- if(screen==='splash'){app.innerHTML='<main class="screen splash splash-from-legal" id="splash">'+bg()+'<div class="splash-composition"><div class="splash-eyebrow">FATE / DOMINATION</div><div class="splash-title splash-title-original" aria-label="Fate / Domination"><span class="fate">Fate<i>/</i></span><span class="dom">Domination</span></div></div><button class="press-any"><span>◇</span><span>按任意键进入</span></button><div class="splash-foot"><span>Fate / Domination</span><span></span></div></main>';return}
+ if(screen==='splash'){app.innerHTML='<main class="screen splash splash-from-legal" id="splash">'+bg()+'<div class="splash-composition"><img class="splash-title-logo" src="../assets/ui/logos/fate-domination-title-v2.png" alt="Fate / Domination"></div><button class="press-any"><span>◇</span><span>按任意键进入</span></button><div class="splash-foot"><span>Fate / Domination</span><span></span></div></main>';return}
  if(screen==='home'){app.innerHTML='<main class="screen home-screen"'+homeBackgroundAttribute()+'>'+bg()+'<header class="topbar">'+logo()+'<button class="profile" type="button" data-profile><div class="profile-badge">'+avatarContent()+'</div><div class="profile-text"><small>PLAYER</small><strong>'+esc(playerProfile.name)+'</strong></div></button></header><section class="home-menu">'+[['single','SOLO','单人模式'],['multi','MULTIPLAYER','多人模式'],['codex','ARCHIVE','图鉴'],['tutorial','GUIDE','教程'],['settings','OPTIONS','设置']].map(x=>'<button class="nav" data-nav="'+x[0]+'"><small>'+x[1]+'</small><strong>'+x[2]+'</strong></button>').join('')+'</section>'+homeNoticeMarkup()+'</main>';requestAnimationFrame(initHomeNoticeCarousel);return}
  if(screen==='profile'){renderPlayerProfile();return}
  if(screen==='single'||screen==='multi'){const multi=screen==='multi';app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>'+(multi?'MULTIPLAYER':'SOLO PLAY')+'</span><h1>'+(multi?'多人模式':'单人模式')+'</h1></div></header><section class="mode-grid '+(multi?'mode-grid--multi':'mode-grid--single')+'">'+mode('free','STANDARD','自选模式','自由选择御主与从者，使用标准流程进行对局。',multi)+mode('3x','3X','3X模式','使用 3X 专属规则与构筑流程开始一局对战。',multi)+(multi?joinMode():'')+'</section></main>';return}

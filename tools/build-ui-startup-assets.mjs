@@ -10,6 +10,7 @@ const imageDirectories = [
   'assets/cards/servants',
   'assets/ui/home-backgrounds',
   'assets/ui/splash-backgrounds',
+  'assets/ui/logos',
   'assets/ui/battle-backgrounds'
 ];
 
