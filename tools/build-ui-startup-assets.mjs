@@ -6,6 +6,8 @@ const imageExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avi
 const audioExtensions = new Set(['.mp3', '.ogg', '.wav', '.m4a', '.aac', '.flac']);
 const imageDirectories = [
   'assets/map',
+  'assets/cards/masters',
+  'assets/cards/servants',
   'assets/ui/home-backgrounds',
   'assets/ui/splash-backgrounds',
   'assets/ui/battle-backgrounds'
