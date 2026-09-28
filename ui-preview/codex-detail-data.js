@@ -84,7 +84,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-shinji/01.png"
+          "image": "../assets/rules-content/chm-used/masters/master-shinji/01.png"
         }
       ]
     },
@@ -152,7 +152,7 @@ window.FDCodexDetailData={
           "cost": 2,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-maiya/01.png"
+          "image": "../assets/rules-content/chm-used/masters/master-maiya/01.png"
         }
       ]
     },
@@ -163,16 +163,6 @@ window.FDCodexDetailData={
       "class": "Master",
       "image": "../assets/cards/masters/卧藤门司.png",
       "skills": [
-        {
-          "id": "master.gatou.command-spell",
-          "name": "令咒",
-          "type": "令咒",
-          "text": "行动阶段：获得4魔力。行动阶段：总威力+2，如果你本回合每赢得一场战斗，获得2战果。行动阶段：从新都或深山町移动至任意位置，无视交战状态。",
-          "cost": 0,
-          "requirement": null,
-          "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-gatou/01.png"
-        },
         {
           "id": "master.gatou.skill.seeker",
           "name": "求道者",
@@ -222,16 +212,6 @@ window.FDCodexDetailData={
       "image": "../assets/cards/masters/奥尔加玛丽·阿尼姆斯菲亚.png",
       "skills": [
         {
-          "id": "master.olga-marie.command-spell",
-          "name": "令咒",
-          "type": "令咒",
-          "text": "行动阶段：获得4点魔力。行动阶段：+2合计威力，若你获胜，获得2点战果。行动阶段：无视交战状态从深山町或新都移动至任意地点。",
-          "cost": 0,
-          "requirement": null,
-          "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/03.png"
-        },
-        {
           "id": "master.olga-marie.skill.astronomical-science",
           "name": "天体科学",
           "type": "御主技能",
@@ -249,7 +229,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/01.png"
+          "image": "../assets/rules-content/chm-used/masters/master-olga-marie/01.png"
         },
         {
           "id": "master.olga-marie.skill.trismegistus-grief",
@@ -259,7 +239,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/02.png"
+          "image": "../assets/rules-content/chm-used/masters/master-olga-marie/02.png"
         }
       ]
     }
@@ -280,7 +260,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/01.png"
         },
         {
           "id": "servant.artoriac.skill.sc-artoriac-2",
@@ -290,7 +270,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 7,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/02.png"
         },
         {
           "id": "servant.artoriac.skill.sc-artoriac-3",
@@ -300,7 +280,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": null,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/03.png"
         }
       ],
       "deck": [
@@ -378,7 +358,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/04.png",
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/04.png",
           "count": 1
         },
         {
@@ -389,7 +369,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/05.png",
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/05.png",
           "count": 1
         },
         {
@@ -400,7 +380,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 6,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/06.png",
+          "image": "../assets/rules-content/chm-used/servants/servant-artoriac/06.png",
           "count": 1
         }
       ]
@@ -420,7 +400,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-drake/01.png"
         },
         {
           "id": "servant.drake.skill.sc-drake-2",
@@ -430,7 +410,7 @@ window.FDCodexDetailData={
           "cost": 7,
           "requirement": null,
           "basePower": 13,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-drake/02.png"
         },
         {
           "id": "servant.drake.skill.sc-drake-3",
@@ -440,7 +420,7 @@ window.FDCodexDetailData={
           "cost": 2,
           "requirement": null,
           "basePower": null,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-drake/03.png"
         }
       ],
       "deck": [
@@ -518,7 +498,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 1
         },
         {
@@ -529,7 +509,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 3,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "image": "../assets/rules-content/basic-attacks/basic-surveil.png",
           "count": 3
         }
       ]
@@ -549,7 +529,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-achilles/01.png"
         },
         {
           "id": "servant.achilles.skill.sc-achilles-2",
@@ -559,7 +539,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 2,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-achilles/02.png"
         },
         {
           "id": "servant.achilles.skill.sc-achilles-3",
@@ -569,7 +549,7 @@ window.FDCodexDetailData={
           "cost": 6,
           "requirement": null,
           "basePower": 8,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-achilles/03.png"
         }
       ],
       "deck": [
@@ -669,7 +649,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 1
         },
         {
@@ -680,7 +660,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 3,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "image": "../assets/rules-content/basic-attacks/basic-surveil.png",
           "count": 2
         }
       ]
@@ -700,7 +680,7 @@ window.FDCodexDetailData={
           "cost": 2,
           "requirement": null,
           "basePower": 6,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoria-alt/03.png"
         },
         {
           "id": "servant.artoria-alt.skill.sc-artoria-alt-2",
@@ -710,7 +690,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 1,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoria-alt/01.png"
         },
         {
           "id": "servant.artoria-alt.skill.sc-artoria-alt-3",
@@ -720,7 +700,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 3,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-artoria-alt/02.png"
         }
       ],
       "deck": [
@@ -809,7 +789,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 1
         },
         {
@@ -820,7 +800,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 3,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "image": "../assets/rules-content/basic-attacks/basic-surveil.png",
           "count": 1
         }
       ]
@@ -840,7 +820,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 5,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-ereshkigal/02.png"
         },
         {
           "id": "servant.ereshkigal.skill.sc-ereshkigal-2",
@@ -850,7 +830,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-ereshkigal/01.png"
         },
         {
           "id": "servant.ereshkigal.skill.sc-ereshkigal-3",
@@ -860,7 +840,7 @@ window.FDCodexDetailData={
           "cost": 7,
           "requirement": null,
           "basePower": 7,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-ereshkigal/03.png"
         }
       ],
       "deck": [
@@ -960,7 +940,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 1
         },
         {
@@ -971,7 +951,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 2,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-preparation.png",
+          "image": "../assets/rules-content/basic-attacks/basic-preparation.png",
           "count": 2
         }
       ]
@@ -991,7 +971,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 6,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-tomoe/02.png"
         },
         {
           "id": "servant.tomoe.skill.sc-tomoe-2",
@@ -1001,7 +981,7 @@ window.FDCodexDetailData={
           "cost": 3,
           "requirement": null,
           "basePower": 5,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-tomoe/01.png"
         },
         {
           "id": "servant.tomoe.skill.sc-tomoe-3",
@@ -1011,7 +991,7 @@ window.FDCodexDetailData={
           "cost": 4,
           "requirement": null,
           "basePower": 9,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/03.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-tomoe/03.png"
         }
       ],
       "deck": [
@@ -1089,7 +1069,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 1
         },
         {
@@ -1100,7 +1080,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 3,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "image": "../assets/rules-content/basic-attacks/basic-surveil.png",
           "count": 1
         },
         {
@@ -1111,7 +1091,7 @@ window.FDCodexDetailData={
           "cost": 1,
           "requirement": null,
           "basePower": 2,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-preparation.png",
+          "image": "../assets/rules-content/basic-attacks/basic-preparation.png",
           "count": 1
         }
       ]
@@ -1131,7 +1111,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 11,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-kintoki/02.png"
         },
         {
           "id": "servant.kintoki.skill.sc-kintoki-2",
@@ -1141,7 +1121,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 11,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/02.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-kintoki/02.png"
         },
         {
           "id": "servant.kintoki.skill.sc-kintoki-3",
@@ -1151,7 +1131,7 @@ window.FDCodexDetailData={
           "cost": 5,
           "requirement": null,
           "basePower": 0,
-          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/01.png"
+          "image": "../assets/rules-content/chm-used/servants/servant-kintoki/01.png"
         }
       ],
       "deck": [
@@ -1229,7 +1209,7 @@ window.FDCodexDetailData={
           "cost": 0,
           "requirement": null,
           "basePower": 4,
-          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "image": "../assets/rules-content/basic-attacks/basic-luck.png",
           "count": 2
         }
       ]

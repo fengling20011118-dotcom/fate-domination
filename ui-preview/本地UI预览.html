@@ -2107,8 +2107,6 @@ const masters=['肯尼斯','间桐慎二','卫宫切嗣','久宇舞弥','卧藤�
 const threeXMasterNames=masters;
 const servants=[['阿尔托莉雅·卡斯特','Caster'],['弗朗西斯·德雷克','Rider'],['阿喀琉斯','Rider'],['阿尔托莉雅·潘德拉贡 (Alter)','Saber'],['埃列什基伽勒','Lancer'],['巴御前','Archer'],['坂田金时','Berserker']];
 const classes=['Saber','Archer','Lancer','Rider','Caster','Berserker'];
-const playtestMasterIds={'肯尼斯':'master.kayneth','间桐慎二':'master.shinji','卫宫切嗣':'master.kiritsugu','久宇舞弥':'master.maiya','卧藤门司':'master.gatou','爱丽丝菲尔':'master.irisviel','奥尔加玛丽·阿尼姆斯菲亚':'master.olga-marie'};
-const playtestServantIds={'阿尔托莉雅·卡斯特':'servant.artoriac','弗朗西斯·德雷克':'servant.drake','阿喀琉斯':'servant.achilles','阿尔托莉雅·潘德拉贡 (Alter)':'servant.artoria-alt','埃列什基伽勒':'servant.ereshkigal','巴御前':'servant.tomoe','坂田金时':'servant.kintoki'};
 const threeXRatings={'肯尼斯':4,'间桐慎二':4,'卫宫切嗣':4,'久宇舞弥':4,'卧藤门司':4,'爱丽丝菲尔':4,'奥尔加玛丽·阿尼姆斯菲亚':4};
 function sampleUnique(list,count,excluded=[]){const pool=list.filter(x=>!excluded.includes(Array.isArray(x)?x[0]:x));for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool.slice(0,Math.min(count,pool.length))}
 function resetMultiplayerLobby(){multiplayerRoomPlayers=[{id:'host',name:playerProfile.name||'御主',avatar:normalizeProfileAvatar(playerProfile.avatar),rankXp:playerProfile.progression.xp,host:true,ready:true,ai:false}];multiplayerLaunchRoster=[]}
@@ -2579,7 +2577,7 @@ function battleTransitionAsset(kind,name){
 }
 function startBattleTransition(){
  if(isSwitching)return;
- prepareScreenExit('battle-preview');
+ resetDocumentPreviews();
  resetBattlePreview();
  const pick=currentBattleSelection(),masterSrc=battleTransitionAsset('master',pick.master),servantSrc=battleTransitionAsset('servant',pick.servant);
  const overlay=document.createElement('div');
@@ -2588,7 +2586,7 @@ function startBattleTransition(){
  document.body.appendChild(overlay);
  isSwitching=true;
  let battleRendered=false,finished=false;
- const renderBattle=()=>{if(battleRendered)return;battleRendered=true;stopBgmPlayback();stopActiveSfx(false);const masterId=playtestMasterIds[pick.master],servantId=playtestServantIds[pick.servant];if(!masterId||!servantId){finish();alert('所选阵容尚未连接到对局规则，请重新选择。');return}const params=new URLSearchParams({master:masterId,servant:servantId,mode:chosenMode||'free'});window.location.assign(new URL('playtest/index.html?'+params.toString(),window.location.href).href)};
+ const renderBattle=()=>{if(battleRendered)return;battleRendered=true;screen='battle-preview';render()};
  const finish=()=>{if(finished)return;finished=true;overlay.remove();isSwitching=false};
  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const motion=window.anime;

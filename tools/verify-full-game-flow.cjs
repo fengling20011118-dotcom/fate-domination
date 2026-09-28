@@ -5,8 +5,6 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
 
 (async () => {
   const requestedMode = process.argv[2] === '3x' ? '3x' : 'free';
-  const masterIds = {'肯尼斯':'master.kayneth','间桐慎二':'master.shinji','卫宫切嗣':'master.kiritsugu','久宇舞弥':'master.maiya','卧藤门司':'master.gatou','爱丽丝菲尔':'master.irisviel','奥尔加玛丽·阿尼姆斯菲亚':'master.olga-marie'};
-  const servantIds = {'阿尔托莉雅·卡斯特':'servant.artoriac','弗朗西斯·德雷克':'servant.drake','阿喀琉斯':'servant.achilles','阿尔托莉雅·潘德拉贡 (Alter)':'servant.artoria-alt','埃列什基伽勒':'servant.ereshkigal','巴御前':'servant.tomoe','坂田金时':'servant.kintoki'};
   const errors = [];
   const browser = await chromium.launch({
     headless: true,
@@ -63,7 +61,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (/测试|预览/.test(readyText)) throw new Error(`准备页残留非正式文案：${readyText}`);
   await page.locator('[data-enter-battle-preview]').click();
   try {
-    await page.waitForURL(url => url.pathname.endsWith('/playtest/index.html'), {timeout: 15000});
+    await page.locator('.battle-host').waitFor({timeout: 15000});
+    await page.waitForFunction(() => document.querySelector('.battle-host')?.shadowRoot?.querySelector('.battle-root'), null, {timeout: 15000});
   } catch (error) {
     const diagnostic = await page.evaluate(() => ({
       href: location.href,
@@ -73,19 +72,16 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     }));
     throw new Error(`${error.message}\n${JSON.stringify(diagnostic)}\n${errors.join('\n')}`);
   }
-  await page.locator('.workbench__toggle').waitFor({timeout: 30000});
-
-  const url = new URL(page.url());
-  if (url.searchParams.get('master') !== masterIds[selectedMaster]) throw new Error(`御主参数错误：${url.search}`);
-  if (url.searchParams.get('servant') !== servantIds[selectedServant]) throw new Error(`从者参数错误：${url.search}`);
-  if (url.searchParams.get('mode') !== requestedMode) throw new Error(`模式参数错误：${url.search}`);
-  const body = await page.locator('body').innerText();
-  if (!body.includes(selectedMaster)) throw new Error(`对局未载入所选御主：${selectedMaster}`);
-  if (!body.includes(selectedServant)) throw new Error(`对局未载入所选从者：${selectedServant}`);
+  if (!page.url().endsWith(encodeURI('/本地UI预览.html'))) throw new Error(`正式入口被导航到其他页面：${page.url()}`);
+  const battleText = await page.evaluate(() => document.querySelector('.battle-host').shadowRoot.textContent);
+  if (!battleText.includes(selectedMaster)) throw new Error(`主对战区未载入所选御主：${selectedMaster}`);
+  if (!battleText.includes(selectedServant)) throw new Error(`主对战区未载入所选从者：${selectedServant}`);
+  if (!battleText.includes('冬木事件组 · 剩余20张')) throw new Error('主对战区未使用开发版冬木20张事件组');
+  if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
 
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant]}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);

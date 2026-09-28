@@ -116,12 +116,6 @@ window.FDCharacterPreviewData={
       "image": "../assets/cards/masters/卧藤门司.png",
       "skills": [
         {
-          "id": "master.gatou.command-spell",
-          "name": "令咒",
-          "type": "令咒",
-          "text": "行动阶段：获得4魔力。行动阶段：总威力+2，如果你本回合每赢得一场战斗，获得2战果。行动阶段：从新都或深山町移动至任意位置，无视交战状态。"
-        },
-        {
           "id": "master.gatou.skill.seeker",
           "name": "求道者",
           "type": "御主技能",
@@ -157,12 +151,6 @@ window.FDCharacterPreviewData={
       "class": "Master",
       "image": "../assets/cards/masters/奥尔加玛丽·阿尼姆斯菲亚.png",
       "skills": [
-        {
-          "id": "master.olga-marie.command-spell",
-          "name": "令咒",
-          "type": "令咒",
-          "text": "行动阶段：获得4点魔力。行动阶段：+2合计威力，若你获胜，获得2点战果。行动阶段：无视交战状态从深山町或新都移动至任意地点。"
-        },
         {
           "id": "master.olga-marie.skill.astronomical-science",
           "name": "天体科学",

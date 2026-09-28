@@ -41,9 +41,9 @@ const cardTypeNames = {
   basic_attack: '基础攻击',
 };
 const basicImages = {
-  'basic.luck': './playtest/assets/fd/real/basic-attacks/basic-luck.png',
-  'basic.surveil': './playtest/assets/fd/real/basic-attacks/basic-surveil.png',
-  'basic.preparation': './playtest/assets/fd/real/basic-attacks/basic-preparation.png',
+  'basic.luck': '../assets/rules-content/basic-attacks/basic-luck.png',
+  'basic.surveil': '../assets/rules-content/basic-attacks/basic-surveil.png',
+  'basic.preparation': '../assets/rules-content/basic-attacks/basic-preparation.png',
 };
 
 const authoredCards = new Map(library.cards.map(card => [card.id, card]));
@@ -51,7 +51,8 @@ const runtimeCards = library.rules.cards || {};
 const entityById = new Map([...library.masters, ...library.servants].map(entity => [entity.id, entity]));
 
 function localAsset(assetPath = '') {
-  return assetPath ? `./playtest${assetPath}` : '';
+  const prefix = '/assets/fd/real/';
+  return assetPath.startsWith(prefix) ? `../assets/rules-content/${assetPath.slice(prefix.length)}` : '';
 }
 
 function cardById(id) {
@@ -109,7 +110,7 @@ function characterView(id) {
   const entity = entityById.get(id);
   if (!entity) throw new Error(`内容库缺少角色：${id}`);
   const name = displayNames[id] || entity.name;
-  const skillIds = [...(entity.commandSpellCardIds || []), ...(entity.skillCardIds || [])];
+  const skillIds = [...(entity.skillCardIds || [])];
   return {
     sourceId: id,
     name,
