@@ -1,1516 +1,1236 @@
 window.FDCodexDetailData={
   "masters": {
-    "远坂凛": {
-      "name": "远坂凛",
-      "fullName": "远坂凛",
+    "肯尼斯": {
+      "sourceId": "master.kayneth",
+      "name": "肯尼斯",
+      "fullName": "肯尼斯·阿其波卢德",
       "class": "Master",
-      "image": "../assets/cards/masters/远坂凛.png",
+      "image": "../assets/cards/masters/肯尼斯.png",
       "skills": [
         {
-          "name": "宝石魔术",
-          "type": "被动",
-          "text": "游戏开始时，你获得10枚【宝石】。高潮阶段时你可以在【宝石】上选择相同的选项，每个选项至多3次(共计9次)。",
-          "cost": null,
+          "id": "master.kayneth.skill.double-master",
+          "name": "双重御主",
+          "type": "御主技能",
+          "text": "双重御主-你拥有的魔力少于8点也可以使用技能牌。",
+          "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "绝对服从的命令",
-          "type": "被动",
-          "text": "你必须于第一回合使用一枚令咒。否则于该回合结束失去一枚令咒。若你以该令咒获得了魔力，战斗阶段结束后，你失去4点魔力。",
-          "cost": null,
+          "id": "master.kayneth.skill.alchemist",
+          "name": "炼金术师",
+          "type": "御主技能",
+          "text": "炼金术师-游戏开始时，将6张【月灵髓液】洗成一副独立的牌库。行动阶段：从独立牌库抽一张【月灵髓液】。",
+          "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "宝石",
-          "type": "行动阶段",
-          "text": "<每局游戏限一次>\n行动阶段：选择一项本回合没有选择过的选项：\n-获得1点魔力。\n-打出一张游戏外的【阴炁弹】。\n-弃置1-3张牌，然后抽取相同数量的牌。",
+          "id": "master.kayneth.skill.pride",
+          "name": "倨傲",
+          "type": "御主技能",
+          "text": "倨傲-若你可以部署于一名战果低于你且独自位于战场的其他玩家所在的战场，则你必须部署。",
           "cost": 0,
           "requirement": null,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-远坂凛-s3.png"
-        },
-        {
-          "name": "阴炁弹",
-          "type": "牌库牌",
-          "text": "魔术属性，0耗1威。<每局游戏限一次>\n(<每局游戏限一次>的卡牌，关闭后将被移除游戏。对于其他卡牌的效果而言，它们便是游戏外的。)",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-远坂凛-s4.png"
-        },
-        {
-          "name": "宝石剑泽尔里奇",
-          "type": "魔术",
-          "text": "（升华技，将此牌加入你的技能区）\n被动：你的魔术基础牌和【阴炁弹】的威力+2。\n行动阶段：获得本回合所有玩家花费的魔力。战斗结束后，将此牌移除游戏。",
-          "cost": 0,
-          "requirement": 0,
-          "basePower": 6,
+          "basePower": 0,
           "image": ""
         }
       ]
     },
-    "韦伯·维尔维特": {
-      "name": "韦伯·维尔维特",
-      "fullName": "韦伯·维尔维特",
+    "间桐慎二": {
+      "sourceId": "master.shinji",
+      "name": "间桐慎二",
+      "fullName": "间桐慎二",
       "class": "Master",
-      "image": "../assets/cards/masters/韦伯·维尔维特.png",
+      "image": "../assets/cards/masters/间桐慎二.png",
       "skills": [
         {
-          "name": "鉴识眼",
-          "type": "被动",
-          "text": "你可观看背面朝上的事件牌。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        },
-        {
-          "name": "战略部署",
-          "type": "前哨阶段",
-          "text": "你能支付1魔力来抽2张牌。",
-          "cost": 1,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        },
-        {
-          "name": "调查",
-          "type": "前哨阶段",
-          "text": "查看一位玩家的手牌。你可选择其中一张牌放于其拥有的牌库顶部，若如此，下回合你不可进行【调查】。",
+          "id": "master.shinji.skill.drain-command",
+          "name": "吸魔命令",
+          "type": "御主技能",
+          "text": "进入深山町时，获得1点魔力。",
           "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "埃尔梅罗二世事件簿",
-          "type": "升华技",
-          "text": "前哨阶段：预测每个游戏内的战场的胜者，战斗阶段结束时，你每预测正确一个，便获得1点战果。你本回合无法从侦查获得战果。\n前哨阶段：花费5点魔力，本阶段结束时，你所在地点的所有玩家均随机弃置2张手牌。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        }
-      ]
-    },
-    "言峰绮礼": {
-      "name": "言峰绮礼",
-      "fullName": "言峰绮礼",
-      "class": "Master",
-      "image": "../assets/cards/masters/言峰绮礼.png",
-      "skills": [
-        {
-          "name": "两幅面孔",
-          "type": "被动",
-          "text": "当从者真名隐藏时，你是【监督者】；其他情况下，你是【执行者】。（包括且不限于你没有从者）",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        },
-        {
-          "name": "监督者",
-          "type": "行动阶段",
-          "text": "管理者-所有玩家秘密告诉你从者职阶。 中立-行动阶段：你可以无视交战状态，花费2魔力移动至侦察。",
-          "cost": 2,
-          "requirement": 2,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-言峰绮礼-s2.png"
-        },
-        {
-          "name": "执行者",
-          "type": "战斗阶段",
-          "text": "战斗阶段：你的总威力+2。",
+          "id": "master.shinji.skill.useless-person",
+          "name": "无用之人",
+          "type": "御主技能",
+          "text": "开局获得【伪臣之书】。",
           "cost": 0,
           "requirement": null,
-          "basePower": 2,
-          "image": "../assets/cards/skills/master-言峰绮礼-s3.png"
-        },
-        {
-          "name": "恶的庇护者",
-          "type": "升华技",
-          "text": "当你为【监督者】时，战斗阶段：可【真名解放】使与你位于同一战场的一名玩家【败北】。当你为【执行者】时，你的所有基础攻击牌威力+2且无视【败北】。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        }
-      ]
-    },
-    "爱丽丝菲尔": {
-      "name": "爱丽丝菲尔",
-      "fullName": "爱丽丝菲尔",
-      "class": "Master",
-      "image": "../assets/cards/masters/爱丽丝菲尔.png",
-      "skills": [
-        {
-          "name": "代理御主",
-          "type": "被动",
-          "text": "令咒改为在前哨阶段使用。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "转换魔术",
-          "type": "前哨阶段",
-          "text": "弃置所有手牌，每1张获得1点魔力。",
+          "id": "master.shinji.skill.clown",
+          "name": "小丑",
+          "type": "御主技能",
+          "text": "当你战败时，失去一枚令咒。",
           "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "生命赋予",
-          "type": "魔术",
-          "text": "（升华技，将此牌加入你的技能区）\n你每回合只能使用此攻击的其中一项能力。\n行动阶段：本回合的一张基础攻击可以保持激活至下回合结束。\n战斗阶段：你的攻击获得魔术属性并且威力+1。",
-          "cost": 2,
-          "requirement": 2,
-          "basePower": 4,
-          "image": ""
+          "id": "master.shinji.skill.false-attendant-book",
+          "name": "伪臣之书",
+          "type": "御主技能",
+          "text": "当间桐樱在场时：当你第一次失去所有令咒时，在该回合结束时，将从者替换为一个随机的，未被使用的从者。重新获得3令咒。 当间桐樱不在场时：当你第一次失去所有令咒时，在该回合结束时，将你的御主替换为【间桐樱】。重置你的魔力，获得2令咒，保持战果不变。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-shinji/01.png"
         }
       ]
     },
     "卫宫切嗣": {
+      "sourceId": "master.kiritsugu",
       "name": "卫宫切嗣",
       "fullName": "卫宫切嗣",
       "class": "Master",
       "image": "../assets/cards/masters/卫宫切嗣.png",
       "skills": [
         {
+          "id": "master.kiritsugu.skill.magus-killer",
           "name": "魔术师杀手",
-          "type": "被动",
+          "type": "御主技能",
           "text": "游戏开始时，将你牌库的一张牌替换为【起源弹】。",
-          "cost": null,
+          "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
+          "id": "master.kiritsugu.skill.time-alter",
           "name": "固有时制御",
-          "type": "行动阶段",
-          "text": "暗置打出一张牌，然后抽一张牌。",
+          "type": "御主技能",
+          "text": "行动阶段：暗置打出一张牌，然后抽一张牌。",
           "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
+          "id": "master.kiritsugu.skill.square-accel",
           "name": "四倍速",
-          "type": "战斗阶段",
-          "text": "关闭一张你激活的攻击，然后激活一张你暗置的【起源弹】。",
+          "type": "御主技能",
+          "text": "战斗阶段：关闭一张你激活的攻击，然后激活一张你暗置的【起源弹】。",
           "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
-        },
-        {
-          "name": "起源弹",
-          "type": "牌库牌",
-          "text": "迅捷0耗2威。[切断与结合]-战斗阶段：令一名你的交战对手失去三分之一的魔力（向上取整），然后此牌获得等同于其失去魔力值二倍的威力。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        },
-        {
-          "name": "冷血杀手",
-          "type": "升华技",
-          "text": "解锁此技能后立刻移除你弃牌堆中的2张牌并将2张游戏外的起源弹加入手牌。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-卫宫切嗣-ascension.png"
         }
       ]
     },
-    "间桐樱": {
-      "name": "间桐樱",
-      "fullName": "间桐樱",
+    "久宇舞弥": {
+      "sourceId": "master.maiya",
+      "name": "久宇舞弥",
+      "fullName": "久宇舞弥",
       "class": "Master",
-      "image": "../assets/cards/masters/间桐樱.png",
+      "image": "../assets/cards/masters/久宇舞弥.png",
       "skills": [
         {
-          "name": "欠损容器",
-          "type": "被动",
-          "text": "回合结束时，若你的战果低于所有其他玩家且你的第一名御主不是【间桐慎二】，激活【黑泥】。",
-          "cost": null,
+          "id": "master.maiya.skill.military",
+          "name": "军旅",
+          "type": "御主技能",
+          "text": "你拥有【援护射击】。前哨阶段：若你不位于战场，花费2点魔力，将【援护射击】加入一名其他玩家的攻击，回合结束时令其返回你的技能区。若如此做，你本回合无法成为战斗的胜者。",
+          "cost": 0,
           "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
         },
         {
-          "name": "此世全部之恶",
-          "type": "被动",
-          "text": "第8回合结束时，若你的战果排名不为第一，激活【被污染的圣杯】。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
-          "image": ""
-        },
-        {
-          "name": "黑泥",
-          "type": "准备阶段",
-          "text": "准备阶段：花费2点魔力，若你未激活【被污染的圣杯】，获得2点战果。",
+          "id": "master.maiya.deck.support-shot",
+          "name": "援护射击",
+          "type": "御主技能",
+          "text": "迅捷属性，2魔耗2需0威力。此牌需追加打出。压制-行动阶段：若你不是久宇舞弥，你需向其支付2点战果使用此效果。获得+1基础地利后，翻倍你的地利。",
           "cost": 2,
-          "requirement": 2,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-间桐樱-s3.png"
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-maiya/01.png"
+        }
+      ]
+    },
+    "卧藤门司": {
+      "sourceId": "master.gatou",
+      "name": "卧藤门司",
+      "fullName": "卧藤门司",
+      "class": "Master",
+      "image": "../assets/cards/masters/卧藤门司.png",
+      "skills": [
+        {
+          "id": "master.gatou.command-spell",
+          "name": "令咒",
+          "type": "令咒",
+          "text": "行动阶段：获得4魔力。行动阶段：总威力+2，如果你本回合每赢得一场战斗，获得2战果。行动阶段：从新都或深山町移动至任意位置，无视交战状态。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-gatou/01.png"
         },
         {
-          "name": "被污染的圣杯",
-          "type": "被动",
-          "text": "你拥有无限魔力（此状态下无法获得或失去魔力）。每回合常规攻击可以多打一张牌。",
-          "cost": null,
+          "id": "master.gatou.skill.seeker",
+          "name": "求道者",
+          "type": "御主技能",
+          "text": "求道者-战斗阶段结束时，每有一名位于你所在地地点且以移动进入该地点的其他玩家，你获得1点魔力。若你获胜，改为获得1点战果。冥想-你使用过令咒的回合不受其他玩家的能力影响。",
+          "cost": 0,
           "requirement": null,
-          "basePower": null,
-          "image": "../assets/cards/skills/master-间桐樱-s4.png"
-        },
-        {
-          "name": "腐蚀",
-          "type": "升华技",
-          "text": "你只能在游戏的前四回合中解锁此牌。每局游戏限一次，当一名玩家被淘汰且【被污染的圣杯】处于激活状态，你可将其拥有的任意张从者技能牌加入你的技能区。",
-          "cost": null,
-          "requirement": null,
-          "basePower": null,
+          "basePower": 0,
           "image": ""
+        }
+      ]
+    },
+    "爱丽丝菲尔": {
+      "sourceId": "master.irisviel",
+      "name": "爱丽丝菲尔",
+      "fullName": "爱丽丝菲尔·冯·爱因兹贝伦",
+      "class": "Master",
+      "image": "../assets/cards/masters/爱丽丝菲尔.png",
+      "skills": [
+        {
+          "id": "master.irisviel.skill.proxy-master",
+          "name": "代理御主",
+          "type": "御主技能",
+          "text": "令咒改为在前哨阶段使用。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": ""
+        },
+        {
+          "id": "master.irisviel.skill.conversion-magic",
+          "name": "转换魔术",
+          "type": "御主技能",
+          "text": "前哨阶段：弃置所有手牌，每1张获得1点魔力。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": ""
+        }
+      ]
+    },
+    "奥尔加玛丽·阿尼姆斯菲亚": {
+      "sourceId": "master.olga-marie",
+      "name": "奥尔加玛丽·阿尼姆斯菲亚",
+      "fullName": "奥尔加玛丽·阿尼姆斯菲亚",
+      "class": "Master",
+      "image": "../assets/cards/masters/奥尔加玛丽·阿尼姆斯菲亚.png",
+      "skills": [
+        {
+          "id": "master.olga-marie.command-spell",
+          "name": "令咒",
+          "type": "令咒",
+          "text": "行动阶段：获得4点魔力。行动阶段：+2合计威力，若你获胜，获得2点战果。行动阶段：无视交战状态从深山町或新都移动至任意地点。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/03.png"
+        },
+        {
+          "id": "master.olga-marie.skill.astronomical-science",
+          "name": "天体科学",
+          "type": "御主技能",
+          "text": "天体科学-你拥有【迦勒底亚斯】。无论抵达-当你首次战败后的回合结束时，激活【特里斯墨吉斯忒斯之殇】。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": ""
+        },
+        {
+          "id": "master.olga-marie.skill.chaldeas",
+          "name": "迦勒底亚斯",
+          "type": "御主技能",
+          "text": "事务剪定-你可以查看局势牌堆底和事件牌堆底。每回合限一次，当一张属于原局势或事件牌堆的非高潮局势或事件牌被展示后将要生效前，你可以将其与相应牌堆底的牌调换。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/01.png"
+        },
+        {
+          "id": "master.olga-marie.skill.trismegistus-grief",
+          "name": "特里斯墨吉斯忒斯之殇",
+          "type": "御主技能",
+          "text": "魂离神引-你的合计威力+X，X为此牌被激活时的回合数的一半（向上取整）。当你战败后，你失去魂离神引并获得归寂。归寂-你必须部署于战场，你的战斗阶段开始时，令所有与你位于同一战场的玩家【败北】，然后移除此牌。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/masters/master-olga-marie/02.png"
         }
       ]
     }
   },
   "servants": {
-    "阿尔托莉雅": {
-      "name": "阿尔托莉雅",
-      "fullName": "阿尔托莉雅·潘德拉贡",
-      "class": "Saber",
-      "image": "../assets/cards/servants/阿尔托莉雅.png",
+    "阿尔托莉雅·卡斯特": {
+      "sourceId": "servant.artoriac",
+      "name": "阿尔托莉雅·卡斯特",
+      "fullName": "阿尔托莉雅·卡斯特",
+      "class": "Caster",
+      "image": "../assets/cards/servants/阿尔托莉雅·卡斯特.png",
       "skills": [
         {
-          "name": "对魔力",
-          "type": "特殊",
-          "text": "【宝具绽放】被动/战斗阶段：若你于本回合打出了魔耗最高的宝具攻击，获1战果。若其消耗≥4，额外获1战果。\n【魔术抗性】战斗阶段：将与你位于同战场的交战对手控制的魔法/魔术属性攻击威力设置为0。",
+          "id": "servant.artoriac.skill.sc-artoriac-1",
+          "name": "选王剑",
+          "type": "从者技能",
+          "text": "【真名解放】\n残留：此卡持续激活两回合。你的其他特殊属性攻击威力+2。\n战斗阶段：将一张你本回合打出的非技能卡或背面向上的攻击返回你的手牌。",
           "cost": 3,
-          "requirement": 3,
-          "basePower": 3,
-          "image": "../assets/cards/skills/servant-阿尔托莉雅-sc_saber_1.png"
-        },
-        {
-          "name": "风王结界",
-          "type": "魔术/宝具",
-          "text": "若你的真名隐藏，此牌的魔力消耗-2。\n战斗阶段：将与你进行战斗对手的力量攻击威力变为0。",
-          "cost": 4,
-          "requirement": 4,
+          "requirement": null,
           "basePower": 4,
-          "image": "../assets/cards/skills/servant-阿尔托莉雅-sc_saber_2.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/01.png"
         },
         {
-          "name": "誓约胜利之剑",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n战斗阶段：高潮回合时，合计威力+4。若你赢得第11回合战斗，获得游戏胜利。",
-          "cost": 8,
-          "requirement": 8,
-          "basePower": 12,
-          "image": "../assets/cards/skills/servant-阿尔托莉雅-sc_saber_np.png"
+          "id": "servant.artoriac.skill.sc-artoriac-2",
+          "name": "选定之杖",
+          "type": "从者技能",
+          "text": "行动阶段：花费X点魔力，然后查看你牌库顶的X+2张牌，你可以将其中一张加入手牌，然后弃置其余被查看的牌。",
+          "cost": 3,
+          "requirement": null,
+          "basePower": 7,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/02.png"
+        },
+        {
+          "id": "servant.artoriac.skill.sc-artoriac-3",
+          "name": "真圆集结誓约之星",
+          "type": "从者技能",
+          "text": "残留：你的弃牌堆持续公开，X为你弃牌堆中幸运牌的数量×5（至多为15）。当X大于0时，【真名解放】。当你获得一场胜利时，将你的弃牌堆洗回牌库，此效果无法被阻止。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": null,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/03.png"
         }
       ],
       "deck": [
         {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
+          "image": "",
+          "count": 2
         },
         {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
+          "id": "basic.agility.3",
+          "name": "敏捷攻击 3",
+          "type": "敏捷",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardb3",
-          "name": "浑身的一击",
-          "type": "力量",
+          "id": "basic.magecraft.2",
+          "name": "魔术攻击 2",
+          "type": "魔术",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 3,
-          "image": "../assets/cards/deck/cardB3.png"
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardb4",
-          "name": "会心的一击",
-          "type": "力量",
-          "cost": 1,
+          "id": "basic.magecraft.3",
+          "name": "魔术攻击 3",
+          "type": "魔术",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.magecraft.4",
+          "name": "魔术攻击 4",
+          "type": "魔术",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.magecraft.5",
+          "name": "魔术攻击 5",
+          "type": "魔术",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
           "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB4.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ2.png"
-        },
-        {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA1.png"
-        },
-        {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.cardsurveil",
-          "name": "急行",
-          "type": "特殊",
+          "id": "servant.artoriac.skill.sc-artoriac-4",
+          "name": "朝圣者的召唤",
+          "type": "卡牌",
+          "text": "唯一/被动：如果你赢得战斗，你可以从手牌中将此卡移出游戏并将一张[幸运]洗入你的牌库。\n行动阶段：如果你位于侦察，获得2点战果。沿着箭头移动至多两个地点。",
           "cost": 1,
-          "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardSurveil.png"
+          "requirement": null,
+          "basePower": 4,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/04.png",
+          "count": 1
         },
         {
-          "id": "card.cardluck",
-          "name": "幸运",
-          "type": "特殊",
+          "id": "servant.artoriac.skill.sc-artoriac-5",
+          "name": "朝圣者的休憩",
+          "type": "卡牌",
+          "text": "唯一/被动：如果你赢得战斗，你可以从手牌中将此卡移出游戏并将一张[幸运]洗入你的牌库。\n行动阶段：获得2点魔力，如果你无法增加魔力则获得2点战果。",
           "cost": 0,
-          "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardluck.png"
-        }
-      ]
-    },
-    "卫宫": {
-      "name": "卫宫",
-      "fullName": "卫宫",
-      "class": "Archer",
-      "image": "../assets/cards/servants/卫宫.png",
-      "skills": [
-        {
-          "name": "炽天覆七重圆环",
-          "type": "特殊",
-          "text": "战斗阶段：将同一战场所有对手的迅捷属性威力变为0。",
-          "cost": 2,
-          "requirement": 2,
-          "basePower": 4,
-          "image": "../assets/cards/skills/servant-卫宫-sc_emiya_1.png"
-        },
-        {
-          "name": "伪·螺旋剑",
-          "type": "迅捷/宝具",
-          "text": "【真名解放】<每局游戏限一次>\n行动阶段：将你的地利变为3倍。\n战斗阶段：若赢得本场战斗，获得4战果。",
-          "cost": 2,
-          "requirement": 2,
-          "basePower": 4,
-          "image": "../assets/cards/skills/servant-卫宫-sc_emiya_2.png"
-        },
-        {
-          "name": "无限剑制",
-          "type": "特殊",
-          "text": "【真名解放】\n打出时：以你打出的牌、手牌、牌库和弃牌堆任意组建一组至多12张牌的手牌。\n残留：你的常规出牌改为打出0~4张牌，你不能抽牌，当你的手牌数为0时，关闭此牌。",
-          "cost": 8,
-          "requirement": 8,
+          "requirement": null,
           "basePower": 0,
-          "image": "../assets/cards/skills/servant-卫宫-sc_emiya_np.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/05.png",
+          "count": 1
         },
         {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardQ1.png"
-        },
-        {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ2.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA1.png"
-        },
-        {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.carda3",
-          "name": "高位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA3.png"
-        },
-        {
-          "id": "card.cardsurveil",
-          "name": "急行",
-          "type": "特殊",
+          "id": "servant.artoriac.skill.sc-artoriac-6",
+          "name": "朝圣者的命运",
+          "type": "卡牌",
+          "text": "唯一/被动：如果你赢得战斗，你可以从手牌中将此卡移出游戏并将一张[幸运]洗入你的牌库。\n战斗阶段：如果你赢得战斗且不是单独获胜，获得2点战果。",
           "cost": 1,
-          "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardSurveil.png"
-        },
-        {
-          "id": "card.cardpreparation",
-          "name": "远隔操作",
-          "type": "特殊",
-          "cost": 1,
-          "basePower": 2,
-          "text": "行动：地利翻倍。战斗：若赢，获2战果。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardPreparation.png"
-        }
-      ]
-    },
-    "库·丘林": {
-      "name": "库·丘林",
-      "fullName": "库·丘林",
-      "class": "Lancer",
-      "image": "../assets/cards/servants/库·丘林.png",
-      "skills": [
-        {
-          "name": "穿刺死棘之枪",
-          "type": "迅捷/宝具",
-          "text": "【真名解放】\n打出时：此牌+2魔力消耗（可叠加）直至游戏结束。\n贯穿心脏-战斗阶段：若仅有一名对手与你位于同一战场，令其【败北】。",
-          "cost": 3,
-          "requirement": 3,
+          "requirement": null,
           "basePower": 6,
-          "image": ""
-        },
-        {
-          "name": "战斗续行",
-          "type": "迅捷/特殊",
-          "text": "行动阶段：移动至除魔术工房外的任意地点。",
-          "cost": 3,
-          "requirement": 3,
-          "basePower": 5,
-          "image": "../assets/cards/skills/servant-库·丘林-sc_cu_2.png"
-        },
-        {
-          "name": "突穿死翔之枪",
-          "type": "迅捷/宝具",
-          "text": "【真名解放】\n战斗阶段：战斗阶段结束后，每与一名对手进行了战斗便获得1点战果。若你获得胜利，每名交战对手失去该数量的战果。",
-          "cost": 7,
-          "requirement": 7,
-          "basePower": 10,
-          "image": "../assets/cards/skills/servant-库·丘林-sc_cu_np.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
-        },
-        {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ1.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 3,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.cardq4",
-          "name": "刹那的一击",
-          "type": "迅捷",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ4.png"
-        },
-        {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA1.png"
-        },
-        {
-          "id": "card.carda3",
-          "name": "高位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA3.png"
-        },
-        {
-          "id": "card.carda4",
-          "name": "高位魔法",
-          "type": "魔法",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA4.png"
-        },
-        {
-          "id": "card.cardsurveil",
-          "name": "急行",
-          "type": "特殊",
-          "cost": 1,
-          "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardSurveil.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoriac/06.png",
+          "count": 1
         }
       ]
     },
-    "伊斯坎达尔": {
-      "name": "伊斯坎达尔",
-      "fullName": "伊斯坎达尔",
+    "弗朗西斯·德雷克": {
+      "sourceId": "servant.drake",
+      "name": "弗朗西斯·德雷克",
+      "fullName": "弗朗西斯·德雷克",
       "class": "Rider",
-      "image": "../assets/cards/servants/伊斯坎达尔.png",
+      "image": "../assets/cards/servants/弗朗西斯·德雷克.png",
       "skills": [
         {
+          "id": "servant.drake.skill.sc-drake-1",
           "name": "骑乘",
-          "type": "特殊",
+          "type": "从者技能",
           "text": "打出时：若此牌与一张基础攻击一同打出，抽一张牌。\n坐骑召唤-行动阶段：打出至多3张基本威力为3或更低的手牌。",
           "cost": 3,
-          "requirement": 3,
+          "requirement": null,
           "basePower": 0,
-          "image": "../assets/cards/skills/servant-伊斯坎达尔-sc_iskandar_1.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/01.png"
         },
         {
-          "name": "神威车轮",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n行动阶段：将你所在地点的一张事件牌弃置，然后抽2张新的事件牌。将其中1张作为新的事件牌，另一张洗回牌堆。",
-          "cost": 4,
-          "requirement": 4,
-          "basePower": 7,
-          "image": "../assets/cards/skills/servant-伊斯坎达尔-sc_iskandar_2.png"
-        },
-        {
-          "name": "王之军势",
-          "type": "宝具",
-          "text": "【真名解放】\n行动阶段：创造并激活5张临时的威力2的力量或迅捷属性的基础攻击直至回合结束。",
-          "cost": 8,
-          "requirement": 8,
-          "basePower": 0,
-          "image": "../assets/cards/skills/servant-伊斯坎达尔-sc_iskandar_np.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardB1.png"
-        },
-        {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardb3",
-          "name": "浑身的一击",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB3.png"
-        },
-        {
-          "id": "card.cardb4",
-          "name": "会心的一击",
-          "type": "力量",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB4.png"
-        },
-        {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ1.png"
-        },
-        {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ2.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.cardsurveil",
-          "name": "急行",
-          "type": "特殊",
-          "cost": 1,
-          "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardSurveil.png"
-        },
-        {
-          "id": "card.cardluck",
-          "name": "幸运",
-          "type": "特殊",
-          "cost": 0,
-          "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardluck.png"
-        }
-      ]
-    },
-    "吉尔·德·雷": {
-      "name": "吉尔·德·雷",
-      "fullName": "吉尔·德·雷",
-      "class": "Caster",
-      "image": "../assets/cards/servants/吉尔·德·雷.png",
-      "skills": [
-        {
-          "name": "螺湮城教本(水魔)",
-          "type": "魔术/宝具",
-          "text": "【真名解放】\n打出时：若此牌与魔术攻击一同打出，抽一张牌。\n行动阶段：从手牌打出至多3张魔术攻击并将它们的属性切换为力量或敏捷(必须切换)。",
-          "cost": 4,
-          "requirement": 4,
-          "basePower": 0,
-          "image": "../assets/cards/skills/servant-吉尔·德·雷-sc_gilles_1.png"
-        },
-        {
-          "name": "阵地建造",
-          "type": "魔术",
-          "text": "X为16 - (当前回合数 × 2)\n残留：当你部署于魔术工房时，获得1点魔力和2点战果。",
-          "cost": 0,
-          "requirement": 0,
-          "basePower": 2,
-          "image": "../assets/cards/skills/servant-吉尔·德·雷-sc_gilles_2.png"
-        },
-        {
-          "name": "螺湮城教本(海魔)",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n打出时：将此牌放置于你所在的战场或关闭此牌。\n古神的呼唤-此牌失去宝具属性。当你位于被放置的此牌所在的战场时，将此牌加入攻击。当你于此战场战败，该战场关闭或其不(再)为战场时，关闭此牌。",
-          "cost": 8,
-          "requirement": 8,
-          "basePower": 8,
-          "image": "../assets/cards/skills/servant-吉尔·德·雷-sc_gilles_np.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 3,
-          "image": "../assets/cards/deck/cardA1.png"
-        },
-        {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 3,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.carda3",
-          "name": "高位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardA3.png"
-        },
-        {
-          "id": "card.carda4",
-          "name": "高位魔法",
-          "type": "魔法",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardA4.png"
-        },
-        {
-          "id": "card.cardpreparation",
-          "name": "远隔操作",
-          "type": "特殊",
-          "cost": 1,
-          "basePower": 2,
-          "text": "行动：地利翻倍。战斗：若赢，获2战果。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardPreparation.png"
-        }
-      ]
-    },
-    "哈桑": {
-      "name": "哈桑",
-      "fullName": "哈桑·萨巴赫(咒腕)",
-      "class": "Assassin",
-      "image": "../assets/cards/servants/哈桑.png",
-      "skills": [
-        {
-          "name": "气息遮断",
-          "type": "迅捷",
-          "text": "刺杀-战斗阶段：战力结算后，如果你满足以下条件，令战力最高的所有交战对手【败北】：\n1.你的战力低于战力最高的所有交战对手。\n2.没有除战力最高的交战对手外其他战力高于你的交战对手。\n3.此战斗有3名及以上的参与者。",
-          "cost": 3,
-          "requirement": 3,
-          "basePower": 4,
-          "image": "../assets/cards/skills/servant-哈桑-sc_hassan_1.png"
-        },
-        {
-          "name": "自我改造",
-          "type": "迅捷",
-          "text": "打出时：隐藏真名并获得2点战果。\n残留：若与你进行交战的玩家本回合被淘汰时，此牌获得威力+1。",
-          "cost": 1,
-          "requirement": 1,
-          "basePower": 2,
-          "image": "../assets/cards/skills/servant-哈桑-sc_hassan_2.png"
-        },
-        {
-          "name": "妄想心音",
-          "type": "迅捷/宝具",
-          "text": "【真名解放】\n只有当真名隐藏时才能使用此牌。\n战斗阶段：如果你战胜了一名玩家，将本回合获得的战果翻倍。如果游戏除你外仅剩1名玩家，改为使其【败北】。",
+          "id": "servant.drake.skill.sc-drake-2",
+          "name": "黄金鹿与暴风夜",
+          "type": "从者技能",
+          "text": "【真名解放】\n战斗阶段：如果无人与你对战，获得你所处战场上的所有事件牌的战果并弃置它们。如果你在侦察，立刻获得2点战果。\n无视花费移动至任一地点。",
           "cost": 7,
-          "requirement": 7,
-          "basePower": 6,
-          "image": "../assets/cards/skills/servant-哈桑-sc_hassan_np.png"
+          "requirement": null,
+          "basePower": 13,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/02.png"
+        },
+        {
+          "id": "servant.drake.skill.sc-drake-3",
+          "name": "暴风雨的航海家",
+          "type": "从者技能",
+          "text": "【真名解放】\nX为你本回合移动距离的4倍。\n被动：你的【急行】可以反向移动。\n劫掠-战斗阶段：本回合每经过或停留一个战场获得1战果。",
+          "cost": 2,
+          "requirement": null,
+          "basePower": null,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-drake/03.png"
         }
       ],
       "deck": [
         {
-          "id": "card.cardb1",
-          "name": "迫击",
+          "id": "basic.strength.2",
+          "name": "力量攻击 2",
           "type": "力量",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardb2",
-          "name": "强打",
+          "id": "basic.strength.3",
+          "name": "力量攻击 3",
           "type": "力量",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
+          "image": "",
+          "count": 2
         },
         {
-          "id": "card.cardb3",
-          "name": "浑身的一击",
-          "type": "力量",
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB3.png"
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
+          "id": "basic.agility.3",
+          "name": "敏捷攻击 3",
+          "type": "敏捷",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ2.png"
+          "image": "",
+          "count": 2
         },
         {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
+          "id": "basic.agility.4",
+          "name": "敏捷攻击 4",
+          "type": "敏捷",
+          "text": "以基础威力 4 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ3.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardq4",
-          "name": "刹那的一击",
-          "type": "迅捷",
-          "cost": 1,
+          "id": "basic.agility.5",
+          "name": "敏捷攻击 5",
+          "type": "敏捷",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
           "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ4.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
+          "id": "basic.luck",
+          "name": "幸运",
+          "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
           "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA1.png"
+          "requirement": null,
+          "basePower": 4,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 1
         },
         {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.cardsurveil",
+          "id": "basic.surveil",
           "name": "急行",
           "type": "特殊",
+          "text": "行动阶段：无视交战状态，沿箭头移动至下一地点。",
           "cost": 1,
+          "requirement": null,
           "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardSurveil.png"
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "count": 3
+        }
+      ]
+    },
+    "阿喀琉斯": {
+      "sourceId": "servant.achilles",
+      "name": "阿喀琉斯",
+      "fullName": "阿喀琉斯",
+      "class": "Rider",
+      "image": "../assets/cards/servants/阿喀琉斯.png",
+      "skills": [
+        {
+          "id": "servant.achilles.skill.sc-achilles-1",
+          "name": "勇者的不凋花",
+          "type": "从者技能",
+          "text": "阿喀琉斯之踵-被动：当你战败后，你【真名解放】。\n疾风驰骋-被动/战斗阶段：若你真名隐藏，令你的所有交战对手随机弃置一张手牌，然后将未弃置牌或弃置的牌不是【幸运】或敏捷牌的对手的合计威力设为0。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/01.png"
         },
         {
-          "id": "card.cardpreparation",
+          "id": "servant.achilles.skill.sc-achilles-2",
+          "name": "包围苍天的小世界",
+          "type": "从者技能",
+          "text": "湛蓝天空-行动阶段：选择下列一项：\n1. 与你位于同一战场的对手立即随机弃置一张手牌。\n2. 与你位于同一战场的对手无法使用技能牌。\n3. 花费3点魔力，隐藏你的从者真名直至回合结束。",
+          "cost": 3,
+          "requirement": null,
+          "basePower": 2,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/02.png"
+        },
+        {
+          "id": "servant.achilles.skill.sc-achilles-3",
+          "name": "驰骋天际星之枪尖",
+          "type": "从者技能",
+          "text": "英雄对决-行动阶段：当你所在的战场只有1名对手时，所有人无法进入或离开此战场，同时，你与此对手无法被地利和所有不属于你们的从者或NPC的牌或效果影响。",
+          "cost": 6,
+          "requirement": null,
+          "basePower": 8,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-achilles/03.png"
+        }
+      ],
+      "deck": [
+        {
+          "id": "basic.strength.2",
+          "name": "力量攻击 2",
+          "type": "力量",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.3",
+          "name": "力量攻击 3",
+          "type": "力量",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.4",
+          "name": "力量攻击 4",
+          "type": "力量",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.5",
+          "name": "力量攻击 5",
+          "type": "力量",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.3",
+          "name": "敏捷攻击 3",
+          "type": "敏捷",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.4",
+          "name": "敏捷攻击 4",
+          "type": "敏捷",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.agility.5",
+          "name": "敏捷攻击 5",
+          "type": "敏捷",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.luck",
+          "name": "幸运",
+          "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 1
+        },
+        {
+          "id": "basic.surveil",
+          "name": "急行",
+          "type": "特殊",
+          "text": "行动阶段：无视交战状态，沿箭头移动至下一地点。",
+          "cost": 1,
+          "requirement": null,
+          "basePower": 3,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "count": 2
+        }
+      ]
+    },
+    "阿尔托莉雅·潘德拉贡 (Alter)": {
+      "sourceId": "servant.artoria-alt",
+      "name": "阿尔托莉雅·潘德拉贡 (Alter)",
+      "fullName": "阿尔托莉雅·潘德拉贡 (Alter)",
+      "class": "Saber",
+      "image": "../assets/cards/servants/阿尔托莉雅·潘德拉贡 (Alter).png",
+      "skills": [
+        {
+          "id": "servant.artoria-alt.skill.sc-artoria-alt-1",
+          "name": "誓约胜利之剑",
+          "type": "从者技能",
+          "text": "【真名解放】\n局势牌无法阻止你打出此牌。\n风王铁锤-行动阶段：花费4点魔力，此牌每被连续打出一回合，便获得+3威力。",
+          "cost": 2,
+          "requirement": null,
+          "basePower": 6,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/03.png"
+        },
+        {
+          "id": "servant.artoria-alt.skill.sc-artoria-alt-2",
+          "name": "黑化诅咒",
+          "type": "从者技能",
+          "text": "你拥有的魔力少于8点也可以打出此牌。\n安哥拉曼纽的拥抱-残留：当你使用宝具时，关闭此牌。\n若你的魔力少于8点，与你位于同一战场的对手无法使用宝具。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 1,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/01.png"
+        },
+        {
+          "id": "servant.artoria-alt.skill.sc-artoria-alt-3",
+          "name": "对魔力（saber class）",
+          "type": "从者技能",
+          "text": "宝具绽放-被动/战斗阶段：若你于本回合打出了你战斗中魔力消耗最高的宝具攻击，获得1点战果。\n若其消耗≥4，你额外获得1点战果。\n魔术抗性-战斗阶段：将与你位于同一战场的交战对手控制的魔术属性攻击威力设置为0。",
+          "cost": 3,
+          "requirement": null,
+          "basePower": 3,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-artoria-alt/02.png"
+        }
+      ],
+      "deck": [
+        {
+          "id": "basic.strength.2",
+          "name": "力量攻击 2",
+          "type": "力量",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.3",
+          "name": "力量攻击 3",
+          "type": "力量",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.4",
+          "name": "力量攻击 4",
+          "type": "力量",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.5",
+          "name": "力量攻击 5",
+          "type": "力量",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 3
+        },
+        {
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.magecraft.2",
+          "name": "魔术攻击 2",
+          "type": "魔术",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.magecraft.3",
+          "name": "魔术攻击 3",
+          "type": "魔术",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.luck",
+          "name": "幸运",
+          "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 1
+        },
+        {
+          "id": "basic.surveil",
+          "name": "急行",
+          "type": "特殊",
+          "text": "行动阶段：无视交战状态，沿箭头移动至下一地点。",
+          "cost": 1,
+          "requirement": null,
+          "basePower": 3,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "count": 1
+        }
+      ]
+    },
+    "埃列什基伽勒": {
+      "sourceId": "servant.ereshkigal",
+      "name": "埃列什基伽勒",
+      "fullName": "埃列什基伽勒",
+      "class": "Lancer",
+      "image": "../assets/cards/servants/埃列什基伽勒.png",
+      "skills": [
+        {
+          "id": "servant.ereshkigal.skill.sc-ereshkigal-1",
+          "name": "战斗续行（Lancer Class）",
+          "type": "从者技能",
+          "text": "行动阶段：移动至除魔术工房外的任意地点。",
+          "cost": 3,
+          "requirement": null,
+          "basePower": 5,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/02.png"
+        },
+        {
+          "id": "servant.ereshkigal.skill.sc-ereshkigal-2",
+          "name": "冥界佑护",
+          "type": "从者技能",
+          "text": "位于此战场的玩家计算威力时，来自局势牌和事件牌的所有力量修正值乘以-1。每当有玩家部署于此战场时，埃列什基伽勒获得1点魔力。\n被动/行动阶段：埃列什基伽勒不受【冥界佑护】的影响。\n战斗阶段结束后将此牌放还于技能区。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 0,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/01.png"
+        },
+        {
+          "id": "servant.ereshkigal.skill.sc-ereshkigal-3",
+          "name": "灵峰踏抱冥府之鞴",
+          "type": "从者技能",
+          "text": "【真名解放】花开冥界-行动阶段：若【冥界佑护】未位于版图内，将其放置于你所在的战场。若其已位于你所在的战场，你+6合计威力。",
+          "cost": 7,
+          "requirement": null,
+          "basePower": 7,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-ereshkigal/03.png"
+        }
+      ],
+      "deck": [
+        {
+          "id": "basic.strength.2",
+          "name": "力量攻击 2",
+          "type": "力量",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.strength.4",
+          "name": "力量攻击 4",
+          "type": "力量",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.3",
+          "name": "敏捷攻击 3",
+          "type": "敏捷",
+          "text": "以基础威力 3 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 3,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.agility.4",
+          "name": "敏捷攻击 4",
+          "type": "敏捷",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.magecraft.2",
+          "name": "魔术攻击 2",
+          "type": "魔术",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.magecraft.4",
+          "name": "魔术攻击 4",
+          "type": "魔术",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.magecraft.5",
+          "name": "魔术攻击 5",
+          "type": "魔术",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.luck",
+          "name": "幸运",
+          "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 1
+        },
+        {
+          "id": "basic.preparation",
           "name": "远隔操作",
           "type": "特殊",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 1,
+          "requirement": null,
           "basePower": 2,
-          "text": "行动：地利翻倍。战斗：若赢，获2战果。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardPreparation.png"
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-preparation.png",
+          "count": 2
         }
       ]
     },
-    "赫拉克勒斯": {
-      "name": "赫拉克勒斯",
-      "fullName": "赫拉克勒斯",
-      "class": "Berserker",
-      "image": "../assets/cards/servants/赫拉克勒斯.png",
+    "巴御前": {
+      "sourceId": "servant.tomoe",
+      "name": "巴御前",
+      "fullName": "巴御前",
+      "class": "Archer",
+      "image": "../assets/cards/servants/巴御前.png",
       "skills": [
         {
-          "name": "十二试炼",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n若你战败，获得3点战果并令此战斗的所有胜者分别失去3点战果，然后将此牌移除游戏并令你的其他【十二试炼】获得+3威力直至游戏结束。",
-          "cost": 1,
-          "requirement": 1,
-          "basePower": 5,
-          "image": "../assets/cards/skills/servant-赫拉克勒斯-sc_herc_1.png"
-        },
-        {
-          "name": "十二试炼",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n若你战败，获得3点战果并令此战斗的所有胜者分别失去3点战果，然后将此牌移除游戏并令你的其他【十二试炼】获得+3威力直至游戏结束。",
-          "cost": 1,
-          "requirement": 1,
-          "basePower": 5,
-          "image": "../assets/cards/skills/servant-赫拉克勒斯-sc_herc_2.png"
-        },
-        {
-          "name": "十二试炼",
-          "type": "力量/宝具",
-          "text": "【真名解放】\n若你战败，获得3点战果并令此战斗的所有胜者分别失去3点战果，然后将此牌移除游戏并令你的其他【十二试炼】获得+3威力直至游戏结束。",
-          "cost": 1,
-          "requirement": 1,
-          "basePower": 5,
-          "image": "../assets/cards/skills/servant-赫拉克勒斯-sc_herc_3.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
+          "id": "servant.tomoe.skill.sc-tomoe-1",
+          "name": "单独行动（Archer Class）",
+          "type": "从者技能",
+          "text": "当你的行动顺位为当前回合前半数时（向下取整），你才能使用此牌。\n行动阶段：你获得3点战果。\n如果你本回合战斗失败，失去5点战果，此效果不能被任何方法阻止。",
           "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardB1.png"
+          "requirement": null,
+          "basePower": 6,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/02.png"
         },
         {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardb4",
-          "name": "会心的一击",
-          "type": "力量",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardB4.png"
-        },
-        {
-          "id": "card.cardb5",
-          "name": "狂战士力量1",
-          "type": "力量",
+          "id": "servant.tomoe.skill.sc-tomoe-2",
+          "name": "鬼种之魔",
+          "type": "从者技能",
+          "text": "无间业火-行动阶段：下个回合，所有对手部署于此战场前可以花费至多5点战果，所有基础地利数高于其支付战果数的地利位置视为已被占据，无法部署。\n战斗阶段：将你的地利翻倍。",
           "cost": 3,
-          "basePower": 7,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB5.png"
+          "requirement": null,
+          "basePower": 5,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/01.png"
         },
         {
-          "id": "card.cardb6",
-          "name": "狂战士力量2",
-          "type": "力量",
-          "cost": 5,
+          "id": "servant.tomoe.skill.sc-tomoe-3",
+          "name": "真言·圣观世音菩萨",
+          "type": "从者技能",
+          "text": "【真名解放】\n炽焰之雨-战斗阶段：令同一战场所有未拥有地利的对手-5合计威力。",
+          "cost": 4,
+          "requirement": null,
           "basePower": 9,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB6.png"
-        },
-        {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ1.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.cardq5",
-          "name": "狂战士迅捷1",
-          "type": "迅捷",
-          "cost": 3,
-          "basePower": 7,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ5.png"
-        },
-        {
-          "id": "card.cardluck",
-          "name": "幸运",
-          "type": "特殊",
-          "cost": 0,
-          "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardluck.png"
-        }
-      ]
-    },
-    "贞德": {
-      "name": "贞德",
-      "fullName": "贞德",
-      "class": "Ruler",
-      "image": "../assets/cards/servants/贞德.png",
-      "skills": [
-        {
-          "name": "裁决者",
-          "type": "被动",
-          "text": "此牌及其效果不可被复制或盗用。<每局游戏限三次>神明裁决-行动阶段：令两名其他玩家获得一枚【裁决者令咒】来对其束缚，你仅可束缚本局游戏束缚次数最少的玩家。只有进行束缚的裁决者可以于自己的行动阶段对被束缚者使用【裁决者令咒】。",
-          "cost": 1,
-          "requirement": 1,
-          "basePower": 1,
-          "image": "../assets/cards/skills/servant-贞德-sc_jeanne_1.png"
-        },
-        {
-          "name": "吾主在此",
-          "type": "宝具",
-          "text": "【真名解放】被动/战斗阶段：场上每有一张正面表示的【幸运】牌，便获得合计威力+2。行动阶段：所有玩家抽一张牌。所有【幸运】牌获得：“被动/战斗阶段：打出此牌。”",
-          "cost": 4,
-          "requirement": 8,
-          "basePower": 3,
-          "image": "../assets/cards/skills/servant-贞德-sc_jeanne_2.png"
-        },
-        {
-          "name": "红莲圣女",
-          "type": "宝具",
-          "text": "【真名解放】<每局游戏限一次>\n战斗阶段：使所有参与这场战斗的玩家【败北】。",
-          "cost": 6,
-          "requirement": 8,
-          "basePower": 8,
-          "image": "../assets/cards/skills/servant-贞德-sc_jeanne_3.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-tomoe/03.png"
         }
       ],
       "deck": [
         {
-          "id": "card.cardb1",
-          "name": "迫击",
+          "id": "basic.strength.3",
+          "name": "力量攻击 3",
           "type": "力量",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
-        },
-        {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardb3",
-          "name": "浑身的一击",
+          "id": "basic.strength.4",
+          "name": "力量攻击 4",
           "type": "力量",
+          "text": "以基础威力 4 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB3.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
+          "id": "basic.strength.5",
+          "name": "力量攻击 5",
+          "type": "力量",
+          "text": "以基础威力 5 参与战斗。",
           "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
           "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ1.png"
+          "image": "",
+          "count": 2
         },
         {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
+          "id": "basic.agility.3",
+          "name": "敏捷攻击 3",
+          "type": "敏捷",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ2.png"
+          "image": "",
+          "count": 2
         },
         {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
+          "id": "basic.agility.4",
+          "name": "敏捷攻击 4",
+          "type": "敏捷",
+          "text": "以基础威力 4 参与战斗。",
           "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardluck",
+          "id": "basic.luck",
           "name": "幸运",
           "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
           "cost": 0,
+          "requirement": null,
           "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 4,
-          "image": "../assets/cards/deck/cardluck.png"
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 1
         },
         {
-          "id": "card.cardsurveil",
+          "id": "basic.surveil",
           "name": "急行",
           "type": "特殊",
+          "text": "行动阶段：无视交战状态，沿箭头移动至下一地点。",
           "cost": 1,
+          "requirement": null,
           "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardSurveil.png"
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-surveil.png",
+          "count": 1
+        },
+        {
+          "id": "basic.preparation",
+          "name": "远隔操作",
+          "type": "特殊",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 1,
+          "requirement": null,
+          "basePower": 2,
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-preparation.png",
+          "count": 1
         }
       ]
     },
-    "梅柳齐娜": {
-      "name": "梅柳齐娜",
-      "fullName": "梅柳齐娜",
-      "class": "Lancer",
-      "image": "../assets/cards/servants/梅柳齐娜.png",
+    "坂田金时": {
+      "sourceId": "servant.kintoki",
+      "name": "坂田金时",
+      "fullName": "坂田金时",
+      "class": "Berserker",
+      "image": "../assets/cards/servants/坂田金时.png",
       "skills": [
         {
-          "name": "光之地平线",
-          "type": "被动",
-          "text": "被动：此效果无法被复制或盗用，当梅柳齐娜战败时，展示此牌。若她战败时此牌已被展示，将你的从者梅柳齐娜替换为阿尔比恩之骸并【真名解放】（阿尔比恩之骸是一名拥有不同牌库和上述技能的从者）。",
+          "id": "servant.kintoki.skill.sc-kintoki-1",
+          "name": "黄金冲击",
+          "type": "从者技能",
+          "text": "【真名解放】\n你拥有的魔力少于8点也可打出此牌。\n局势牌无法禁止你打出此牌。\n每局游戏限一次",
           "cost": 0,
-          "requirement": 0,
+          "requirement": null,
+          "basePower": 11,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/02.png"
+        },
+        {
+          "id": "servant.kintoki.skill.sc-kintoki-2",
+          "name": "黄金冲击",
+          "type": "从者技能",
+          "text": "【真名解放】\n你拥有的魔力少于8点也可打出此牌。\n局势牌无法禁止你打出此牌。\n每局游戏限一次",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 11,
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/02.png"
+        },
+        {
+          "id": "servant.kintoki.skill.sc-kintoki-3",
+          "name": "黄金噬者",
+          "type": "从者技能",
+          "text": "【真名解放】\n战斗阶段：将一张被移除游戏的【黄金冲击】加入你的技能区，你可以花费7点魔力将另一张黄金冲击也加入你的技能区。若你位于一处战场，每加入一张【黄金冲击】便获得2点战果。",
+          "cost": 5,
+          "requirement": null,
           "basePower": 0,
-          "image": "../assets/cards/skills/servant-梅柳齐娜-sc_melusine_1.png"
-        },
-        {
-          "name": "佩里舞者",
-          "type": "特殊",
-          "text": "行动阶段：从手牌中打出至多2张基础攻击。若你于本回合进行了移动，你可将此效果更改为“抽一张牌，然后从手牌中打出至多3张基础攻击。”",
-          "cost": 4,
-          "requirement": 4,
-          "basePower": 4,
-          "image": "../assets/cards/skills/servant-梅柳齐娜-sc_melusine_2.png"
-        },
-        {
-          "name": "尚未知晓的无垢湖光",
-          "type": "迅捷/宝具",
-          "text": "龙之心-若你赢得了一场战斗，且你的交战对手控制与你控制的攻击具有相同属性且威力高于该攻击的攻击，战斗阶段结束且计算战斗获得的战果后，你失去3点战果。",
-          "cost": 0,
-          "requirement": 8,
-          "basePower": 7,
-          "image": "../assets/cards/skills/servant-梅柳齐娜-sc_melusine_3.png"
+          "image": "./playtest/assets/fd/real/chm-used/servants/servant-kintoki/01.png"
         }
       ],
       "deck": [
         {
-          "id": "card.cardb2",
-          "name": "强打",
+          "id": "basic.strength.2",
+          "name": "力量攻击 2",
           "type": "力量",
+          "text": "以基础威力 2 参与战斗。",
           "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 3,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.cardq4",
-          "name": "刹那的一击",
-          "type": "迅捷",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardQ4.png"
-        },
-        {
-          "id": "card.carda1",
-          "name": "低位魔法",
-          "type": "魔法",
-          "cost": 0,
+          "requirement": null,
           "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA1.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
+          "id": "basic.strength.3",
+          "name": "力量攻击 3",
+          "type": "力量",
+          "text": "以基础威力 3 参与战斗。",
           "cost": 0,
+          "requirement": null,
           "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
+          "image": "",
+          "count": 1
         },
         {
-          "id": "card.cardluck",
+          "id": "basic.strength.5",
+          "name": "力量攻击 5",
+          "type": "力量",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 4
+        },
+        {
+          "id": "basic.agility.2",
+          "name": "敏捷攻击 2",
+          "type": "敏捷",
+          "text": "以基础威力 2 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 2,
+          "image": "",
+          "count": 2
+        },
+        {
+          "id": "basic.agility.4",
+          "name": "敏捷攻击 4",
+          "type": "敏捷",
+          "text": "以基础威力 4 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 4,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.agility.5",
+          "name": "敏捷攻击 5",
+          "type": "敏捷",
+          "text": "以基础威力 5 参与战斗。",
+          "cost": 0,
+          "requirement": null,
+          "basePower": 5,
+          "image": "",
+          "count": 1
+        },
+        {
+          "id": "basic.luck",
           "name": "幸运",
           "type": "特殊",
+          "text": "战斗阶段：无视本次败北效果。",
           "cost": 0,
+          "requirement": null,
           "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 1,
-          "image": "../assets/cards/deck/cardluck.png"
-        },
-        {
-          "id": "card.cardsurveil",
-          "name": "急行",
-          "type": "特殊",
-          "cost": 1,
-          "basePower": 3,
-          "text": "行动：无视交战沿箭头移动。",
-          "count": 2,
-          "image": "../assets/cards/deck/cardSurveil.png"
-        }
-      ]
-    },
-    "山中老人": {
-      "name": "山中老人",
-      "fullName": "山中老人",
-      "class": "Assassin",
-      "image": "../assets/cards/servants/山中老人.png",
-      "skills": [
-        {
-          "name": "告死天使",
-          "type": "迅捷/宝具",
-          "text": "此牌需追加打出。\n晚钟-战斗阶段：与你交战的所有对手分别投掷一次六面骰，若掷出6，令其【败北】。\n你可以弃置一张【幸运】令一名对手进行一次重骰。",
-          "cost": 0,
-          "requirement": 8,
-          "basePower": 2,
-          "image": "../assets/cards/skills/servant-山中老人-sc_kinghassan_1.png"
-        },
-        {
-          "name": "告死天使",
-          "type": "宝具",
-          "text": "【真名解放】 <每局游戏限一次>\n斩断命运-战斗阶段：【杀死】一名你交战对手的从者并令其【败北】。回合结束时，该对手随机抽取一名新的从者。（杀死：将被杀死的从者的所有牌移除游戏。）",
-          "cost": 4,
-          "requirement": 8,
-          "basePower": 4,
-          "image": "../assets/cards/skills/servant-山中老人-sc_kinghassan_2.png"
-        },
-        {
-          "name": "告死天使",
-          "type": "迅捷/宝具",
-          "text": "每有一名处于【败北】状态或被淘汰的对手，此牌获得威力+1。\n晚钟-战斗阶段：与你交战的所有对手分别投掷一次骰子。若掷出5或6，令其【败北】。你可以弃置一张【幸运】令一名对手进行重骰。",
-          "cost": 8,
-          "requirement": 8,
-          "basePower": 10,
-          "image": "../assets/cards/skills/servant-山中老人-sc_kinghassan_3.png"
-        }
-      ],
-      "deck": [
-        {
-          "id": "card.cardb1",
-          "name": "迫击",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB1.png"
-        },
-        {
-          "id": "card.cardb2",
-          "name": "强打",
-          "type": "力量",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB2.png"
-        },
-        {
-          "id": "card.cardb4",
-          "name": "会心的一击",
-          "type": "力量",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardB4.png"
-        },
-        {
-          "id": "card.cardq1",
-          "name": "翻弄",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 2,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ1.png"
-        },
-        {
-          "id": "card.cardq2",
-          "name": "瞬间移动",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 2,
-          "image": "../assets/cards/deck/cardQ2.png"
-        },
-        {
-          "id": "card.cardq3",
-          "name": "瞬间的一击",
-          "type": "迅捷",
-          "cost": 0,
-          "basePower": 4,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ3.png"
-        },
-        {
-          "id": "card.cardq4",
-          "name": "刹那的一击",
-          "type": "迅捷",
-          "cost": 1,
-          "basePower": 5,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardQ4.png"
-        },
-        {
-          "id": "card.carda2",
-          "name": "中位魔法",
-          "type": "魔法",
-          "cost": 0,
-          "basePower": 3,
-          "text": "基础攻击卡牌",
-          "count": 1,
-          "image": "../assets/cards/deck/cardA2.png"
-        },
-        {
-          "id": "card.cardluck",
-          "name": "幸运",
-          "type": "特殊",
-          "cost": 0,
-          "basePower": 4,
-          "text": "战斗阶段：你本回合无视直接败北效果。",
-          "count": 3,
-          "image": "../assets/cards/deck/cardluck.png"
+          "image": "./playtest/assets/fd/real/basic-attacks/basic-luck.png",
+          "count": 2
         }
       ]
     }
