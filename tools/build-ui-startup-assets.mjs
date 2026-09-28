@@ -6,12 +6,12 @@ const imageExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avi
 const audioExtensions = new Set(['.mp3', '.ogg', '.wav', '.m4a', '.aac', '.flac']);
 const imageDirectories = [
   'assets/map',
-  'assets/cards/masters',
-  'assets/cards/servants',
-  'assets/ui/home-backgrounds',
-  'assets/ui/splash-backgrounds',
-  'assets/ui/logos',
-  'assets/ui/battle-backgrounds'
+  // Keep every card face warm. Character detail pages and the battle UI use
+  // deck/skill art that is not visible on the first selection screen.
+  'assets/cards',
+  // Avatars, mode covers, card backs, settlement art and every selectable
+  // background can all appear without a page reload.
+  'assets/ui'
 ];
 
 async function collect(directory, extensions) {

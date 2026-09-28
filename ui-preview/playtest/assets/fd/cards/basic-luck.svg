@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="500" viewBox="0 0 360 500">
+  <rect width="360" height="500" fill="#07090f"/>
+  <rect x="14" y="14" width="332" height="472" rx="8" fill="#201321" stroke="#4c2a4f" stroke-width="3"/>
+  <path d="M20 22 H120 L144 48 L120 74 H20 L10 48 Z" fill="#777" stroke="#ddd" stroke-width="2"/>
+  <text x="76" y="58" text-anchor="middle" font-family="Microsoft YaHei, Arial, sans-serif" font-size="27" fill="#fff" font-weight="700">特殊</text>
+  <path d="M180 116 C248 78 302 172 244 238 C302 306 240 410 180 354 C120 410 58 306 116 238 C58 172 112 78 180 116 Z" fill="#ff72c9"/>
+  <circle cx="180" cy="238" r="46" fill="#201321"/>
+  <path d="M44 376 H204 L228 356 H338 V454 H44 Z" fill="#062760" stroke="#3c8cff" stroke-width="2"/>
+  <text x="88" y="410" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#fff" font-weight="700">幸运</text>
+  <rect x="216" y="360" width="58" height="48" rx="10" fill="#071814" stroke="#1dff82" stroke-width="3"/>
+  <text x="245" y="395" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#23ff85">0</text>
+  <rect x="286" y="360" width="52" height="48" rx="8" fill="#133b87" stroke="#6fa2ff" stroke-width="3"/>
+  <text x="312" y="395" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#fff">4</text>
+  <text x="310" y="474" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#ddd">Basic</text>
+</svg>

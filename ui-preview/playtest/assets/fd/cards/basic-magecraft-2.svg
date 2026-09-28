@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="500" viewBox="0 0 360 500">
+  <rect width="360" height="500" fill="#090d18"/>
+  <rect x="14" y="14" width="332" height="472" fill="#10172a" stroke="#d9b65b" stroke-width="3"/>
+  <rect x="30" y="30" width="300" height="88" fill="#233f92"/>
+  <text x="180" y="84" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#dce7ff" font-weight="700">MAGECRAFT</text>
+  <circle cx="180" cy="242" r="98" fill="none" stroke="#7fb6ff" stroke-width="10"/>
+  <path d="M180 144 L264 290 L96 290 Z" fill="none" stroke="#7fb6ff" stroke-width="10"/>
+  <text x="180" y="426" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#f6d27a">BASIC ATTACK 2</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504" role="img" aria-label="FD event placeholder">
+  <rect width="360" height="504" rx="24" fill="#061313"/>
+  <rect x="16" y="16" width="328" height="472" rx="18" fill="#12302f" stroke="#8de0d2" stroke-width="3"/>
+  <circle cx="180" cy="192" r="86" fill="#0f766e" opacity=".55"/>
+  <path d="M92 244c44-96 132-96 176 0M112 282c36-52 100-52 136 0" fill="none" stroke="#d7fffa" stroke-width="12" stroke-linecap="round"/>
+  <text x="180" y="382" text-anchor="middle" font-family="Georgia, serif" font-size="38" font-weight="700" fill="#d7fffa">EVENT</text>
+  <text x="180" y="424" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" letter-spacing="3" fill="#b6f4ec">BATTLEFIELD</text>
+</svg>

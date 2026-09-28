@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504" role="img" aria-label="FD situation placeholder">
+  <rect width="360" height="504" rx="24" fill="#081018"/>
+  <rect x="16" y="16" width="328" height="472" rx="18" fill="#122235" stroke="#9bd3ff" stroke-width="3"/>
+  <path d="M74 266c52-126 160-126 212 0" fill="none" stroke="#9bd3ff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M98 266c42 74 122 74 164 0" fill="none" stroke="#f7e8bd" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="180" cy="210" r="44" fill="#f7e8bd"/>
+  <text x="180" y="382" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700" fill="#e0f2fe">SITUATION</text>
+  <text x="180" y="424" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" letter-spacing="3" fill="#badcff">ROUND STATE</text>
+</svg>

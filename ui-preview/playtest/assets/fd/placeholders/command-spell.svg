@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504" role="img" aria-label="FD command spell placeholder">
+  <rect width="360" height="504" rx="24" fill="#14090d"/>
+  <rect x="16" y="16" width="328" height="472" rx="18" fill="#2a0f18" stroke="#efb8c8" stroke-width="3"/>
+  <path d="M180 72c46 54 66 108 66 164 0 58-26 104-66 148-40-44-66-90-66-148 0-56 20-110 66-164Z" fill="#7f1d1d" stroke="#ffd2df" stroke-width="6"/>
+  <path d="M180 118v230M130 218h100M150 168l60 124" stroke="#ffd2df" stroke-width="10" stroke-linecap="round"/>
+  <text x="180" y="438" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#ffe4ec">COMMAND SPELL</text>
+</svg>

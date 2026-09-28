@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="500" viewBox="0 0 360 500">
+  <rect width="360" height="500" fill="#17100c"/>
+  <rect x="14" y="14" width="332" height="472" fill="#24130f" stroke="#d9b65b" stroke-width="3"/>
+  <rect x="30" y="30" width="300" height="88" fill="#7e1e16"/>
+  <text x="180" y="84" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" fill="#ffe6a4" font-weight="700">STRENGTH</text>
+  <circle cx="180" cy="242" r="84" fill="#b42a1c"/>
+  <text x="180" y="265" text-anchor="middle" font-family="Georgia, serif" font-size="84" fill="#ffe6a4" font-weight="700">2</text>
+  <text x="180" y="426" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#f6d27a">BASIC ATTACK</text>
+</svg>

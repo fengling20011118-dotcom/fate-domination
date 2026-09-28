@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="500" viewBox="0 0 360 500">
+  <rect width="360" height="500" fill="#130b19"/>
+  <rect x="14" y="14" width="332" height="472" fill="#21112d" stroke="#d9b65b" stroke-width="3"/>
+  <rect x="30" y="30" width="300" height="88" fill="#5d2b8d"/>
+  <text x="180" y="84" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" fill="#f1ddff" font-weight="700">SPECIAL</text>
+  <path d="M180 142 L208 216 L286 222 L224 270 L244 346 L180 304 L116 346 L136 270 L74 222 L152 216 Z" fill="#a76dff"/>
+  <text x="180" y="426" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#f6d27a">BASIC ATTACK 2</text>
+</svg>
