@@ -136,6 +136,7 @@ export class StandardMatchEngine {
       }];
     }
     const actions = this.modes.get(state.mode).getLegalActions(structuredClone(state), playerId);
+    if (state.mode === "standard") actions.push(...this.getStandardCoreLegalActions(state, playerId));
     const definitions = this.cardDefinitions();
     if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, definitions));
     actions.push(...getNormalCommandSealLegalActions(state, playerId, definitions));
@@ -143,6 +144,96 @@ export class StandardMatchEngine {
       actions.push({ type: CommandType.CompletePlayerWindow, label: "完成当前步骤", payload: {} });
     }
     return structuredClone(actions);
+  }
+
+  /**
+   * The standard mode owns phase order, while these shared commands own the
+   * actual board and card rules.  Candidate payloads are accepted only when
+   * the authoritative executor can apply them to a cloned state.  This keeps
+   * the browser from inventing permissions and gives every front end the same
+   * deploy, move, attack and settlement entry points.
+   */
+  private getStandardCoreLegalActions(state: GameState, playerId: string): GameAction[] {
+    if (state.status !== "playing") return [];
+    const player = state.players[playerId];
+    if (!player || player.eliminated) return [];
+    const candidates: GameAction[] = [];
+
+    if (state.activePlayerId === playerId && state.phase === "outpost" && state.step === "player-window"
+      && player.flags.deploymentBonusActive !== true) {
+      for (const locationId of ["workshop", "mountain", "city"] as const) {
+        candidates.push({ type: CommandType.DeployPlayer, label: `部署至${locationId}`, payload: { locationId } });
+      }
+    }
+
+    if (state.activePlayerId === playerId && state.phase === "action" && state.step === "move-decision") {
+      for (const locationId of ["workshop", "mountain", "city", "scouting", "moon-cell"] as const) {
+        candidates.push({ type: CommandType.MovePlayer, label: `移动至${locationId}`, payload: { locationId } });
+      }
+    }
+
+    if (state.activePlayerId === playerId && state.phase === "action" && state.step === "play-batch-draft") {
+      const hand = [...player.hand];
+      const selections: string[][] = hand.map((instanceId) => [instanceId]);
+      for (let left = 0; left < hand.length; left += 1) {
+        for (let right = left + 1; right < hand.length; right += 1) selections.push([hand[left], hand[right]]);
+      }
+      for (const selected of selections) {
+        const masks = 1 << selected.length;
+        for (let mask = 0; mask < masks; mask += 1) {
+          const faceUpInstanceIds = selected.filter((_id, index) => (mask & (1 << index)) === 0);
+          const faceDownInstanceIds = selected.filter((_id, index) => (mask & (1 << index)) !== 0);
+          candidates.push({
+            type: CommandType.CommitAttack,
+            label: faceDownInstanceIds.length ? "暗置所选" : "打出所选",
+            payload: { faceUpInstanceIds, faceDownInstanceIds },
+          });
+        }
+      }
+    }
+
+    if (state.phase === "combat" && state.step === "settlement") {
+      const resolved = new Set((state.modeState.resolvedCombats as string[] | undefined) ?? []);
+      for (const locationId of getBattlefieldLocationIds(state)) {
+        if (!resolved.has(locationId)) candidates.push({ type: CommandType.ResolveCombat, label: `结算${locationId}`, payload: { locationId } });
+      }
+      candidates.push({ type: CommandType.EndRound, label: "结束本回合", payload: {} });
+    }
+
+    if (state.phase === "combat" && state.step === "post-power-response" && state.activePlayerId === playerId) {
+      candidates.push({ type: CommandType.CompleteCombatResponse, label: "完成战斗响应", payload: {} });
+    }
+
+    const definitions = this.cardDefinitions();
+    return candidates.filter((action) => {
+      try {
+        const probe = cloneState(state);
+        if (action.type === CommandType.DeployPlayer) {
+          deployPlayer(probe, playerId, (action.payload as { locationId: "workshop" | "mountain" | "city" }).locationId, definitions);
+          return true;
+        }
+        if (action.type === CommandType.MovePlayer) {
+          movePlayer(probe, playerId, (action.payload as { locationId: string }).locationId, false, definitions);
+          return true;
+        }
+        if (action.type === CommandType.CommitAttack) {
+          const payload = action.payload as { faceUpInstanceIds: string[]; faceDownInstanceIds: string[] };
+          commitStandardAttack(probe, playerId, payload.faceUpInstanceIds, payload.faceDownInstanceIds, definitions);
+          return true;
+        }
+        if (action.type === CommandType.ResolveCombat) {
+          calculateCombatSnapshot(probe, (action.payload as { locationId: BattlefieldLocationId }).locationId, definitions);
+          return true;
+        }
+        if (action.type === CommandType.EndRound) {
+          const resolved = new Set((state.modeState.resolvedCombats as string[] | undefined) ?? []);
+          return getBattlefieldLocationIds(state).every((locationId) => resolved.has(locationId));
+        }
+        return action.type === CommandType.CompleteCombatResponse;
+      } catch {
+        return false;
+      }
+    });
   }
 
   execute(current: GameState, command: GameCommand): { state: GameState; events: GameEvent[]; duplicate: boolean } {

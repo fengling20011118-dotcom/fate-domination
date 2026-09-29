@@ -1685,6 +1685,7 @@ export function registerCorePassiveHandlers(registry: SkillRegistry, passives: P
   }
   const shinjiSkills = definitions.filter((skill) => [SHINJI_UNWORTHY_ID, SHINJI_BOOK_ID, SHINJI_ASCENSION_ID].includes(skill.id)
     && skill.handlerId === SHINJI_HANDLER && skill.supportLevel === "FULL");
+  if (shinjiSkills.length && !effects.has(SHINJI_HANDLER)) effects.register(SHINJI_HANDLER, useShinjiBook);
   if (shinjiSkills.length && !effects.has(SHINJI_BOOK_CHOICE_RESOLVE)) effects.register(SHINJI_BOOK_CHOICE_RESOLVE, resolveShinjiBookChoice);
   for (const skill of shinjiSkills) {
     for (const eventType of skill.passiveEventTypes ?? []) {

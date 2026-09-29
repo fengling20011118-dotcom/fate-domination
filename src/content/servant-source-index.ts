@@ -1,4 +1,4 @@
-import { createRequire } from "node:module";
+import sourceIndexJson from "./generated/english-servant-sources.json" with { type: "json" };
 
 export interface EnglishServantSource {
   kind: "chm";
@@ -19,8 +19,7 @@ interface SourceIndex {
   entries?: SourceIndexEntry[];
 }
 
-const require = createRequire(import.meta.url);
-const sourceIndex = require("./generated/english-servant-sources.json") as SourceIndex;
+const sourceIndex = sourceIndexJson as SourceIndex;
 const exactByServantId = new Map(
   (sourceIndex.entries ?? [])
     .filter((entry) => entry.matchStatus === "exact" && typeof entry.servantId === "string")
