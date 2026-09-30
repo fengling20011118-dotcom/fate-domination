@@ -179799,9 +179799,12 @@
         const servant = previewBySourceId("servants", assignment.servantId) ?? { sourceId: assignment.servantId, name: assignment.servantId };
         return { ...assignment, player, master, servant };
       });
+      const availableActions = this.app.availableActionsFor(this.playerId);
+      const deploymentRequired = view.phase === "outpost" && availableActions.some((action) => action.commandType === CommandType.DeployPlayer);
+      const actions = deploymentRequired ? availableActions.filter((action) => action.commandType !== CommandType.CompletePlayerWindow) : availableActions;
       return {
         view,
-        actions: this.app.availableActionsFor(this.playerId),
+        actions,
         definitions,
         roster,
         events: structuredClone(this.#lastEvents),
@@ -179825,6 +179828,13 @@
       };
       const result = this.#send(this.playerId, action.commandType, payload);
       if (!result.ok) throw new Error(result.rejection.code);
+      if (action.commandType === CommandType.DeployPlayer || action.commandType === CommandType.CommitAttack) {
+        const complete = this.app.availableActionsFor(this.playerId).find((candidate) => candidate.commandType === CommandType.CompletePlayerWindow);
+        if (complete) {
+          const completed = this.#send(this.playerId, complete.commandType, complete.payload ?? {});
+          if (!completed.ok) throw new Error(completed.rejection.code);
+        }
+      }
       this.#emit();
       this.#scheduleComputerPlayers();
       return this.snapshot();

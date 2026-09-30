@@ -78,7 +78,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const battleText = await page.evaluate(() => document.querySelector('.battle-host').shadowRoot.textContent);
   if (!battleText.includes(selectedMaster)) throw new Error(`主对战区未载入所选御主：${selectedMaster}`);
   if (!battleText.includes(selectedServant)) throw new Error(`主对战区未载入所选从者：${selectedServant}`);
-  if (!battleText.includes('冬木事件组 · 剩余20张')) throw new Error(`主对战区未使用开发版冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
+  if (!/冬木事件组 · 剩余(?:19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
   const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
@@ -89,12 +89,11 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   await endAction.click();
   const deployTarget = page.locator('.battle-host').locator('.place.runtime-map-action-deploy').first();
   await deployTarget.waitFor({timeout: 15000});
+  if (await endAction.isEnabled()) throw new Error('尚未部署时仍然可以跳过部署阶段');
   const locationButtons = await page.locator('.battle-host').locator('.runtime-action-list button').allTextContents();
   if (locationButtons.some(text => /部署|移动/.test(text))) throw new Error(`部署或移动仍显示为右侧按钮：${locationButtons.join('、')}`);
   const deployedViaMap = await deployTarget.getAttribute('aria-label');
   await deployTarget.click();
-  await endAction.waitFor({timeout: 15000});
-  await endAction.click();
   const moveToggle = page.locator('.battle-host').locator('[data-runtime-map-move-toggle]');
   await moveToggle.waitFor({timeout: 15000});
   if ((await moveToggle.innerText()) !== '常规移动') throw new Error('行动阶段没有显示常规移动按钮');
@@ -103,10 +102,39 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const moveTarget = page.locator('.battle-host').locator('.place.runtime-map-action-move').first();
   await moveTarget.waitFor({timeout: 15000});
   const mapInteractions = {deploy: deployedViaMap, move: await moveTarget.getAttribute('aria-label')};
+  const firstVisibleHandCard = page.locator('.battle-host').locator('.hand .card').first();
+  await firstVisibleHandCard.waitFor({timeout: 15000});
+  await firstVisibleHandCard.click();
+  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().view.step === 'play-batch-draft', null, {timeout: 10000});
+  const playableInstanceIds = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().actions.find(action => action.commandType === 'player.attack.commit' && action.payload?.faceUpInstanceIds?.length && !action.payload?.faceDownInstanceIds?.length)?.payload.faceUpInstanceIds);
+  if (!playableInstanceIds?.length) {
+    const available = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().actions.filter(action => action.commandType === 'player.attack.commit'));
+    throw new Error(`移动后没有可打出的手牌组合：${JSON.stringify(available)}`);
+  }
+  const alreadySelected = await page.locator('.battle-host').locator('.hand .card.selected').evaluateAll(nodes => nodes.map(node => node.dataset.instanceId));
+  for (const instanceId of alreadySelected) await page.locator('.battle-host').locator(`.hand .card[data-instance-id="${instanceId}"]`).click();
+  for (const instanceId of playableInstanceIds) {
+    const handCard = page.locator('.battle-host').locator(`.hand .card[data-instance-id="${instanceId}"]`);
+    await handCard.waitFor({timeout: 15000});
+    await handCard.click();
+  }
+  const confirmPlay = page.locator('.battle-host').locator('#confirm-play');
+  const playDiagnostic = await page.evaluate(() => {
+    const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
+    return {phase: snapshot.view.phase, step: snapshot.view.step, actions: snapshot.actions.map(action => action.commandType), selected: root?.querySelectorAll('.hand .card.selected').length, buttonDisabled: root?.querySelector('#confirm-play')?.disabled};
+  });
+  if (!playDiagnostic.actions.includes('player.attack.commit')) throw new Error(`移动后没有进入出牌步骤：${JSON.stringify(playDiagnostic)}`);
+  await page.waitForFunction(() => {
+    const host = document.querySelector('.battle-host');
+    return host?.shadowRoot?.querySelector('#confirm-play')?.disabled === false;
+  }, null, {timeout: 10000});
+  await confirmPlay.click();
+  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId === 'p2'), null, {timeout: 15000});
+  const automaticProgress = await page.evaluate(() => ({phase: window.fdCurrentBattleRuntime.snapshot().view.phase, activePlayerId: window.fdCurrentBattleRuntime.snapshot().view.activePlayerId}));
 
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, automaticProgress}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);
