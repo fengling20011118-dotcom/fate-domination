@@ -59,6 +59,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
 
   const readyText = await page.locator('.ready-footer').innerText();
   if (/测试|预览/.test(readyText)) throw new Error(`准备页残留非正式文案：${readyText}`);
+  const battleEntryStartedAt = Date.now();
   await page.locator('[data-enter-battle-preview]').click();
   try {
     await page.locator('.battle-host').waitFor({timeout: 15000});
@@ -73,15 +74,19 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     throw new Error(`${error.message}\n${JSON.stringify(diagnostic)}\n${errors.join('\n')}`);
   }
   if (!page.url().endsWith(encodeURI('/本地UI预览.html'))) throw new Error(`正式入口被导航到其他页面：${page.url()}`);
+  const battleEntryMs = Date.now() - battleEntryStartedAt;
   const battleText = await page.evaluate(() => document.querySelector('.battle-host').shadowRoot.textContent);
   if (!battleText.includes(selectedMaster)) throw new Error(`主对战区未载入所选御主：${selectedMaster}`);
   if (!battleText.includes(selectedServant)) throw new Error(`主对战区未载入所选从者：${selectedServant}`);
-  if (!battleText.includes('冬木事件组 · 剩余20张')) throw new Error('主对战区未使用开发版冬木20张事件组');
+  if (!battleText.includes('冬木事件组 · 剩余20张')) throw new Error(`主对战区未使用开发版冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
+  const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
+  if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
+  if (battleEntryMs > 3000) throw new Error(`进入主对战区仍然过慢：${battleEntryMs}ms`);
 
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);

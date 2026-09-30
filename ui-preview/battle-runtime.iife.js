@@ -179667,6 +179667,46 @@
     "servant.tomoe",
     "servant.kintoki"
   ];
+  var preparedContent;
+  var preparationPromise;
+  function playableContentSource() {
+    const masterIds = new Set(MASTER_IDS);
+    const servantIds = new Set(SERVANT_IDS);
+    return {
+      masters: (legacy_content_default.masters ?? []).filter((master) => masterIds.has(master.id)).map(({ skills: _skills, ...master }) => ({ ...master, skills: [] })),
+      servants: (legacy_content_default.servants ?? []).filter((servant) => servantIds.has(servant.id)).map(({ skills: _skills, ...servant }) => ({ ...servant, skills: [] })),
+      cards: (legacy_content_default.cards ?? []).filter((card) => card.cardType !== "skill" && card.isSkill !== true),
+      situations: legacy_content_default.situations ?? [],
+      eventGroups: (legacy_content_default.eventGroups ?? []).filter((group) => group.id === "event-group.fuyuki" || group.name.includes("\u51AC\u6728")),
+      civilizationRuins: []
+    };
+  }
+  function standardContent() {
+    if (!preparedContent) {
+      const built = buildStandardContent(playableContentSource());
+      preparedContent = Object.freeze({
+        ...built,
+        cards: Object.fromEntries(Object.entries(built.cards).filter(([, card]) => card.cardType !== "skill" && card.isSkill !== true))
+      });
+    }
+    return preparedContent;
+  }
+  function prepareStandardContent() {
+    if (preparedContent) return Promise.resolve();
+    if (preparationPromise) return preparationPromise;
+    preparationPromise = new Promise((resolve, reject) => {
+      window.setTimeout(() => {
+        try {
+          standardContent();
+          resolve();
+        } catch (error) {
+          preparationPromise = void 0;
+          reject(error);
+        }
+      }, 0);
+    });
+    return preparationPromise;
+  }
   function previewBySourceId(kind, sourceId) {
     return Object.values(window.FDCodexDetailData?.[kind] ?? {}).find((entry) => entry.sourceId === sourceId);
   }
@@ -179700,7 +179740,7 @@
     #aiPumping = false;
     constructor(options = {}) {
       const mode = options.mode === "3x" || options.mode === "three-x" || options.mode === "threeX" ? "three-x" : "standard";
-      const allContent = buildStandardContent(legacy_content_default);
+      const allContent = standardContent();
       const masterPool = [...MASTER_IDS];
       const servantPool = [...SERVANT_IDS];
       const selectedMaster = selectedSourceId("masters", options.master, masterPool);
@@ -179906,5 +179946,9 @@
       for (const listener of this.#listeners) listener(snapshot);
     }
   };
-  window.FDBattleRuntime = { create: (options) => new BrowserBattleRuntime(options) };
+  window.FDBattleRuntime = {
+    create: (options) => new BrowserBattleRuntime(options),
+    prepare: prepareStandardContent,
+    isPrepared: () => preparedContent !== void 0
+  };
 })();

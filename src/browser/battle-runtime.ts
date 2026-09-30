@@ -1,6 +1,6 @@
 import rawContent from "../content/generated/legacy-content.json" with { type: "json" };
 import { GameApplication } from "../application/game-application.ts";
-import { buildStandardContent } from "../content/content-package.ts";
+import { buildStandardContent, type LegacyContentPackage } from "../content/content-package.ts";
 import { CommandType } from "../match-engine/commands.ts";
 import type { AvailableAction } from "../application/integration-contract.ts";
 import { createGameState } from "../domain/state/createGameState.ts";
@@ -34,11 +34,64 @@ type Listener = (snapshot: ReturnType<BrowserBattleRuntime["snapshot"]>) => void
 type RuntimeMode = "standard" | "three-x";
 type ThreeXPurchaseCounts = Partial<Record<ThreeXPurchase, number>>;
 type RuntimeOptions = { master?: string; servant?: string; seed?: number; mode?: string; threeXPurchases?: ThreeXPurchaseCounts };
+type StandardContent = ReturnType<typeof buildStandardContent>;
+
+let preparedContent: StandardContent | undefined;
+let preparationPromise: Promise<void> | undefined;
+
+function playableContentSource(): LegacyContentPackage {
+  const masterIds = new Set<string>(MASTER_IDS);
+  const servantIds = new Set<string>(SERVANT_IDS);
+  return {
+    masters: (rawContent.masters ?? [])
+      .filter((master) => masterIds.has(master.id))
+      .map(({ skills: _skills, ...master }) => ({ ...master, skills: [] })),
+    servants: (rawContent.servants ?? [])
+      .filter((servant) => servantIds.has(servant.id))
+      .map(({ skills: _skills, ...servant }) => ({ ...servant, skills: [] })),
+    cards: (rawContent.cards ?? []).filter((card) => card.cardType !== "skill" && card.isSkill !== true),
+    situations: rawContent.situations ?? [],
+    eventGroups: (rawContent.eventGroups ?? []).filter((group) => group.id === "event-group.fuyuki" || group.name.includes("冬木")),
+    civilizationRuins: [],
+  };
+}
+
+function standardContent(): StandardContent {
+  if (!preparedContent) {
+    const built = buildStandardContent(playableContentSource());
+    preparedContent = Object.freeze({
+      ...built,
+      cards: Object.fromEntries(Object.entries(built.cards).filter(([, card]) => card.cardType !== "skill" && card.isSkill !== true)),
+    });
+  }
+  return preparedContent;
+}
+
+function prepareStandardContent(): Promise<void> {
+  if (preparedContent) return Promise.resolve();
+  if (preparationPromise) return preparationPromise;
+  preparationPromise = new Promise<void>((resolve, reject) => {
+    window.setTimeout(() => {
+      try {
+        standardContent();
+        resolve();
+      } catch (error) {
+        preparationPromise = undefined;
+        reject(error);
+      }
+    }, 0);
+  });
+  return preparationPromise;
+}
 
 declare global {
   interface Window {
     FDCodexDetailData?: DetailCatalog;
-    FDBattleRuntime?: { create(options?: RuntimeOptions): BrowserBattleRuntime };
+    FDBattleRuntime?: {
+      create(options?: RuntimeOptions): BrowserBattleRuntime;
+      prepare(): Promise<void>;
+      isPrepared(): boolean;
+    };
   }
 }
 
@@ -80,7 +133,7 @@ export class BrowserBattleRuntime {
 
   constructor(options: RuntimeOptions = {}) {
     const mode: RuntimeMode = options.mode === "3x" || options.mode === "three-x" || options.mode === "threeX" ? "three-x" : "standard";
-    const allContent = buildStandardContent(rawContent);
+    const allContent = standardContent();
     const masterPool = [...MASTER_IDS];
     const servantPool = [...SERVANT_IDS];
     const selectedMaster = selectedSourceId("masters", options.master, masterPool);
@@ -296,5 +349,9 @@ export class BrowserBattleRuntime {
   }
 }
 
-window.FDBattleRuntime = { create: (options) => new BrowserBattleRuntime(options) };
+window.FDBattleRuntime = {
+  create: (options) => new BrowserBattleRuntime(options),
+  prepare: prepareStandardContent,
+  isPrepared: () => preparedContent !== undefined,
+};
 
