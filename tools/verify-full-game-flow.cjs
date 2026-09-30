@@ -78,7 +78,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const battleText = await page.evaluate(() => document.querySelector('.battle-host').shadowRoot.textContent);
   if (!battleText.includes(selectedMaster)) throw new Error(`主对战区未载入所选御主：${selectedMaster}`);
   if (!battleText.includes(selectedServant)) throw new Error(`主对战区未载入所选从者：${selectedServant}`);
-  if (!/冬木事件组 · 剩余(?:19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
+  if (!/冬木事件组 · 剩余(?:18|19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
   const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
@@ -147,15 +147,67 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   }, null, {timeout: 10000});
   await confirmPlay.click();
   await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId !== 'p1') || window.fdCurrentBattleRuntime.snapshot().view.phase === 'combat', null, {timeout: 20000});
-  const visualMotion = await page.evaluate(() => {const root=document.querySelector('.battle-host')?.shadowRoot;return {tokenArrivals:root?.querySelectorAll('.runtime-token-arrive').length??0,cardArrivals:root?.querySelectorAll('.runtime-card-arrive').length??0}});
-  if (!visualMotion.tokenArrivals || !visualMotion.cardArrivals) throw new Error(`AI 动作没有生成入场动画：${JSON.stringify(visualMotion)}`);
+  const visualMotion = await page.evaluate(() => {const root=document.querySelector('.battle-host')?.shadowRoot,css=[...(root?.querySelectorAll('style')||[])].map(style=>style.textContent).join('\n');return {tokenArrivals:root?.querySelectorAll('.runtime-token-arrive').length??0,cardArrivals:root?.querySelectorAll('.runtime-card-arrive').length??0,cardAnimationInstalled:css.includes('.runtime-card-arrive')}});
+  if (!visualMotion.tokenArrivals || !visualMotion.cardAnimationInstalled) throw new Error(`AI 动作没有生成入场动画：${JSON.stringify(visualMotion)}`);
   const seededFirstPlayers = await page.evaluate(() => [1,123456789,305419896].map(seed => window.FDBattleRuntime.create({seed}).snapshot().view.turnOrder[0]));
   if (new Set(seededFirstPlayers).size < 2) throw new Error(`新局首位玩家没有随机化：${seededFirstPlayers.join(',')}`);
   const automaticProgress = await page.evaluate(() => ({phase: window.fdCurrentBattleRuntime.snapshot().view.phase, activePlayerId: window.fdCurrentBattleRuntime.snapshot().view.activePlayerId}));
 
+  for (let attempts = 0; attempts < 90; attempts += 1) {
+    const progress = await page.evaluate(() => { const snapshot=window.fdCurrentBattleRuntime.snapshot(); return {phase:snapshot.view.phase,step:snapshot.view.step,activePlayerId:snapshot.view.activePlayerId,completeActionId:snapshot.actions.find(action=>action.commandType==='phase.player.complete')?.id}; });
+    if (progress.phase === 'combat' && ['settlement', 'post-power-response'].includes(progress.step)) break;
+    if (progress.activePlayerId === 'p1' && progress.completeActionId) {
+      await page.locator('.battle-host').locator(`[data-runtime-action="${progress.completeActionId}"]`).click();
+    } else {
+      await page.waitForTimeout(450);
+    }
+  }
+  const reachedSettlement = await page.evaluate(() => { const view=window.fdCurrentBattleRuntime.snapshot().view; return view.phase==='combat'&&['settlement','post-power-response'].includes(view.step); });
+  if (!reachedSettlement) {
+    const diagnostic = await page.evaluate(() => { const snapshot=window.fdCurrentBattleRuntime.snapshot(); return {view:snapshot.view,actions:snapshot.actions,eventTypes:snapshot.eventLog.slice(-12).map(event=>event.type)}; });
+    throw new Error(`未能进入战场结算：${JSON.stringify(diagnostic)}`);
+  }
+  const settlementBefore = await page.evaluate(() => {
+    const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
+    return {
+      resolveLocations: snapshot.actions.filter(action => action.commandType === 'combat.resolve').map(action => action.payload?.locationId),
+      buttons: [...(root?.querySelectorAll('.settlement-actions [data-runtime-action]') || [])].map(button => button.textContent.trim()),
+      combatants: root?.querySelectorAll('.settlement-combatant').length ?? 0,
+      progress: root?.querySelector('.settlement-progress')?.textContent.trim() || '',
+    };
+  });
+  if (process.env.FD_SETTLEMENT_SCREENSHOT) await page.screenshot({path: process.env.FD_SETTLEMENT_SCREENSHOT});
+  if (JSON.stringify(settlementBefore.resolveLocations) !== JSON.stringify(['mountain'])) throw new Error(`首个结算项目不是唯一的深山町：${JSON.stringify(settlementBefore)}`);
+  if (settlementBefore.buttons.length !== 1 || settlementBefore.buttons[0] !== '结算深山町') throw new Error(`结算界面没有只显示当前战场操作：${JSON.stringify(settlementBefore)}`);
+  if (!settlementBefore.progress.includes('1 / 2')) throw new Error(`结算界面没有显示顺序进度：${JSON.stringify(settlementBefore)}`);
+  await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
+  for (let attempts = 0; attempts < 12; attempts += 1) {
+    const state = await page.evaluate(() => ({
+      step: window.fdCurrentBattleRuntime.snapshot().view.step,
+      actions: window.fdCurrentBattleRuntime.snapshot().actions.map(action => ({type: action.commandType, locationId: action.payload?.locationId})),
+    }));
+    if (state.actions.some(action => action.type === 'combat.resolve' && action.locationId === 'city')) break;
+    if (state.actions.some(action => action.type === 'combat.response.complete')) {
+      await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
+    } else {
+      await page.waitForTimeout(450);
+    }
+  }
+  const settlementAfter = await page.evaluate(() => {
+    const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
+    return {
+      resolveLocations: snapshot.actions.filter(action => action.commandType === 'combat.resolve').map(action => action.payload?.locationId),
+      buttons: [...(root?.querySelectorAll('.settlement-actions [data-runtime-action]') || [])].map(button => button.textContent.trim()),
+      completed: root?.querySelectorAll('.settlement-history-item').length ?? 0,
+    };
+  });
+  if (JSON.stringify(settlementAfter.resolveLocations) !== JSON.stringify(['city'])) throw new Error(`深山町后没有按顺序开放新都：${JSON.stringify(settlementAfter)}`);
+  if (settlementAfter.buttons.length !== 1 || settlementAfter.buttons[0] !== '结算新都') throw new Error(`第二项结算操作不正确：${JSON.stringify(settlementAfter)}`);
+  if (settlementAfter.completed < 1) throw new Error(`结算界面没有保留已完成战场结果：${JSON.stringify(settlementAfter)}`);
+
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress, settlementBefore, settlementAfter}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);

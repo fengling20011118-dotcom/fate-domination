@@ -75,6 +75,29 @@ test("电子版标准对局不会自动创建实体规则 NPC", () => {
   assert.equal(Object.values(result.state.players).some((player) => "isNpc" in player), false);
 });
 
+test("战场结算严格按深山町、新都顺序逐项开放", () => {
+  const state = createGameState({ gameInstanceId: "ordered-settlement", players: [{ id: "p1", name: "一" }, { id: "p2", name: "二" }], seed: 91 });
+  const engine = new StandardMatchEngine({ cards, situations, events, playerDecks: { p1: [], p2: [] } });
+  state.status = "playing";
+  state.phase = "combat";
+  state.step = "settlement";
+  state.activePlayerId = null;
+
+  let actions = engine.getLegalActions(state, "p1");
+  assert.deepEqual(actions.filter((action) => action.type === CommandType.ResolveCombat).map((action) => action.payload), [{ locationId: "mountain" }]);
+  assert.equal(actions.some((action) => action.type === CommandType.EndRound), false);
+
+  state.modeState.resolvedCombats = ["mountain"];
+  actions = engine.getLegalActions(state, "p1");
+  assert.deepEqual(actions.filter((action) => action.type === CommandType.ResolveCombat).map((action) => action.payload), [{ locationId: "city" }]);
+  assert.equal(actions.some((action) => action.type === CommandType.EndRound), false);
+
+  state.modeState.resolvedCombats = ["mountain", "city"];
+  actions = engine.getLegalActions(state, "p1");
+  assert.equal(actions.some((action) => action.type === CommandType.ResolveCombat), false);
+  assert.equal(actions.filter((action) => action.type === CommandType.EndRound).length, 1);
+});
+
 test("阵地建造仅在残留牌已激活且本人部署于魔术工房时触发", () => {
   const skillId = "servant.medea.skill.sc-medea-2";
   const skills = new SkillRegistry();

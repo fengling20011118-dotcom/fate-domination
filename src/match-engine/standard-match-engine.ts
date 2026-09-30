@@ -199,10 +199,12 @@ export class StandardMatchEngine {
 
     if (state.phase === "combat" && state.step === "settlement") {
       const resolved = new Set((state.modeState.resolvedCombats as string[] | undefined) ?? []);
-      for (const locationId of getBattlefieldLocationIds(state)) {
-        if (!resolved.has(locationId)) candidates.push({ type: CommandType.ResolveCombat, label: `结算${locationId}`, payload: { locationId } });
+      const nextLocationId = getBattlefieldLocationIds(state).find((locationId) => !resolved.has(locationId));
+      if (nextLocationId) {
+        candidates.push({ type: CommandType.ResolveCombat, label: `结算${nextLocationId}`, payload: { locationId: nextLocationId } });
+      } else {
+        candidates.push({ type: CommandType.EndRound, label: "结束本回合", payload: {} });
       }
-      candidates.push({ type: CommandType.EndRound, label: "结束本回合", payload: {} });
     }
 
     if (state.phase === "combat" && state.step === "post-power-response" && state.activePlayerId === playerId) {

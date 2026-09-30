@@ -109984,10 +109984,12 @@
       }
       if (state.phase === "combat" && state.step === "settlement") {
         const resolved2 = new Set(state.modeState.resolvedCombats ?? []);
-        for (const locationId of getBattlefieldLocationIds(state)) {
-          if (!resolved2.has(locationId)) candidates.push({ type: CommandType.ResolveCombat, label: `\u7ED3\u7B97${locationId}`, payload: { locationId } });
+        const nextLocationId = getBattlefieldLocationIds(state).find((locationId) => !resolved2.has(locationId));
+        if (nextLocationId) {
+          candidates.push({ type: CommandType.ResolveCombat, label: `\u7ED3\u7B97${nextLocationId}`, payload: { locationId: nextLocationId } });
+        } else {
+          candidates.push({ type: CommandType.EndRound, label: "\u7ED3\u675F\u672C\u56DE\u5408", payload: {} });
         }
-        candidates.push({ type: CommandType.EndRound, label: "\u7ED3\u675F\u672C\u56DE\u5408", payload: {} });
       }
       if (state.phase === "combat" && state.step === "post-power-response" && state.activePlayerId === playerId) {
         candidates.push({ type: CommandType.CompleteCombatResponse, label: "\u5B8C\u6210\u6218\u6597\u54CD\u5E94", payload: {} });
