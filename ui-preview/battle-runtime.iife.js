@@ -109937,7 +109937,7 @@
       if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, definitions));
       actions.push(...getNormalCommandSealLegalActions(state, playerId, definitions));
       if (state.activePlayerId === playerId && state.status === "playing") {
-        actions.push({ type: CommandType.CompletePlayerWindow, label: "\u5B8C\u6210\u5F53\u524D\u6B65\u9AA4", payload: {} });
+        actions.push({ type: CommandType.CompletePlayerWindow, label: "\u5B8C\u6210\u5F53\u524D\u9636\u6BB5", payload: {} });
       }
       return structuredClone(actions);
     }
@@ -111259,7 +111259,7 @@
   var COMMAND_LABELS = {
     "game.start": "\u5F00\u59CB\u6E38\u620F",
     "game.start.standard": "\u5F00\u59CB\u6807\u51C6\u6A21\u5F0F",
-    "phase.player.complete": "\u5B8C\u6210\u5F53\u524D\u6B65\u9AA4",
+    "phase.player.complete": "\u5B8C\u6210\u5F53\u524D\u9636\u6BB5",
     "decision.resolve": "\u786E\u8BA4\u9009\u62E9",
     "decision.cancel": "\u53D6\u6D88\u9009\u62E9",
     "card.play": "\u6253\u51FA\u5361\u724C",

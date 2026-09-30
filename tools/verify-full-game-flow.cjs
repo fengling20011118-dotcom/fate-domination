@@ -84,9 +84,24 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
   if (battleEntryMs > 3000) throw new Error(`进入主对战区仍然过慢：${battleEntryMs}ms`);
 
+  const endAction = page.locator('.battle-host').locator('.end-action');
+  if ((await endAction.innerText()) !== '完成当前阶段') throw new Error('阶段完成按钮没有使用“完成当前阶段”');
+  await endAction.click();
+  const deployTarget = page.locator('.battle-host').locator('.place.runtime-map-action-deploy').first();
+  await deployTarget.waitFor({timeout: 15000});
+  const locationButtons = await page.locator('.battle-host').locator('.runtime-action-list button').allTextContents();
+  if (locationButtons.some(text => /部署|移动/.test(text))) throw new Error(`部署或移动仍显示为右侧按钮：${locationButtons.join('、')}`);
+  const deployedViaMap = await deployTarget.getAttribute('aria-label');
+  await deployTarget.click();
+  await endAction.waitFor({timeout: 15000});
+  await endAction.click();
+  const moveTarget = page.locator('.battle-host').locator('.place.runtime-map-action-move').first();
+  await moveTarget.waitFor({timeout: 15000});
+  const mapInteractions = {deploy: deployedViaMap, move: await moveTarget.getAttribute('aria-label')};
+
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);

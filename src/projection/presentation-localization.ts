@@ -155,7 +155,7 @@ const PHASE_LABELS: Record<string, string> = {
 const COMMAND_LABELS: Record<string, string> = {
   "game.start": "开始游戏",
   "game.start.standard": "开始标准模式",
-  "phase.player.complete": "完成当前步骤",
+  "phase.player.complete": "完成当前阶段",
   "decision.resolve": "确认选择",
   "decision.cancel": "取消选择",
   "card.play": "打出卡牌",

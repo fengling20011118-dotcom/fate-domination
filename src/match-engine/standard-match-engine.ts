@@ -146,7 +146,7 @@ export class StandardMatchEngine {
     if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, definitions));
     actions.push(...getNormalCommandSealLegalActions(state, playerId, definitions));
     if (state.activePlayerId === playerId && state.status === "playing") {
-      actions.push({ type: CommandType.CompletePlayerWindow, label: "完成当前步骤", payload: {} });
+      actions.push({ type: CommandType.CompletePlayerWindow, label: "完成当前阶段", payload: {} });
     }
     return structuredClone(actions);
   }
