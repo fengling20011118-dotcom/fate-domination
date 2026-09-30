@@ -559,12 +559,12 @@ function inferUsageLimit(text: string): CardDefinition["limit"] {
   return undefined;
 }
 
-function inferEventPlacement(id: string, text: string): { mountain: number; city: number } | undefined {
-  // Imported legacy text is only used during migration; runtime uses this structured result.
-  if (id.endsWith("sit2") || text.includes("于新都增加一张")) return { mountain: 0, city: 1 };
-  if (id.endsWith("sit3") || text.includes("于深山町增加一张")) return { mountain: 1, city: 0 };
-  if (id.endsWith("sit13") || text.includes("于深山町增加两张")) return { mountain: 2, city: 0 };
-  if (id.endsWith("sit1") || id.endsWith("sit11") || text.includes("深山町和新都各增加一张")) return { mountain: 1, city: 1 };
-  if (id.endsWith("sit12")) return { mountain: 1, city: 0 };
-  return { mountain: 0, city: 0 };
+function inferEventPlacement(id: string, text: string): NonNullable<SituationDefinition["eventPlacement"]> {
+  // Every round has one public mountain event and one hidden city event.
+  // Situation text says "add": these public events supplement that baseline.
+  if (id.endsWith("sit1") || id.endsWith("sit11") || text.includes("深山町和新都各增加一张") || text.includes("深山町和新都增加一张")) return { mountain: 2, city: 2, cityFaceUp: 1 };
+  if (id.endsWith("sit2") || text.includes("于新都增加一张")) return { mountain: 1, city: 2, cityFaceUp: 1 };
+  if (id.endsWith("sit13") || text.includes("于深山町增加两张")) return { mountain: 3, city: 1 };
+  if (id.endsWith("sit3") || id.endsWith("sit12") || text.includes("于深山町增加一张")) return { mountain: 2, city: 1 };
+  return { mountain: 1, city: 1 };
 }

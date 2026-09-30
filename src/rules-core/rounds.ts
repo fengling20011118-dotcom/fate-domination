@@ -102,9 +102,10 @@ function drawEvents(state: GameState, count: number, randomInt: (maxExclusive: n
   return drawn;
 }
 
-function assertEventPlacement(placement: { mountain: number; city: number }): void {
+function assertEventPlacement(placement: { mountain: number; city: number; cityFaceUp?: number }): void {
   if (!placement || !Number.isInteger(placement.mountain) || placement.mountain < 0
-    || !Number.isInteger(placement.city) || placement.city < 0) {
+    || !Number.isInteger(placement.city) || placement.city < 0
+    || (placement.cityFaceUp !== undefined && (!Number.isInteger(placement.cityFaceUp) || placement.cityFaceUp < 0 || placement.cityFaceUp > placement.city))) {
     throw new Error("EVENT_PLACEMENT_INVALID");
   }
 }
@@ -345,7 +346,13 @@ function startStandardRoundDraft(
     throw new Error("PENDING_EVENT_REPLACEMENT_EXCEEDS_PLACEMENT");
   }
   const mountainEvents = drawForLocation("mountain", placement.mountain - mountainReplacementCount, "up");
-  const cityEvents = drawForLocation("city", placement.city - cityReplacementCount, "down");
+  // Pending replacements consume the ordinary hidden slots before public extras.
+  const cityFaceUp = placement.cityFaceUp ?? 0;
+  const cityFaceDown = placement.city - cityFaceUp;
+  const cityEvents = [
+    ...drawForLocation("city", Math.max(0, cityFaceDown - cityReplacementCount), "down"),
+    ...drawForLocation("city", cityFaceUp - Math.max(0, cityReplacementCount - cityFaceDown), "up"),
+  ];
   for (const eventId of [...mountainEvents, ...cityEvents]) {
     if (!events.some((event) => event.id === eventId) && !definitions[eventId]) throw new Error("EVENT_NOT_FOUND");
   }

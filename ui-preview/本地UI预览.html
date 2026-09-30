@@ -1367,6 +1367,7 @@
 .codex-detail-identity.tutorial-chapters{display:flex;overflow:auto}
 .tutorial-chapters button{flex:0 0 auto;cursor:pointer;transition:border-color .17s ease,color .17s ease,background .17s ease}
 .tutorial-chapters button:hover{border-color:#cfaf6d;color:#ffe4a0;background:#172433}
+.tutorial-lesson-copy li{color:#ccd5df;font-size:15px;line-height:1.9;padding:4px 0}.tutorial-lesson-copy ol{padding-left:26px}.tutorial-reference{margin-top:28px;border-top:1px solid #394451;padding-top:16px}.tutorial-reference summary{cursor:pointer;color:#e7c87e;font-size:14px}.tutorial-reference[open] summary{margin-bottom:20px}
 .codex-detail-identity,.codex-detail-content{will-change:transform,opacity,filter}.codex-detail-content{transform-origin:center left}
 .codex-detail-identity{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:16px;border:1px solid rgba(151,184,204,.15);background:rgba(4,13,22,.82);box-shadow:0 18px 46px rgba(0,0,0,.24);overflow:hidden}
 .codex-detail-art{min-height:0;display:grid;place-items:center;overflow:hidden;background:linear-gradient(180deg,rgba(18,31,45,.78),rgba(5,13,22,.9));cursor:zoom-in}.codex-detail-art img{width:100%;height:100%;display:block;object-fit:contain}
@@ -2052,8 +2053,8 @@ button:not(:disabled):not(.nav):not(.press-any):not(.mode-card):not(.tutorial-ca
 <script src="./character-preview-data.js"></script>
 <script src="./codex-detail-data.js"></script>
 <script src="./board-codex-data.js?v=20261001-board-codex-1"></script>
-<script src="./tutorial-data.js?v=20261001-ui-module-1"></script>
-<script src="./battle-runtime.iife.js?v=20260930-location-sequence-1"></script>
+<script src="./tutorial-data.js?v=20261001-edited-guide-2"></script>
+<script src="./battle-runtime.iife.js?v=20261001-event-baseline-1"></script>
 
 <script src="./startup-assets.js?v=20260930-board-art-1"></script>
 <script src="../assets/vendor/progressbar.js/progressbar.min.js"></script>
@@ -2546,23 +2547,25 @@ function updateThreeXPurchaseInPlace(addedCandidates=[]){
  const options=app.querySelector('.purchase-screen .purchase-grid');if(options)options.innerHTML=purchaseOptionsHtml();
 }
 const BEGINNER_LESSONS=[
- {title:'认识御主与从者',image:'../assets/map/locations/workshop.png',text:'先选择一名御主，再选择一名从者。魔力用于支付牌和行动的费用；令咒提供额外能力；战果决定排名。确认阵容后可返回更换选择。'},
- {title:'准备阶段',image:'../assets/map/locations/situation.png',text:'回合开始时处理抽牌、局势、事件与魔力恢复，然后玩家按顺位使用准备阶段能力。事件是否增加、增加在哪个地点，由本回合局势决定。例如「新都之战」只给新都增加一张事件牌；「深山町的杀人魔」只给深山町增加一张。'},
- {title:'部署阶段',image:'../assets/map/locations/workshop.png',text:'按顺位将御主部署到魔术工坊、深山町或新都；不可直接部署到侦察。点击地图上的合法地点完成部署。部署到工坊时获得位置标注的魔力；部署到战场地利位置且仍留在那里，结算时获得相应威力。'},
- {title:'行动阶段',image:'../assets/map/locations/mountain.png',text:'需要常规移动时，先点击「常规移动」，再点击地图上的合法目的地。移动要支付魔力；处于交战中的玩家不能常规移动。选择攻击牌后确认出牌并支付费用；选牌时出牌区显示预估威力，确认后玩家面板才更新公开合计威力。'},
- {title:'战斗与地区结算',image:'../assets/map/locations/city.png',text:'完成战斗阶段的能力窗口后，计算合计威力与战果。地区展示按魔术工坊、深山町、新都、侦察，以及展开的月之圣杯依次推进。明置牌可以查看效果；暗置牌在公开前只显示牌背。'},
- {title:'下一回合与终局',image:'../assets/map/locations/scouting.png',text:'完成地区结算后进入下一回合，回合顺位按规则轮换。第8、9、10回合结束时分别保留战果前4、3、2名，同分者一起保留。第11回合结束时战果最多者获胜；终局同分与特殊效果详见基础规则和规则问答。'}
+ {title:'先认识你的主从',image:'../assets/map/locations/workshop.png',text:'选择一名御主和一名从者，组成你的阵容。\n\n魔力用来支付移动和出牌费用，令咒提供额外能力，战果决定整局排名。想赢下战斗，看合计威力；想赢下圣杯战争，看累计战果。\n\n先看一遍主从资料，再确认阵容。准备页可以返回更换选择。'},
+ {title:'准备：看清本回合局面',image:'../assets/map/locations/situation.png',text:'回合开始，通常先把手牌补到 3 张，再展示局势牌并恢复牌上标注的魔力。\n\n深山町放一张明置事件，新都放一张暗置事件；局势写着「增加」时，在基础事件之外再增加对应数量。新都的暗置事件在行动阶段开始时展示。\n\n部署前，先看清局势限制、事件奖励和自己的魔力，再决定这一回合去哪。'},
+ {title:'部署：选一个起点',image:'../assets/map/locations/workshop.png',text:'轮到你时，直接点击地图上的合法地点部署。可以选择魔术工坊、深山町或新都，不能直接部署到侦察。\n\n去工坊：立即获得工坊位标注的魔力。去战场：争取事件奖励，并优先占用空余地利位。\n\n地利要到战力结算时才加入威力，而且你必须仍留在部署位置。之后移动过去，不会自动获得地利。'},
+ {title:'行动：先移动，再出牌',image:'../assets/map/locations/mountain.png',text:'需要移动时，先按「常规移动」，再点击目的地并支付沿途费用。常规移动只能沿地图方向前进；与对手在战场交战时不能常规移动。\n\n通常同时打出正好两张攻击牌。先检查合计费用，再确认出牌；在战场至少要有一张明置牌，非战场可以两张都暗置。\n\n选中卡牌时只是预估威力。确认出牌后才实际支付费用，玩家面板也会更新公开合计威力。'},
+ {title:'战斗：把威力换成战果',image:'../assets/map/locations/city.png',text:'所有玩家处理完战斗阶段能力后，再计算最终威力。激活攻击、地利、局势、事件和能力都可能影响结果。\n\n同一战场威力最高者获胜，领取事件战果；有对手参战时，另得该地点的竞争战果。并列胜者平分奖励并向上取整。\n\n侦察的 2 点战果也在结算时获得。逐项查看地区结果，暗置牌公开前仍只显示牌背。'},
+ {title:'回合结束与最终胜负',image:'../assets/map/locations/scouting.png',text:'结算后处理回合结束效果、清理本回合卡牌，再开始下一回合。首位按规则后移一位，不是每回合重新随机。\n\n第 8、9、10 回合结束，分别保留战果前 4、3、2 名，淘汰线同分者一起保留。\n\n第 11 回合结束，战果最多者获胜；并列第一时看本回合深山町的胜者，仍无法决出胜者则所有人失败。准备好后，就去选择你的主从。'}
 ];
 function tutorialDocumentHtml(text){
  const lines=String(text||'').split(/\r?\n/),html=[];for(let i=0;i<lines.length;i++){const line=lines[i].trim();if(!line)continue;
  if(line.startsWith('|')){const rows=[];while(i<lines.length&&lines[i].trim().startsWith('|')){const cells=lines[i].trim().replace(/^\||\|$/g,'').split('|').map(cell=>cell.trim());if(!cells.every(cell=>/^:?-+:?$/.test(cell)))rows.push('<tr>'+cells.map(cell=>'<td>'+esc(cell)+'</td>').join('')+'</tr>');i++}i--;html.push('<div class="tutorial-rule-table"><table>'+rows.join('')+'</table></div>');continue}
- if(/^#{1,6}\s/.test(line))html.push('<h3>'+esc(line.replace(/^#{1,6}\s+/,''))+'</h3>');else html.push('<p>'+esc(line)+'</p>');
+ if(/^#{1,6}\s/.test(line))html.push('<h3>'+esc(line.replace(/^#{1,6}\s+/,''))+'</h3>');
+ else if(/^\d+\.\s/.test(line)){const items=[];while(i<lines.length&&/^\d+\.\s/.test(lines[i].trim())){items.push('<li>'+esc(lines[i].trim().replace(/^\d+\.\s+/,''))+'</li>');i++}i--;html.push('<ol>'+items.join('')+'</ol>')}
+ else html.push('<p>'+esc(line)+'</p>');
  }return html.join('');
 }
 function renderTutorialLesson(){
  const beginner=tutorialKind==='beginner',documents=window.FDTutorialDocuments||[],data=beginner?BEGINNER_LESSONS[tutorialStep]:documents.find(doc=>doc.id===tutorialDocument),title=beginner?'新手教程':'详细教程';
  const links=(beginner?BEGINNER_LESSONS:documents).map((item,index)=>'<button type="button" '+(beginner?'data-tutorial-step="'+index+'"':'data-tutorial-document="'+esc(item.id)+'"')+' class="'+(beginner?index===tutorialStep?'active':'':item.id===tutorialDocument?'active':'')+'">'+(beginner?String(index+1).padStart(2,'0')+' · ':'')+esc(item.title)+'</button>').join('');
- const body=beginner?'<img class="tutorial-lesson-art" src="'+esc(data.image)+'" alt="'+esc(data.title)+'"><p>'+esc(data.text)+'</p>':tutorialDocumentHtml(data?.text);
+ const body=beginner?'<img class="tutorial-lesson-art" src="'+esc(data.image)+'" alt="'+esc(data.title)+'">'+data.text.split('\n\n').map(text=>'<p>'+esc(text)+'</p>').join(''):tutorialDocumentHtml(data?.text)+(data?.reference?'<details class="tutorial-reference"><summary>'+esc(data.referenceTitle)+' · 展开查阅</summary>'+tutorialDocumentHtml(data.reference)+'</details>':'');
  const controls=beginner?'<footer class="tutorial-step-actions"><button type="button" data-tutorial-step="'+Math.max(0,tutorialStep-1)+'" '+(!tutorialStep?'disabled':'')+'>上一步</button><span>'+(tutorialStep+1)+' / '+BEGINNER_LESSONS.length+'</span>'+(tutorialStep<BEGINNER_LESSONS.length-1?'<button type="button" data-tutorial-step="'+(tutorialStep+1)+'">下一步</button>':'<button type="button" data-nav="single">开始选择主从</button>')+'</footer>':'';
  app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回教程</button><div class="sub-title"><span>GUIDE</span><h1>'+title+'</h1></div></header><section class="codex-detail-page tutorial-page"><aside class="codex-detail-identity tutorial-chapters">'+links+'</aside><section class="codex-detail-content"><div class="codex-detail-tabs"><button type="button" class="active">'+esc(data?.title||title)+'</button></div><div class="codex-detail-scroll tutorial-lesson-copy">'+body+controls+'</div></section></section></main>';
 }

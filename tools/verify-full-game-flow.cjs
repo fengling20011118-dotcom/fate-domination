@@ -78,7 +78,16 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const battleText = await page.evaluate(() => document.querySelector('.battle-host').shadowRoot.textContent);
   if (!battleText.includes(selectedMaster)) throw new Error(`主对战区未载入所选御主：${selectedMaster}`);
   if (!battleText.includes(selectedServant)) throw new Error(`主对战区未载入所选从者：${selectedServant}`);
-  if (!/冬木事件组 · 剩余(?:18|19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
+  const openingEventState = await page.evaluate(() => {
+    const state = window.fdCurrentBattleRuntime.app.state;
+    return { deck: state.board.eventDeck.length, mountain: state.board.currentEvents.mountain.length,
+      city: state.board.currentEvents.city.length,
+      hiddenCity: state.board.currentEvents.city.filter(id => state.board.eventVisibility[id] === 'down').length };
+  });
+  if (openingEventState.mountain < 1 || openingEventState.city < 1 || openingEventState.hiddenCity !== 1
+    || openingEventState.deck + openingEventState.mountain + openingEventState.city !== 20) {
+    throw new Error(`开局基础事件或冬木20张总数错误：${JSON.stringify(openingEventState)}`);
+  }
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
   const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
   // Presentation-only fixture: exercise the expanded Moon Cell page without enabling unfinished skills.

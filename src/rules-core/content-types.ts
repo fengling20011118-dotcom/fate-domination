@@ -282,7 +282,8 @@ export interface SituationDefinition {
   /** Explicit non-derived attributes named by the active Situation card. */
   mentionedAttributes?: CardAttribute[];
   text?: string;
-  eventPlacement?: { mountain: number; city: number };
+  /** Total round placements, including baseline events. City extras may be public. */
+  eventPlacement?: { mountain: number; city: number; cityFaceUp?: number };
   forbiddenAttributes?: CardAttribute[];
   /** Structured combat modifiers; display text is never parsed at runtime. */
   combatPower?: SituationCombatPowerDefinition;

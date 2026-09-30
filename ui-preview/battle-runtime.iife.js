@@ -59016,7 +59016,7 @@
     state.board.outpostRecords = { workshop: [null, null, null, null], mountain: [null, null], city: [null, null] };
   }
   function assertEventPlacement(placement) {
-    if (!placement || !Number.isInteger(placement.mountain) || placement.mountain < 0 || !Number.isInteger(placement.city) || placement.city < 0) {
+    if (!placement || !Number.isInteger(placement.mountain) || placement.mountain < 0 || !Number.isInteger(placement.city) || placement.city < 0 || placement.cityFaceUp !== void 0 && (!Number.isInteger(placement.cityFaceUp) || placement.cityFaceUp < 0 || placement.cityFaceUp > placement.city)) {
       throw new Error("EVENT_PLACEMENT_INVALID");
     }
   }
@@ -59197,7 +59197,12 @@
       throw new Error("PENDING_EVENT_REPLACEMENT_EXCEEDS_PLACEMENT");
     }
     const mountainEvents = drawForLocation("mountain", placement.mountain - mountainReplacementCount, "up");
-    const cityEvents = drawForLocation("city", placement.city - cityReplacementCount, "down");
+    const cityFaceUp = placement.cityFaceUp ?? 0;
+    const cityFaceDown = placement.city - cityFaceUp;
+    const cityEvents = [
+      ...drawForLocation("city", Math.max(0, cityFaceDown - cityReplacementCount), "down"),
+      ...drawForLocation("city", cityFaceUp - Math.max(0, cityReplacementCount - cityFaceDown), "up")
+    ];
     for (const eventId of [...mountainEvents, ...cityEvents]) {
       if (!events.some((event) => event.id === eventId) && !definitions[eventId]) throw new Error("EVENT_NOT_FOUND");
     }
@@ -179680,12 +179685,11 @@
     return void 0;
   }
   function inferEventPlacement(id, text) {
-    if (id.endsWith("sit2") || text.includes("\u4E8E\u65B0\u90FD\u589E\u52A0\u4E00\u5F20")) return { mountain: 0, city: 1 };
-    if (id.endsWith("sit3") || text.includes("\u4E8E\u6DF1\u5C71\u753A\u589E\u52A0\u4E00\u5F20")) return { mountain: 1, city: 0 };
-    if (id.endsWith("sit13") || text.includes("\u4E8E\u6DF1\u5C71\u753A\u589E\u52A0\u4E24\u5F20")) return { mountain: 2, city: 0 };
-    if (id.endsWith("sit1") || id.endsWith("sit11") || text.includes("\u6DF1\u5C71\u753A\u548C\u65B0\u90FD\u5404\u589E\u52A0\u4E00\u5F20")) return { mountain: 1, city: 1 };
-    if (id.endsWith("sit12")) return { mountain: 1, city: 0 };
-    return { mountain: 0, city: 0 };
+    if (id.endsWith("sit1") || id.endsWith("sit11") || text.includes("\u6DF1\u5C71\u753A\u548C\u65B0\u90FD\u5404\u589E\u52A0\u4E00\u5F20") || text.includes("\u6DF1\u5C71\u753A\u548C\u65B0\u90FD\u589E\u52A0\u4E00\u5F20")) return { mountain: 2, city: 2, cityFaceUp: 1 };
+    if (id.endsWith("sit2") || text.includes("\u4E8E\u65B0\u90FD\u589E\u52A0\u4E00\u5F20")) return { mountain: 1, city: 2, cityFaceUp: 1 };
+    if (id.endsWith("sit13") || text.includes("\u4E8E\u6DF1\u5C71\u753A\u589E\u52A0\u4E24\u5F20")) return { mountain: 3, city: 1 };
+    if (id.endsWith("sit3") || id.endsWith("sit12") || text.includes("\u4E8E\u6DF1\u5C71\u753A\u589E\u52A0\u4E00\u5F20")) return { mountain: 2, city: 1 };
+    return { mountain: 1, city: 1 };
   }
 
   // src/browser/battle-runtime.ts
