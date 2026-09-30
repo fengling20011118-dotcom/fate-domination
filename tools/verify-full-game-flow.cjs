@@ -122,8 +122,20 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const firstVisibleHandCard = page.locator('.battle-host').locator('.hand .card').first();
   await firstVisibleHandCard.waitFor({timeout: 15000});
   await firstVisibleHandCard.click();
-  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().view.step === 'play-batch-draft', null, {timeout: 10000});
-  const playableInstanceIds = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().actions.find(action => action.commandType === 'player.attack.commit' && action.payload?.faceUpInstanceIds?.length && !action.payload?.faceDownInstanceIds?.length)?.payload.faceUpInstanceIds);
+  const selectionCheck = await page.evaluate(() => {
+    const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;
+    const button=root.querySelector('[data-runtime-map-move-toggle]'),row=root.querySelector('.move-action-row');
+    return {step:snapshot.view.step,moveVisible:!!button,buttonWidth:button?.offsetWidth,rowWidth:row.offsetWidth};
+  });
+  if (selectionCheck.step !== 'move-decision' || !selectionCheck.moveVisible) throw new Error(`选牌提前提交了移动决定：${JSON.stringify(selectionCheck)}`);
+  if (Math.abs(selectionCheck.buttonWidth-selectionCheck.rowWidth)>2) throw new Error(`常规移动未占满整行：${JSON.stringify(selectionCheck)}`);
+  if (await moveToggle.isEnabled()) {
+    await moveToggle.click(); // Cancel the currently open map picker after selecting a card.
+    await moveToggle.click(); // Reopen it without changing the card draft or the engine step.
+    if (!await page.locator('.battle-host').locator('.place.runtime-map-action-move').count()) throw new Error('选牌后无法重新开启常规移动');
+    if (!await page.locator('.battle-host').locator('.hand .card.selected').count()) throw new Error('切换常规移动丢失了选牌');
+  }
+  const playableInstanceIds = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().draftAttackActions.find(action => action.payload?.faceUpInstanceIds?.length && !action.payload?.faceDownInstanceIds?.length)?.payload.faceUpInstanceIds);
   if (!playableInstanceIds?.length) {
     const available = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().actions.filter(action => action.commandType === 'player.attack.commit'));
     throw new Error(`移动后没有可打出的手牌组合：${JSON.stringify(available)}`);
@@ -140,7 +152,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
     return {phase: snapshot.view.phase, step: snapshot.view.step, actions: snapshot.actions.map(action => action.commandType), selected: root?.querySelectorAll('.hand .card.selected').length, buttonDisabled: root?.querySelector('#confirm-play')?.disabled};
   });
-  if (!playDiagnostic.actions.includes('player.attack.commit')) throw new Error(`移动后没有进入出牌步骤：${JSON.stringify(playDiagnostic)}`);
+  if (playDiagnostic.step !== 'move-decision') throw new Error(`选牌改变了行动步骤：${JSON.stringify(playDiagnostic)}`);
   await page.waitForFunction(() => {
     const host = document.querySelector('.battle-host');
     return host?.shadowRoot?.querySelector('#confirm-play')?.disabled === false;

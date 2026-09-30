@@ -140,6 +140,7 @@ export class BrowserBattleRuntime {
   readonly assignments: Array<{ playerId: string; masterId: string; servantId: string }>;
   readonly app: GameApplication;
   readonly definitions: ReturnType<GameApplication["cardDefinitions"]>;
+  readonly #content: ReturnType<typeof standardContent>;
   #sequence = 0;
   #listeners = new Set<Listener>();
   #lastEvents: unknown[] = [];
@@ -165,6 +166,7 @@ export class BrowserBattleRuntime {
       threeXMasterPool: masterPool,
       threeXMasterRatings: Object.fromEntries(masterPool.map((id) => [id, allContent.threeXMasterRatings?.[id] ?? 4])),
     };
+    this.#content = content;
     const gameInstanceId = `local-${Date.now().toString(36)}`;
     const players = this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "玩家" : `电脑玩家 ${index}` }));
     if (mode === "three-x") {
@@ -220,6 +222,7 @@ export class BrowserBattleRuntime {
     return {
       view,
       actions,
+      draftAttackActions: this.#draftAttackActions(),
       definitions,
       roster,
       events: structuredClone(this.#lastEvents),
@@ -236,7 +239,17 @@ export class BrowserBattleRuntime {
   }
 
   dispatch(actionId: string, selections?: string[]): ReturnType<BrowserBattleRuntime["snapshot"]> {
-    const action = this.app.availableActionsFor(this.playerId).find((candidate) => candidate.id === actionId);
+    let action = this.app.availableActionsFor(this.playerId).find((candidate) => candidate.id === actionId);
+    if (!action) {
+      const draft = this.#draftAttackActions().find((candidate) => candidate.id === actionId);
+      if (draft) {
+        // Selecting cards is only a UI draft. Commit the decision to stay put
+        // together with the validated attack when the player confirms it.
+        const completed = this.#send(this.playerId, CommandType.CompletePlayerWindow, {});
+        if (!completed.ok) throw new Error(completed.rejection.code);
+        action = draft;
+      }
+    }
     if (!action) throw new Error("ACTION_NOT_AVAILABLE");
     let payload: unknown = action.payload ?? {};
     if (action.commandType === CommandType.ResolveDecision) payload = {
@@ -300,6 +313,19 @@ export class BrowserBattleRuntime {
   }
 
   save(): string { return this.app.save(); }
+
+  #draftAttackActions(): AvailableAction[] {
+    const state = this.app.state;
+    if (state.activePlayerId !== this.playerId || state.phase !== "action" || state.step !== "move-decision") return [];
+    const draft = new GameApplication({ state, content: this.#content });
+    try {
+      draft.dispatch({ commandId: `draft:${state.revision}`, gameInstanceId: state.gameInstanceId,
+        actorId: this.playerId, expectedRevision: state.revision, type: CommandType.CompletePlayerWindow, payload: {} });
+      return draft.availableActionsFor(this.playerId)
+        .filter(action => action.commandType === CommandType.CommitAttack)
+        .map(action => ({ ...action, id: `draft:${action.id}` }));
+    } catch { return []; }
+  }
 
   #send(actorId: string, type: string, payload: unknown) {
     const state = this.app.state;

@@ -179747,6 +179747,7 @@
     assignments;
     app;
     definitions;
+    #content;
     #sequence = 0;
     #listeners = /* @__PURE__ */ new Set();
     #lastEvents = [];
@@ -179770,6 +179771,7 @@
         threeXMasterPool: masterPool,
         threeXMasterRatings: Object.fromEntries(masterPool.map((id) => [id, allContent.threeXMasterRatings?.[id] ?? 4]))
       };
+      this.#content = content;
       const gameInstanceId = `local-${Date.now().toString(36)}`;
       const players = this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "\u73A9\u5BB6" : `\u7535\u8111\u73A9\u5BB6 ${index}` }));
       if (mode === "three-x") {
@@ -179822,6 +179824,7 @@
       return {
         view,
         actions,
+        draftAttackActions: this.#draftAttackActions(),
         definitions,
         roster,
         events: structuredClone(this.#lastEvents),
@@ -179836,7 +179839,15 @@
       return () => this.#listeners.delete(listener);
     }
     dispatch(actionId, selections) {
-      const action = this.app.availableActionsFor(this.playerId).find((candidate) => candidate.id === actionId);
+      let action = this.app.availableActionsFor(this.playerId).find((candidate) => candidate.id === actionId);
+      if (!action) {
+        const draft = this.#draftAttackActions().find((candidate) => candidate.id === actionId);
+        if (draft) {
+          const completed = this.#send(this.playerId, CommandType.CompletePlayerWindow, {});
+          if (!completed.ok) throw new Error(completed.rejection.code);
+          action = draft;
+        }
+      }
       if (!action) throw new Error("ACTION_NOT_AVAILABLE");
       let payload = action.payload ?? {};
       if (action.commandType === CommandType.ResolveDecision) payload = {
@@ -179895,6 +179906,24 @@
     }
     save() {
       return this.app.save();
+    }
+    #draftAttackActions() {
+      const state = this.app.state;
+      if (state.activePlayerId !== this.playerId || state.phase !== "action" || state.step !== "move-decision") return [];
+      const draft = new GameApplication({ state, content: this.#content });
+      try {
+        draft.dispatch({
+          commandId: `draft:${state.revision}`,
+          gameInstanceId: state.gameInstanceId,
+          actorId: this.playerId,
+          expectedRevision: state.revision,
+          type: CommandType.CompletePlayerWindow,
+          payload: {}
+        });
+        return draft.availableActionsFor(this.playerId).filter((action) => action.commandType === CommandType.CommitAttack).map((action) => ({ ...action, id: `draft:${action.id}` }));
+      } catch {
+        return [];
+      }
     }
     #send(actorId, type, payload) {
       const state = this.app.state;
