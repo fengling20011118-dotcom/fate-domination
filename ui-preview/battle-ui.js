@@ -1216,12 +1216,12 @@ function render(host,options={}){
         .runtime-live .runtime-action-list:empty{display:none}
         .runtime-live .runtime-action-list button{min-width:0;padding:0 7px;font-size:10px}
         .runtime-live .place.runtime-map-action{cursor:pointer;border-color:rgba(111,204,255,.9);box-shadow:0 0 0 3px rgba(74,174,229,.18),0 0 28px rgba(71,179,239,.26),0 10px 28px rgba(0,0,0,.65);transition:border-color .2s ease,box-shadow .24s ease,filter .24s ease,transform .24s cubic-bezier(.2,1.35,.35,1)}
-        .runtime-live .place.runtime-map-action::after{content:attr(data-map-action-label);position:absolute;z-index:9;left:50%;top:50%;min-width:88px;padding:7px 12px;transform:translate(-50%,-50%);border:1px solid rgba(180,225,255,.9);border-radius:999px;background:rgba(5,18,29,.9);box-shadow:0 6px 20px rgba(0,0,0,.5),0 0 18px rgba(74,174,229,.28);color:#d8f2ff;text-align:center;font-size:11px;font-weight:700;letter-spacing:.08em;pointer-events:none}
+        .runtime-live .place.runtime-map-action::after{content:""}
         .runtime-live .place.runtime-map-action:hover{z-index:7;transform:translateY(-3px) scale(1.012);border-color:#d9f3ff;box-shadow:0 0 0 4px rgba(82,187,244,.24),0 0 36px rgba(76,190,250,.38),0 14px 32px rgba(0,0,0,.72);filter:brightness(1.08)}
         .runtime-live .place.runtime-map-action:active{transform:translateY(1px) scale(.992)}
         .runtime-live .place.runtime-map-action:focus-visible{outline:2px solid #e3f6ff;outline-offset:3px}
         .runtime-live .place.runtime-map-action-deploy{border-color:rgba(224,184,82,.94);box-shadow:0 0 0 3px rgba(214,174,82,.18),0 0 28px rgba(214,174,82,.26),0 10px 28px rgba(0,0,0,.65)}
-        .runtime-live .place.runtime-map-action-deploy::after{border-color:rgba(255,226,153,.95);background:rgba(31,23,7,.92);color:#ffe6a4;box-shadow:0 6px 20px rgba(0,0,0,.5),0 0 18px rgba(214,174,82,.3)}
+        .runtime-live [data-runtime-map-move-toggle].active{border-color:#74cfff;color:#d8f2ff;background:linear-gradient(180deg,rgba(23,65,91,.98),rgba(9,30,45,.98));box-shadow:0 0 0 2px rgba(82,187,244,.16),0 0 18px rgba(76,190,250,.2)}
         .runtime-live .choice-option.runtime-selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(214,174,82,.18)}
         .runtime-live .settlement-head p{color:#b8c2d0}
         .runtime-live .runtime-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;background:linear-gradient(155deg,#273448,#090d14);color:#fff;text-align:left}
@@ -1233,7 +1233,7 @@ function render(host,options={}){
       const locationLabel={workshop:'魔术工坊',mountain:'深山町',city:'新都',scouting:'侦察','moon-cell':'月之圣杯'};
       const locationIdByLabel=Object.fromEntries(Object.entries(locationLabel).map(([id,label])=>[label,id]));
       const locationSelector={workshop:'.workshop',mountain:'.mountain',city:'.city',scouting:'.scout','moon-cell':'.moon-cell'};
-      let live=null,decisionSelections=new Set();
+      let live=null,decisionSelections=new Set(),mapMoveChoosing=false;
       const settlementModal=root.getElementById('settlement-demo');
       const settlementIntro=settlementModal?.querySelector('.settlement-head p');
       const settlementFooter=settlementModal?.querySelector('.settlement-actions');
@@ -1308,10 +1308,11 @@ function render(host,options={}){
       }
       function renderActions(snapshot){
         const actions=snapshot.actions||[],moveRow=root.querySelector('.move-action-row'),playRow=root.querySelector('.play-action-row');
-        root.querySelectorAll('.place[data-runtime-map-action]').forEach(place=>{place.classList.remove('runtime-map-action','runtime-map-action-deploy','runtime-map-action-move');place.removeAttribute('data-runtime-map-action');place.removeAttribute('data-map-action-label');place.removeAttribute('role');place.removeAttribute('tabindex');place.removeAttribute('aria-label')});
-        actions.filter(action=>action.commandType==='player.deploy'||action.commandType==='player.move').forEach(action=>{const locationId=action.payload?.locationId,place=root.querySelector(locationSelector[locationId]);if(!place)return;const deploying=action.commandType==='player.deploy',verb=deploying?'部署':'移动';place.classList.add('runtime-map-action',deploying?'runtime-map-action-deploy':'runtime-map-action-move');place.dataset.runtimeMapAction=action.id;place.dataset.mapActionLabel=verb+'到此';place.setAttribute('role','button');place.setAttribute('tabindex','0');place.setAttribute('aria-label',verb+'至'+(locationLabel[locationId]||locationId))});
+        root.querySelectorAll('.place[data-runtime-map-action]').forEach(place=>{place.classList.remove('runtime-map-action','runtime-map-action-deploy','runtime-map-action-move');place.removeAttribute('data-runtime-map-action');place.removeAttribute('role');place.removeAttribute('tabindex');place.removeAttribute('aria-label')});
+        const deployActions=actions.filter(action=>action.commandType==='player.deploy'),moveActions=actions.filter(action=>action.commandType==='player.move');if(!moveActions.length)mapMoveChoosing=false;
+        [...deployActions,...(mapMoveChoosing?moveActions:[])].forEach(action=>{const locationId=action.payload?.locationId,place=root.querySelector(locationSelector[locationId]);if(!place)return;const deploying=action.commandType==='player.deploy',verb=deploying?'部署':'移动';place.classList.add('runtime-map-action',deploying?'runtime-map-action-deploy':'runtime-map-action-move');place.dataset.runtimeMapAction=action.id;place.setAttribute('role','button');place.setAttribute('tabindex','0');place.setAttribute('aria-label',verb+'至'+(locationLabel[locationId]||locationId))});
         const direct=actions.filter(action=>['combat.resolve','combat.response.complete','round.end'].includes(action.commandType));
-        if(moveRow){moveRow.className='move-action-row runtime-action-list';moveRow.innerHTML=direct.map(action=>'<button type="button" data-runtime-action="'+h(action.id)+'">'+h(action.label)+'</button>').join('')}
+        if(moveRow){moveRow.className='move-action-row runtime-action-list';moveRow.innerHTML=(moveActions.length?'<button type="button" data-runtime-map-move-toggle class="'+(mapMoveChoosing?'active':'')+'">'+(mapMoveChoosing?'取消移动':'常规移动')+'</button>':'')+direct.map(action=>'<button type="button" data-runtime-action="'+h(action.id)+'">'+h(action.label)+'</button>').join('')}
         const complete=actions.find(action=>action.commandType==='phase.player.complete');
         if(playRow){playRow.innerHTML='<button id="confirm-play" disabled>出牌 0/2</button><button id="confirm-hidden-play" class="hidden-play-action" disabled>暗置所选</button><button class="primary end-action" type="button" data-runtime-action="'+h(complete?.id||'')+'" '+(complete?'':'disabled')+'>'+h(complete?.label||'等待其他玩家')+'</button>'}
         refreshRuntimePlayButtons();
@@ -1354,7 +1355,8 @@ function render(host,options={}){
       }
       root.addEventListener('click',event=>{
         const phase=event.target.closest('.phase span');if(phase){event.preventDefault();event.stopImmediatePropagation();return}
-        const mapTarget=event.target.closest('[data-runtime-map-action]');if(mapTarget&&!event.target.closest('[data-info],[data-discard-kind]')){event.preventDefault();event.stopImmediatePropagation();dispatchAction(live?.actions.find(action=>action.id===mapTarget.dataset.runtimeMapAction));return}
+        const moveToggle=event.target.closest('[data-runtime-map-move-toggle]');if(moveToggle){event.preventDefault();event.stopImmediatePropagation();mapMoveChoosing=!mapMoveChoosing;renderActions(live);return}
+        const mapTarget=event.target.closest('[data-runtime-map-action]');if(mapTarget&&!event.target.closest('[data-info],[data-discard-kind]')){event.preventDefault();event.stopImmediatePropagation();mapMoveChoosing=false;dispatchAction(live?.actions.find(action=>action.id===mapTarget.dataset.runtimeMapAction));return}
         const sealDestination=event.target.closest('[data-command-seal-location]');if(sealDestination){event.preventDefault();event.stopImmediatePropagation();const group=sealDestination.closest('.command-seal-destinations');group?.querySelectorAll('[data-command-seal-location]').forEach(item=>{const selected=item===sealDestination;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});syncAbilityActions(live);return}
         const sealButton=event.target.closest('[data-command-seal]');if(sealButton){event.preventDefault();event.stopImmediatePropagation();const mode=sealButton.dataset.commandSeal,chosen=sealButton.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation,targetLocationId=locationIdByLabel[chosen],action=live?.actions.find(item=>item.commandType==='command-seal.use'&&item.payload?.mode===mode&&(mode!=='move'||item.payload?.targetLocationId===targetLocationId));if(action){playSfx('command-seal-use',{volume:.78});dispatchAction(action)}else showToast('当前阶段无法使用这项令咒',1700);return}
         const card=event.target.closest('.hand .card');if(card){event.preventDefault();event.stopImmediatePropagation();card.classList.toggle('selected');if(handCards().filter(item=>item.classList.contains('selected')).length>2)card.classList.remove('selected');refreshRuntimePlayButtons();return}
