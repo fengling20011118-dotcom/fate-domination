@@ -136,7 +136,12 @@ export class StandardMatchEngine {
       }];
     }
     const actions = this.modes.get(state.mode).getLegalActions(structuredClone(state), playerId);
-    if (state.mode === "standard") actions.push(...this.getStandardCoreLegalActions(state, playerId));
+    // 3X owns its setup, then deliberately hands play to the same board/card
+    // rules as Standard.  Keep setup actions isolated while exposing the
+    // shared deploy, move, attack and settlement actions after the match starts.
+    if (state.mode === "standard" || (state.mode === "three-x" && state.status === "playing")) {
+      actions.push(...this.getStandardCoreLegalActions(state, playerId));
+    }
     const definitions = this.cardDefinitions();
     if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, definitions));
     actions.push(...getNormalCommandSealLegalActions(state, playerId, definitions));

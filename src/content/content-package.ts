@@ -157,6 +157,7 @@ export function buildStandardContent(raw: LegacyContentPackage): StandardContent
 
   const situations: SituationDefinition[] = (raw.situations ?? []).map((item) => ({
     id: String(item.id),
+    name: typeof item.name === "string" ? item.name : String(item.id),
     mana: Number(item.mana ?? 0),
     climax: Boolean(item.climax),
     mentionedAttributes: CONFIRMED_SITUATION_MENTIONED_ATTRIBUTES[String(item.id)]
@@ -168,6 +169,7 @@ export function buildStandardContent(raw: LegacyContentPackage): StandardContent
       ? normalizeCardAttributes(item.forbiddenAttributes.map(String))
       : inferForbiddenAttributes(typeof item.text === "string" ? item.text : ""),
     combatPower: inferSituationCombatPower(String(item.id)),
+    presentation: { imageKey: typeof item.image === "string" ? item.image : undefined },
   }));
 
   const events: EventDefinition[] = [];
@@ -182,6 +184,7 @@ export function buildStandardContent(raw: LegacyContentPackage): StandardContent
       eventIds.push(id);
       events.push({
         id,
+        name: typeof item.name === "string" ? item.name : id,
         locationId: item.locationId === "mountain" || item.locationId === "city" ? item.locationId : undefined,
         victoryPoints: Number(item.victoryPoints ?? 0),
         mentionedAttributes: CONFIRMED_EVENT_MENTIONED_ATTRIBUTES[id]
@@ -191,6 +194,7 @@ export function buildStandardContent(raw: LegacyContentPackage): StandardContent
           ? structuredClone(CONFIRMED_EVENT_COMBAT_POWER[id])
           : undefined,
         text: typeof item.text === "string" ? item.text : undefined,
+        presentation: { imageKey: typeof item.image === "string" ? item.image : undefined },
       });
     }
     eventGroups.push({ id: String(group.id), name: String(group.name), eventIds, persistent: group.persistent });

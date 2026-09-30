@@ -442,7 +442,7 @@ function render(host,options={}){
       if(right)right.innerHTML=opponents.slice(3,6).map((p,i)=>opponentHtml(p,i+4)).join('');
       renderTablePlayedCards();
       const ranking=root.querySelector('.ranking');if(ranking)ranking.innerHTML='战果排名　'+battleRoster.map((p,i)=>(i===0?'<b>':'')+(i+1)+'. '+h(p.master.name)+' '+p.vp+(i===0?'</b>':'')).join('　');
-      const turn=root.querySelector('.turn-order');if(turn)turn.innerHTML=battleRoster.map((p,i)=>'<span class="turn-token '+(i===0?'active':'')+'" aria-label="'+(i+1)+' '+h(p.master.name)+(i===0?'（当前）':'')+'"><img src="'+h(masterImg(p.master))+'" alt=""></span>'+(i<battleRoster.length-1?'<i class="turn-arrow">›</i>':'')).join('');
+      const turn=root.querySelector('.turn-order');if(turn)turn.innerHTML=battleRoster.map((p,i)=>'<span class="turn-token '+(p.current?'active':'')+'" aria-label="'+(i+1)+' '+h(p.master.name)+(p.current?'（当前）':'')+'"><img src="'+h(masterImg(p.master))+'" alt=""></span>'+(i<battleRoster.length-1?'<i class="turn-arrow">›</i>':'')).join('');
       const workshopSlots=[...root.querySelectorAll('.workshop .slot-face')],mountainSlots=[...root.querySelectorAll('.mountain .slot-face')],citySlots=[...root.querySelectorAll('.city .slot-face')];
       const placements=[battleRoster[4],battleRoster[0],battleRoster[1],battleRoster[2]];
       [workshopSlots[0],mountainSlots[0],mountainSlots[1],citySlots[0]].forEach((slot,i)=>{const p=placements[i];if(!slot||!p)return;slot.innerHTML='<img src="'+h(masterImg(p.master))+'" alt="'+h(p.master.name)+'">'});
@@ -956,6 +956,10 @@ function render(host,options={}){
     function autoPlayOnTimeout(){
       if(turnClockState.autoPlayed||!turnClockState.running)return false;
       turnClockState.autoPlayed=true;
+      if(runtime&&typeof runtime.autoAct==='function'){
+        try{runtime.autoAct();showToast(turnClockState.clockOwnerName+'操作超时，已按规则自动处理',2200)}catch(error){console.error(error);showToast('当前没有可自动执行的规则操作',2200)}
+        return true;
+      }
       if(turnClockState.interaction){options.onInteractionTimeout?.({player:battleRoster[turnClockState.clockOwnerIndex],playerIndex:turnClockState.clockOwnerIndex,phase:turnClockState.phase});showToast(turnClockState.clockOwnerName+'回应超时，已自动处理',2200);endInteractionClock();return true}
       if(turnClockState.phase==='prepare'){showToast('准备阶段计时结束，已自动进入部署阶段',2200);window.setTimeout(()=>setBattlePhase('outpost'),260);return true}
       if(turnClockState.phase==='outpost'){
@@ -1098,7 +1102,7 @@ function render(host,options={}){
       {kind:'event',name:'占领高地',image:'../assets/map/events/占领高地.png',detail:'本回合已结算的事件牌。事件战果3；此战场的地利翻倍。',source:'.mountain .map-event-card:not(.facedown)'}
     ];
     let settlementDiscardCommitted=false;
-    function discardCardHtml(card){return '<article class="discard-card"><img src="'+h(card.image)+'" alt="'+h(card.name)+'"><div><strong>'+h(card.name)+'</strong><small>'+h(card.detail)+'</small></div></article>'}
+    function discardCardHtml(card){return '<article class="discard-card">'+(card.image?'<img src="'+h(card.image)+'" alt="'+h(card.name)+'">':'<div class="runtime-card-face"><b>'+h(card.name)+'</b></div>')+'<div><strong>'+h(card.name)+'</strong><small>'+h(card.detail)+'</small></div></article>'}
     function renderDiscardView(){
       ['situation','event'].forEach(kind=>{
         const cards=publicDiscards[kind],list=root.getElementById(kind+'-discard-list'),total=root.getElementById(kind+'-discard-total'),pile=root.querySelector('[data-discard-kind="'+kind+'"]');
@@ -1127,6 +1131,7 @@ function render(host,options={}){
       return Promise.race([travel.finished.catch(()=>{}),fallback]).then(()=>{flight.remove();});
     }
     function commitRoundDiscards(){
+      if(options.runtime)return Promise.resolve();
       if(settlementDiscardCommitted)return Promise.resolve();
       settlementDiscardCommitted=true;
       const cards=roundDiscardSeed.map(card=>({...card,sourceNode:root.querySelector(card.source)}));
@@ -1161,7 +1166,8 @@ function render(host,options={}){
     root.getElementById('close-discard-modal')?.addEventListener('click',closeDiscardModal);
     discardModal?.addEventListener('click',event=>{if(event.target===discardModal)closeDiscardModal()});
     const victoryExit=root.getElementById('victory-exit');
-    const finishVictory=()=>{if(typeof options.onVictoryExit==='function')options.onVictoryExit();else options.onExit?.()};
+    let finalRuntimeResult=null,victoryStarted=false;
+    const finishVictory=()=>{if(typeof options.onVictoryExit==='function')options.onVictoryExit(finalRuntimeResult);else options.onExit?.()};
     root.getElementById('show-victory-demo')?.addEventListener('click',()=>{invalidatePreview();options.onVictoryStart?.();settlementDemo?.classList.add('victory');window.setTimeout(()=>victoryExit?.focus(),420)});
     if(victoryExit){victoryExit.textContent='按任意键 · '+(options.victoryExitLabel||'返回主页');victoryExit.addEventListener('click',finishVictory)}
     root.addEventListener('keydown',event=>{if(!settlementDemo?.classList.contains('victory')||event.repeat)return;event.preventDefault();finishVictory()});
@@ -1170,6 +1176,7 @@ function render(host,options={}){
     root.getElementById('open-log').addEventListener('click', () => {invalidatePreview();logDrawer.classList.add('open')});
     root.getElementById('close-log').addEventListener('click', () => {invalidatePreview();logDrawer.classList.remove('open')});
     const saveModal = root.getElementById('save-modal'),saveBox=saveModal?.querySelector('.save-box');
+    const exitButton=root.getElementById('open-save'),exitTitle=saveBox?.querySelector('h2'),exitCopy=saveBox?.querySelector('p'),exitConfirm=saveBox?.querySelector('.save-actions .primary');if(exitButton)exitButton.textContent='退出';if(exitTitle)exitTitle.textContent='退出当前对局';if(exitCopy)exitCopy.textContent='退出后本局进度不会保留。';if(exitConfirm)exitConfirm.textContent='确认退出';
     root.getElementById('open-save').addEventListener('click', () => openAnimatedModal(saveModal,saveBox));
     root.getElementById('cancel-save').addEventListener('click', () => closeAnimatedModal(saveModal,saveBox));
     saveModal.addEventListener('click', event => { if (event.target === saveModal) closeAnimatedModal(saveModal,saveBox); });
@@ -1209,9 +1216,14 @@ function render(host,options={}){
         .runtime-live .runtime-action-list button{min-width:0;padding:0 7px;font-size:10px}
         .runtime-live .choice-option.runtime-selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(214,174,82,.18)}
         .runtime-live .settlement-head p{color:#b8c2d0}
+        .runtime-live .runtime-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;background:linear-gradient(155deg,#273448,#090d14);color:#fff;text-align:left}
+        .runtime-live .runtime-card-face b{font-size:8px;color:#ffe3a0}.runtime-live .runtime-card-face small{font-size:6px;color:#c1c9d4;line-height:1.25}
+        .runtime-live .map-event-card.runtime-offset{transform:translateX(var(--runtime-offset))}
+        .runtime-live .log-list .log-empty{padding:32px 8px;color:#7d8796;text-align:center;font-size:11px}
       `;root.append(runtimeStyle);
       const phaseMap={preparation:'prepare',outpost:'outpost',action:'action',combat:'battle'},phaseLabel={preparation:'准备阶段',outpost:'部署阶段',action:'行动阶段',combat:'战斗阶段'};
       const locationLabel={workshop:'魔术工坊',mountain:'深山町',city:'新都',scouting:'侦察','moon-cell':'月之圣杯'};
+      const locationIdByLabel=Object.fromEntries(Object.entries(locationLabel).map(([id,label])=>[label,id]));
       const locationSelector={workshop:'.workshop',mountain:'.mountain',city:'.city',scouting:'.scout','moon-cell':'.moon-cell'};
       let live=null,decisionSelections=new Set();
       const settlementModal=root.getElementById('settlement-demo');
@@ -1242,6 +1254,9 @@ function render(host,options={}){
         }
         return {...definition,image};
       }
+      function boardDefinition(id){return live?.definitions?.[id]||{id,name:id,text:'',victoryPoints:0}}
+      function boardArt(definition,kind){const key=definition?.presentation?.imageKey;if(key)return asset(key);if(kind==='event'&&definition?.name==='占领高地')return '../assets/map/events/占领高地.png';if(kind==='situation'&&definition?.name==='怒不可遏')return '../assets/map/situations/怒不可遏.png';return ''}
+      function boardCardInner(definition,kind,hidden=false){if(hidden)return '';const art=boardArt(definition,kind),name=definition?.name||definition?.id||'未知卡牌';return (art?'<img src="'+h(art)+'" alt="'+h(name)+'">':'<span class="runtime-card-face"><b>'+h(name)+'</b><small>'+h(definition?.text||'')+'</small></span>')+(kind==='event'?'<span class="event-vp">'+h(definition?.victoryPoints??0)+'</span><span class="event-name">'+h(name)+'</span>':'<span>'+h(name)+'</span>')}
       function runtimeRoster(snapshot){return snapshot.roster.map((entry,index)=>{const p=entry.player||{},m=detailBySource(entry.masterId)||entry.master,s=detailBySource(entry.servantId)||entry.servant,activeCards=Object.values(snapshot.view.cards||{}).filter(card=>card.ownerPlayerId===entry.playerId&&card.zone==='attack').map(card=>card.definitionId?{...cardPresentation(card.definitionId),faceDown:card.face==='down'}:{name:'暗置牌',faceDown:true});return {master:m,servant:s,mana:p.mana??0,seals:p.commandSeals??0,location:locationLabel[p.locationId]||'未部署',power:Number(p.publicFlags?.['public:combatPower']??0),vp:p.victoryPoints??0,handCount:p.handCount??0,deckCount:p.deckCount??0,discardCount:p.discardCount??0,activeAttackCount:p.attackCount??0,activeCards,statuses:p.statuses||[],current:snapshot.view.activePlayerId===entry.playerId,nameRevealed:index===0||p.servantId!==null};})}
       function syncMap(snapshot){
         root.querySelectorAll('.land-slots .slot-face').forEach(slot=>slot.replaceChildren());
@@ -1251,7 +1266,19 @@ function render(host,options={}){
           const slots=[...place.querySelectorAll('.land-slots .slot-face')];
           playerIds.forEach((playerId,index)=>{const rosterEntry=snapshot.roster.find(item=>item.playerId===playerId),slot=slots[index];if(!slot||!rosterEntry)return;const m=detailBySource(rosterEntry.masterId)||rosterEntry.master,img=document.createElement('img');img.src=masterImg(m);img.alt=m?.name||playerId;slot.append(img)});
         }
+         for(const [locationId,selector] of Object.entries({mountain:'.mountain',city:'.city'})){
+           const place=root.querySelector(selector);if(!place)continue;place.querySelectorAll('.map-event-card').forEach(node=>node.remove());
+           (snapshot.view.board?.currentEvents?.[locationId]||[]).forEach((eventId,index)=>{const hidden=eventId==='event:hidden',definition=boardDefinition(eventId),node=document.createElement('div');node.className='map-event-card runtime-offset'+(hidden?' facedown':'');node.style.setProperty('--runtime-offset',(index*38)+'px');node.dataset.info=hidden?'未揭示事件|卡名、效果和战果保持隐藏。':(definition.name||eventId)+'|'+(definition.text||'');node.innerHTML=boardCardInner(definition,'event',hidden);place.append(node)});
+           const small=place.querySelector('.place-title small'),cards=snapshot.view.board?.currentEvents?.[locationId]||[];if(small)small.textContent=(locationId==='mountain'?'基础战果2':'基础战果3')+' · '+(cards.some(id=>id==='event:hidden')?'当前事件未揭示':cards.length?'事件牌明置':'暂无事件牌');
+         }
+         const workshop=root.querySelector('.workshop'),oldSituation=workshop?.querySelector('.situation-active');oldSituation?.remove();const situationId=snapshot.view.board?.activeSituations?.[0];if(workshop&&situationId){const definition=boardDefinition(situationId),node=document.createElement('div');node.className='situation-active';node.dataset.info=(definition.name||situationId)+'|'+(definition.text||'');node.innerHTML=boardCardInner(definition,'situation');workshop.append(node);const small=workshop.querySelector('.place-title small');if(small)small.textContent='当前局势：'+(definition.name||situationId)}
+         const situationDeck=root.querySelector('.situation-deck'),eventDeck=root.querySelector('.event-deck');if(situationDeck)situationDeck.dataset.count=String(snapshot.view.board?.situationDeck?.length??0);if(eventDeck)eventDeck.dataset.count=String(snapshot.view.board?.eventDeck?.length??0);
+         const situationTitle=root.querySelector('.situation .place-title small');if(situationTitle)situationTitle.textContent='剩余'+(snapshot.view.board?.situationDeck?.length??0)+'张';
+         for(const [kind,ids] of Object.entries({situation:snapshot.view.board?.situationDiscard||[],event:snapshot.view.board?.eventDiscard||[]})){const pile=root.querySelector('[data-discard-kind="'+kind+'"]');if(!pile)continue;pile.classList.toggle('empty',ids.length===0);const count=pile.querySelector('.discard-count');if(count)count.textContent=String(ids.length)}
+         for(const [kind,ids] of Object.entries({situation:snapshot.view.board?.situationDiscard||[],event:snapshot.view.board?.eventDiscard||[]})){const cards=ids.map(id=>{const hidden=id==='situation:hidden'||id==='event:hidden',definition=boardDefinition(id);return {kind,name:hidden?'未公开卡牌':(definition.name||id),image:hidden?(kind==='situation'?'../assets/map/situations/situation-back.png':'../assets/map/events/event-back.png'):boardArt(definition,kind),detail:hidden?'该牌对当前玩家保持隐藏。':(definition.text||'') }});publicDiscards[kind].splice(0,publicDiscards[kind].length,...cards)}renderDiscardView();
       }
+      function eventCopy(event,snapshot){const payload=event?.payload&&typeof event.payload==='object'?event.payload:{},player=snapshot.roster.find(entry=>entry.playerId===payload.playerId),master=player?(detailBySource(player.masterId)||player.master):null,name=master?.name||payload.playerId||'系统',where=locationLabel[payload.locationId]||payload.locationId||'';switch(event.type){case'game.started':return '圣杯战争开始。';case'round.started':return '第 '+(payload.round??snapshot.view.round)+' 回合开始。';case'player.deployed':return name+' 部署至'+where+'。';case'player.moved':return name+' 移动至'+where+'。';case'card.played':return name+' 打出【'+(boardDefinition(payload.definitionId)?.name||payload.definitionId||'卡牌')+'】。';case'skill.used':return name+' 使用技能【'+(boardDefinition(payload.skillId)?.name||payload.skillId||'技能')+'】。';case'command-seal.used':return name+' 使用令咒。';case'combat.resolved':return where+'战斗结算，胜者：'+(payload.winnerIds||[]).map(id=>{const r=snapshot.roster.find(x=>x.playerId===id);return (detailBySource(r?.masterId)||r?.master)?.name||id}).join('、')+'。';case'player.defeated':return name+'进入败北状态。';case'elimination.resolved':return '本回合淘汰结算完成。';case'game.finished':return '圣杯战争结束。';default:return ''}}
+      function syncLog(snapshot){const list=root.querySelector('.log-list');if(!list)return;const rows=(snapshot.eventLog||[]).map(event=>({event,text:eventCopy(event,snapshot)})).filter(row=>row.text);list.innerHTML=rows.length?rows.slice(-120).reverse().map(row=>'<div class="log-item"><span class="log-time">R'+h(row.event.revision)+'</span><span>'+h(row.text)+'</span></div>').join(''):'<div class="log-empty">尚无公开操作记录</div>'}
       function syncHand(snapshot){
         const hand=root.querySelector('.hand');if(!hand)return;
         const selected=new Set(handCards().filter(card=>card.classList.contains('selected')).map(card=>card.dataset.instanceId));
@@ -1279,6 +1306,12 @@ function render(host,options={}){
         if(playRow){playRow.innerHTML='<button id="confirm-play" disabled>出牌 0/2</button><button id="confirm-hidden-play" class="hidden-play-action" disabled>暗置所选</button><button class="primary end-action" type="button" data-runtime-action="'+h(complete?.id||'')+'" '+(complete?'':'disabled')+'>'+h(complete?.label||'等待其他玩家')+'</button>'}
         refreshRuntimePlayButtons();
       }
+      function syncAbilityActions(snapshot){
+        const actions=snapshot.actions||[];
+        root.querySelectorAll('[data-normal-skill]').forEach(button=>{const source=button.dataset.skillKind==='master'?masterData:servantData,definition=(source?.skills||[]).find(item=>item.name===button.dataset.normalSkill),available=actions.some(action=>action.commandType==='skill.use'&&action.payload?.skillId===definition?.id);button.disabled=!available;button.textContent=available?'使用技能':'当前不可使用'});
+        const seals=snapshot.view.players?.[runtime.playerId]?.commandSeals??0,count=root.querySelector('[data-command-seal-count]');if(count)count.textContent=String(seals);
+        root.querySelectorAll('[data-command-seal]').forEach(button=>{const mode=button.dataset.commandSeal;if(mode==='move'){const chosen=button.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation,targetLocationId=locationIdByLabel[chosen];button.disabled=!actions.some(action=>action.commandType==='command-seal.use'&&action.payload?.mode==='move'&&action.payload?.targetLocationId===targetLocationId)}else button.disabled=!actions.some(action=>action.commandType==='command-seal.use'&&action.payload?.mode===mode)});
+      }
       function renderDecision(snapshot){
         const action=snapshot.actions.find(item=>item.commandType==='decision.resolve');if(!action){decisionSelections.clear();closeAnimatedModal(root.getElementById('choice-modal'),root.querySelector('.choice-panel'));return}
         const modal=root.getElementById('choice-modal'),list=root.getElementById('choice-options'),title=root.getElementById('choice-title'),desc=root.getElementById('choice-desc'),confirm=root.getElementById('confirm-choice');
@@ -1288,27 +1321,35 @@ function render(host,options={}){
       }
       function renderSettlement(snapshot){
         const settlementActions=snapshot.actions.filter(action=>['combat.resolve','combat.response.complete','round.end'].includes(action.commandType)),modal=root.getElementById('settlement-demo');
-        if(snapshot.view.phase!=='combat'||!['settlement','post-power-response'].includes(snapshot.view.step)){modal?.classList.remove('open','victory');return}
+        const gameFinished=snapshot.view.status==='finished'&&snapshot.victory?.finished;
+        if(!gameFinished&&(snapshot.view.phase!=='combat'||!['settlement','post-power-response'].includes(snapshot.view.step))){modal?.classList.remove('open','victory');return}
         const head=modal?.querySelector('.settlement-head h2'),note=modal?.querySelector('.settlement-head p'),battles=modal?.querySelector('.settlement-battles'),ranking=modal?.querySelector('.settlement-ranking'),footer=modal?.querySelector('.settlement-actions');
         if(head)head.textContent='第 '+snapshot.view.round+' 回合 · 战场结算';if(note)note.textContent='结算结果来自当前规则引擎';
-        if(battles)battles.innerHTML=Object.entries(snapshot.view.board.locations||{}).filter(([id])=>['mountain','city','scouting','moon-cell'].includes(id)).map(([id,ids],index)=>'<article class="settlement-battle" style="--delay:'+(index*.08)+'s"><div class="settlement-place"><small>战场</small><strong>'+h(locationLabel[id]||id)+'</strong></div><div class="settlement-duel">'+ids.map(pid=>{const entry=snapshot.roster.find(item=>item.playerId===pid),m=detailBySource(entry?.masterId)||entry?.master;return '<span class="settlement-fighter"><img src="'+h(masterImg(m))+'" alt=""><strong>'+h(m?.name||pid)+'</strong><em>战果 '+h(entry?.player?.victoryPoints??0)+'</em></span>'}).join('<i>VS</i>')+'</div></article>').join('');
+        const combats=(snapshot.eventLog||[]).filter(event=>event.type==='combat.resolved'&&Number(event.payload?.round??snapshot.view.round)===snapshot.view.round);if(battles)battles.innerHTML=(combats.length?combats:Object.entries(snapshot.view.board.locations||{}).filter(([id,ids])=>['mountain','city','scouting','moon-cell'].includes(id)&&ids.length).map(([locationId,participantIds])=>({payload:{locationId,participantIds,powers:{},winnerIds:[]}}))).map((event,index)=>{const payload=event.payload||{},ids=payload.participantIds||Object.keys(payload.powers||{}),winners=payload.winnerIds||[];return '<article class="settlement-battle" style="--delay:'+(index*.08)+'s"><div class="settlement-place"><small>战场</small><strong>'+h(locationLabel[payload.locationId]||payload.locationId||'战场')+'</strong></div><div class="settlement-duel">'+ids.map(pid=>{const entry=snapshot.roster.find(item=>item.playerId===pid),m=detailBySource(entry?.masterId)||entry?.master;return '<span class="settlement-fighter"><img class="'+(winners.includes(pid)?'winner':'')+'" src="'+h(masterImg(m))+'" alt=""><strong>'+h(m?.name||pid)+'</strong><em>本回合威力 '+h(payload.powers?.[pid]??0)+'</em></span>'}).join('<i>VS</i>')+'</div></article>'}).join('');
         if(ranking)ranking.innerHTML='<h3>当前战果排名</h3>'+snapshot.roster.slice().sort((a,b)=>(b.player?.victoryPoints||0)-(a.player?.victoryPoints||0)).map((entry,index)=>{const m=detailBySource(entry.masterId)||entry.master;return '<div class="settlement-rank"><b>'+(index+1)+'</b><img src="'+h(masterImg(m))+'" alt=""><span>'+h(m?.name||entry.playerId)+'</span><em>'+h(entry.player?.victoryPoints??0)+' 战果</em></div>'}).join('');
         if(footer)footer.innerHTML=settlementActions.map(action=>'<button type="button" class="'+(action.commandType==='round.end'?'settlement-next':'')+'" data-runtime-action="'+h(action.id)+'">'+h(action.label)+'</button>').join('');
         modal?.classList.add('open');modal?.setAttribute('aria-hidden','false');
+        if(gameFinished){const ordered=snapshot.roster.slice().sort((a,b)=>(b.player?.victoryPoints||0)-(a.player?.victoryPoints||0)||(a.player?.seat||0)-(b.player?.seat||0)),winnerId=snapshot.victory.winnerIds?.[0],winner=snapshot.roster.find(entry=>entry.playerId===winnerId)||ordered[0],master=detailBySource(winner?.masterId)||winner?.master,servant=detailBySource(winner?.servantId)||winner?.servant,localPlacement=Math.max(1,ordered.findIndex(entry=>entry.playerId===runtime.playerId)+1);finalRuntimeResult={placement:localPlacement,winnerIds:[...(snapshot.victory.winnerIds||[])],victoryPoints:winner?.player?.victoryPoints??0,round:snapshot.view.round};const title=modal?.querySelector('.victory-content h1'),subtitle=modal?.querySelector('.victory-content>p'),masterName=modal?.querySelector('#victory-master-name'),servantName=modal?.querySelector('#victory-servant-name'),masterCard=modal?.querySelector('#victory-master-card'),servantCard=modal?.querySelector('#victory-servant-card'),score=modal?.querySelector('.victory-winner p');if(title)title.textContent=snapshot.victory.winnerIds?.includes(runtime.playerId)?'圣杯战争 · 胜利':'圣杯战争 · 终局';if(subtitle)subtitle.textContent=snapshot.victory.winnerIds?.length?'最终结果由规则引擎结算':'圣杯溢出，本局无人获胜';if(masterName)masterName.textContent=master?.name||winnerId||'无人获胜';if(servantName)servantName.textContent=servant?((servant.class?servant.class+' · ':'')+(servant.name||'未知从者')):'最终战果并列';if(masterCard&&master)masterCard.src=masterImg(master);if(servantCard&&servant)servantCard.src=servantImg(servant);if(score)score.textContent='最终战果 '+(winner?.player?.victoryPoints??0);if(!victoryStarted){victoryStarted=true;options.onVictoryStart?.()}modal?.classList.add('victory');window.setTimeout(()=>victoryExit?.focus(),420)}
       }
       function sync(snapshot){
-        live=snapshot;const view=snapshot.view,roster=runtimeRoster(snapshot);battleRoster.splice(0,battleRoster.length,...roster);bindBattleRoster();syncMap(snapshot);syncHand(snapshot);renderActions(snapshot);renderDecision(snapshot);renderSettlement(snapshot);
+        live=snapshot;const view=snapshot.view,roster=runtimeRoster(snapshot);battleRoster.splice(0,battleRoster.length,...roster);bindBattleRoster();syncMap(snapshot);syncHand(snapshot);syncLog(snapshot);renderActions(snapshot);syncAbilityActions(snapshot);renderDecision(snapshot);renderSettlement(snapshot);
         const activePhase=view.phase==='combat'&&['settlement','post-power-response'].includes(view.step)?'settlement':phaseMap[view.phase];
+        const nextOwnerIndex=Math.max(0,snapshot.roster.findIndex(entry=>entry.playerId===view.activePlayerId)),phaseChanged=Boolean(activePhase)&&turnClockState.phase!==activePhase,ownerChanged=turnClockState.clockOwnerIndex!==nextOwnerIndex;
+        if(activePhase)setBattlePhase(activePhase,{reset:phaseChanged});
+        if(ownerChanged)setClockOwner(nextOwnerIndex,{reset:true});
         root.querySelectorAll('.phase span').forEach(node=>node.classList.toggle('active',node.dataset.phase===activePhase));
         const round=root.querySelector('.round strong');if(round)round.textContent='第 '+view.round+' 回合';const status=root.querySelector('.status');if(status){const actor=snapshot.roster.find(entry=>entry.playerId===view.activePlayerId),actorMaster=actor?(detailBySource(actor.masterId)||actor.master):null;status.innerHTML='<b>'+h(actorMaster?.name||'规则结算')+'</b> · '+h(phaseLabel[view.phase]||view.phase)+' · '+h(view.step)}
         const eventLabel=root.querySelector('.event .place-title small');if(eventLabel)eventLabel.textContent='冬木事件组 · 剩余'+(view.board.eventDeck?.length??0)+'张';
+        const ordered=snapshot.roster.slice().sort((a,b)=>(b.player?.victoryPoints||0)-(a.player?.victoryPoints||0)||(a.player?.seat||0)-(b.player?.seat||0)),ranking=root.querySelector('.ranking');if(ranking)ranking.innerHTML='战果排名　'+ordered.map((entry,index)=>{const master=detailBySource(entry.masterId)||entry.master;return (index===0?'<b>':'')+(index+1)+'. '+h(master?.name||entry.playerId)+' '+h(entry.player?.victoryPoints??0)+(index===0?'</b>':'')}).join('　');
       }
       root.addEventListener('click',event=>{
         const phase=event.target.closest('.phase span');if(phase){event.preventDefault();event.stopImmediatePropagation();return}
+        const sealDestination=event.target.closest('[data-command-seal-location]');if(sealDestination){event.preventDefault();event.stopImmediatePropagation();const group=sealDestination.closest('.command-seal-destinations');group?.querySelectorAll('[data-command-seal-location]').forEach(item=>{const selected=item===sealDestination;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});syncAbilityActions(live);return}
+        const sealButton=event.target.closest('[data-command-seal]');if(sealButton){event.preventDefault();event.stopImmediatePropagation();const mode=sealButton.dataset.commandSeal,chosen=sealButton.closest('.command-seal-option')?.querySelector('[data-command-seal-location].selected')?.dataset.commandSealLocation,targetLocationId=locationIdByLabel[chosen],action=live?.actions.find(item=>item.commandType==='command-seal.use'&&item.payload?.mode===mode&&(mode!=='move'||item.payload?.targetLocationId===targetLocationId));if(action){playSfx('command-seal-use',{volume:.78});dispatchAction(action)}else showToast('当前阶段无法使用这项令咒',1700);return}
         const card=event.target.closest('.hand .card');if(card){event.preventDefault();event.stopImmediatePropagation();card.classList.toggle('selected');if(handCards().filter(item=>item.classList.contains('selected')).length>2)card.classList.remove('selected');refreshRuntimePlayButtons();return}
         const decisionOption=event.target.closest('[data-runtime-decision-option]');if(decisionOption){event.preventDefault();event.stopImmediatePropagation();const id=decisionOption.dataset.runtimeDecisionOption,max=live?.actions.find(a=>a.commandType==='decision.resolve')?.input?.max??1;if(decisionSelections.has(id))decisionSelections.delete(id);else{if(decisionSelections.size>=max)decisionSelections.clear();decisionSelections.add(id)};root.querySelectorAll('[data-runtime-decision-option]').forEach(button=>button.classList.toggle('runtime-selected',decisionSelections.has(button.dataset.runtimeDecisionOption)));const confirm=root.getElementById('confirm-choice'),min=live?.actions.find(a=>a.commandType==='decision.resolve')?.input?.min??0;if(confirm)confirm.disabled=decisionSelections.size<min;return}
         const decisionConfirm=event.target.closest('[data-runtime-decision]');if(decisionConfirm){event.preventDefault();event.stopImmediatePropagation();dispatchAction(live?.actions.find(action=>action.id===decisionConfirm.dataset.runtimeDecision),[...decisionSelections]);return}
-        const skill=event.target.closest('[data-normal-skill]');if(skill){const source=skill.dataset.skillKind==='master'?masterData:servantData,definition=(source?.skills||[]).find(item=>item.name===skill.dataset.normalSkill),action=live?.actions.find(item=>item.commandType==='skill.use'&&item.payload?.skillId===definition?.id);if(action){event.preventDefault();event.stopImmediatePropagation();dispatchAction(action)}return}
+        const skill=event.target.closest('[data-normal-skill]');if(skill){event.preventDefault();event.stopImmediatePropagation();const source=skill.dataset.skillKind==='master'?masterData:servantData,definition=(source?.skills||[]).find(item=>item.name===skill.dataset.normalSkill),action=live?.actions.find(item=>item.commandType==='skill.use'&&item.payload?.skillId===definition?.id);if(action)dispatchAction(action);else showToast('当前阶段无法使用该技能',1700);return}
         const button=event.target.closest('[data-runtime-action]');if(button?.dataset.runtimeAction){event.preventDefault();event.stopImmediatePropagation();dispatchAction(live?.actions.find(action=>action.id===button.dataset.runtimeAction))}
       },true);
       runtime.subscribe(sync);return true;

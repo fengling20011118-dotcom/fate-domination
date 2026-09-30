@@ -109930,7 +109930,9 @@
         }];
       }
       const actions = this.modes.get(state.mode).getLegalActions(structuredClone(state), playerId);
-      if (state.mode === "standard") actions.push(...this.getStandardCoreLegalActions(state, playerId));
+      if (state.mode === "standard" || state.mode === "three-x" && state.status === "playing") {
+        actions.push(...this.getStandardCoreLegalActions(state, playerId));
+      }
       const definitions = this.cardDefinitions();
       if (this.content.skills) actions.push(...this.content.skills.getLegalActions(state, playerId, definitions));
       actions.push(...getNormalCommandSealLegalActions(state, playerId, definitions));
@@ -111822,7 +111824,7 @@
       this.#engine = new StandardMatchEngine(input.content);
     }
     static create(input) {
-      return new _GameApplication({ state: createGameState({ gameInstanceId: input.gameInstanceId, players: input.players, seed: input.seed }), content: input.content });
+      return new _GameApplication({ state: createGameState({ gameInstanceId: input.gameInstanceId, players: input.players, seed: input.seed, mode: input.mode }), content: input.content });
     }
     get state() {
       return cloneState(this.#state);
@@ -111847,12 +111849,19 @@
     }
     /** Static definitions are safe catalog data; card instances and zones remain in MatchView. */
     cardDefinitions() {
-      const definitions = structuredClone(this.#content.cards);
+      const definitions = structuredClone({
+        ...this.#content.cards,
+        ...Object.fromEntries(this.#content.events.map((definition) => [definition.id, definition])),
+        ...Object.fromEntries(this.#content.situations.map((definition) => [definition.id, definition]))
+      });
       for (const definition of Object.values(definitions)) {
         definition.name = localizePlayerFacingLabel(definition.name);
         if (definition.text) definition.text = localizePlayerFacingText(definition.text);
       }
       return definitions;
+    }
+    victoryStatus() {
+      return structuredClone(this.#engine.getModeDefinition(this.#state.mode).getVictoryStatus(this.#state));
     }
     /** Front-end transport boundary: never returns the authoritative GameState. */
     dispatchFor(playerId, command) {
@@ -179266,13 +179275,15 @@
     }
     const situations = (raw.situations ?? []).map((item) => ({
       id: String(item.id),
+      name: typeof item.name === "string" ? item.name : String(item.id),
       mana: Number(item.mana ?? 0),
       climax: Boolean(item.climax),
       mentionedAttributes: CONFIRMED_SITUATION_MENTIONED_ATTRIBUTES[String(item.id)] ? [...CONFIRMED_SITUATION_MENTIONED_ATTRIBUTES[String(item.id)]] : void 0,
       text: typeof item.text === "string" ? item.text : void 0,
       eventPlacement: inferEventPlacement(String(item.id), typeof item.text === "string" ? item.text : ""),
       forbiddenAttributes: Array.isArray(item.forbiddenAttributes) ? normalizeCardAttributes(item.forbiddenAttributes.map(String)) : inferForbiddenAttributes(typeof item.text === "string" ? item.text : ""),
-      combatPower: inferSituationCombatPower(String(item.id))
+      combatPower: inferSituationCombatPower(String(item.id)),
+      presentation: { imageKey: typeof item.image === "string" ? item.image : void 0 }
     }));
     const events = [];
     const eventGroups = [];
@@ -179286,11 +179297,13 @@
         eventIds.push(id);
         events.push({
           id,
+          name: typeof item.name === "string" ? item.name : id,
           locationId: item.locationId === "mountain" || item.locationId === "city" ? item.locationId : void 0,
           victoryPoints: Number(item.victoryPoints ?? 0),
           mentionedAttributes: CONFIRMED_EVENT_MENTIONED_ATTRIBUTES[id] ? [...CONFIRMED_EVENT_MENTIONED_ATTRIBUTES[id]] : void 0,
           combatPower: CONFIRMED_EVENT_COMBAT_POWER[id] ? structuredClone(CONFIRMED_EVENT_COMBAT_POWER[id]) : void 0,
-          text: typeof item.text === "string" ? item.text : void 0
+          text: typeof item.text === "string" ? item.text : void 0,
+          presentation: { imageKey: typeof item.image === "string" ? item.image : void 0 }
         });
       }
       eventGroups.push({ id: String(group.id), name: String(group.name), eventIds, persistent: group.persistent });
@@ -179679,35 +179692,67 @@
     playerId = "p1";
     assignments;
     app;
+    definitions;
     #sequence = 0;
     #listeners = /* @__PURE__ */ new Set();
     #lastEvents = [];
+    #eventLog = [];
     #aiPumping = false;
     constructor(options = {}) {
-      const selectedMaster = selectedSourceId("masters", options.master, MASTER_IDS);
-      const selectedServant = selectedSourceId("servants", options.servant, SERVANT_IDS);
-      const masters = orderedWithSelected(MASTER_IDS, selectedMaster);
-      const servants = orderedWithSelected(SERVANT_IDS, selectedServant);
-      this.assignments = masters.map((masterId, index) => ({ playerId: `p${index + 1}`, masterId, servantId: servants[index] }));
+      const mode = options.mode === "3x" || options.mode === "three-x" || options.mode === "threeX" ? "three-x" : "standard";
       const allContent = buildStandardContent(legacy_content_default);
+      const masterPool = [...MASTER_IDS];
+      const servantPool = [...SERVANT_IDS];
+      const selectedMaster = selectedSourceId("masters", options.master, masterPool);
+      const selectedServant = selectedSourceId("servants", options.servant, servantPool);
+      const masters = orderedWithSelected(masterPool, selectedMaster).slice(0, 7);
+      const servants = orderedWithSelected(servantPool, selectedServant).slice(0, 7);
+      this.assignments = masters.map((masterId, index) => ({ playerId: `p${index + 1}`, masterId, servantId: servants[index] }));
       const fuyukiGroups = (allContent.eventGroups ?? []).filter((group) => group.id === "event-group.fuyuki" || group.name.includes("\u51AC\u6728"));
       if (fuyukiGroups.length !== 1) throw new Error("FUYUKI_EVENT_GROUP_REQUIRED");
-      const content = { ...allContent, eventGroups: fuyukiGroups };
-      this.app = GameApplication.create({
-        gameInstanceId: `local-${Date.now().toString(36)}`,
-        players: this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "\u73A9\u5BB6" : `\u7535\u8111\u73A9\u5BB6 ${index}` })),
-        seed: options.seed ?? Date.now(),
-        content
-      });
-      for (const assignment of this.assignments) {
-        this.#send(assignment.playerId, CommandType.AssignIdentity, { masterId: assignment.masterId, servantId: assignment.servantId });
+      const content = {
+        ...allContent,
+        eventGroups: fuyukiGroups,
+        threeXMasterPool: masterPool,
+        threeXMasterRatings: Object.fromEntries(masterPool.map((id) => [id, allContent.threeXMasterRatings?.[id] ?? 4]))
+      };
+      const gameInstanceId = `local-${Date.now().toString(36)}`;
+      const players = this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "\u73A9\u5BB6" : `\u7535\u8111\u73A9\u5BB6 ${index}` }));
+      if (mode === "three-x") {
+        const state = createGameState({ gameInstanceId, players, seed: options.seed ?? Date.now(), mode: "three-x" });
+        const threeX = state.modeState.threeX;
+        threeX.setupPhase = "complete";
+        threeX.turnOrderLocked = true;
+        threeX.selectedMasterIds = Object.fromEntries(this.assignments.map((entry) => [entry.playerId, entry.masterId]));
+        threeX.selectedServantIds = Object.fromEntries(this.assignments.map((entry) => [entry.playerId, entry.servantId]));
+        threeX.banCommittedPlayerIds = [...threeX.playerIds];
+        threeX.purchaseCommittedPlayerIds = [...threeX.playerIds];
+        for (const entry of this.assignments) {
+          const budget = createThreeXBudgetForMaster(entry.masterId, content.threeXMasterRatings ?? {});
+          if (entry.playerId === this.playerId) {
+            for (const [purchase, rawCount] of Object.entries(options.threeXPurchases ?? {})) {
+              const count = Math.max(0, Math.floor(Number(rawCount) || 0));
+              for (let index = 0; index < count; index += 1) applyThreeXPurchase(budget, purchase);
+            }
+          }
+          finalizeThreeXPurchases(budget);
+          threeX.budgets[entry.playerId] = budget;
+        }
+        this.app = new GameApplication({ state, content });
+      } else {
+        this.app = GameApplication.create({ gameInstanceId, players, seed: options.seed ?? Date.now(), content, mode });
+        for (const assignment of this.assignments) {
+          this.#send(assignment.playerId, CommandType.AssignIdentity, { masterId: assignment.masterId, servantId: assignment.servantId });
+        }
       }
-      this.#send("host", CommandType.StartStandardGame, {});
+      this.definitions = this.app.cardDefinitions();
+      const started = this.#send("host", CommandType.StartStandardGame, {});
+      if (!started.ok) throw new Error(started.rejection.code);
       this.#scheduleComputerPlayers();
     }
     snapshot() {
       const view = this.app.viewFor(this.playerId);
-      const definitions = this.app.cardDefinitions();
+      const definitions = this.definitions;
       const roster = this.assignments.map((assignment) => {
         const player = view.players[assignment.playerId];
         const master = previewBySourceId("masters", assignment.masterId) ?? { sourceId: assignment.masterId, name: assignment.masterId };
@@ -179720,6 +179765,8 @@
         definitions,
         roster,
         events: structuredClone(this.#lastEvents),
+        eventLog: structuredClone(this.#eventLog),
+        victory: this.app.victoryStatus(),
         approvedEventGroupId: "event-group.fuyuki"
       };
     }
@@ -179738,10 +179785,46 @@
       };
       const result = this.#send(this.playerId, action.commandType, payload);
       if (!result.ok) throw new Error(result.rejection.code);
-      this.#lastEvents = result.events;
       this.#emit();
       this.#scheduleComputerPlayers();
       return this.snapshot();
+    }
+    autoAct() {
+      const snapshot = this.snapshot();
+      const actions = snapshot.actions;
+      const decision = actions.find((action) => action.commandType === CommandType.ResolveDecision);
+      if (decision) {
+        const selections = (decision.input?.options ?? []).filter((option) => !option.disabled).slice(0, decision.input?.min ?? 1).map((option) => option.id);
+        return this.dispatch(decision.id, selections);
+      }
+      const priority = [
+        CommandType.DeployPlayer,
+        CommandType.MovePlayer,
+        CommandType.CommitAttack,
+        CommandType.ResolveCombat,
+        CommandType.CompleteCombatResponse,
+        CommandType.EndRound,
+        CommandType.CompletePlayerWindow
+      ];
+      for (const commandType of priority) {
+        const candidates = actions.filter((action) => action.commandType === commandType);
+        if (!candidates.length) continue;
+        if (commandType === CommandType.CommitAttack) {
+          const definitions = snapshot.definitions;
+          candidates.sort((left, right) => {
+            const score = (action) => [
+              ...action.payload?.faceUpInstanceIds ?? [],
+              ...action.payload?.faceDownInstanceIds ?? []
+            ].reduce((sum, instanceId) => {
+              const definitionId = snapshot.view.cards[instanceId]?.definitionId;
+              return sum + Number(definitionId ? definitions[definitionId]?.basePower ?? 0 : 0);
+            }, 0);
+            return score(right) - score(left);
+          });
+        }
+        return this.dispatch(candidates[0].id);
+      }
+      throw new Error("NO_AUTOMATIC_ACTION_AVAILABLE");
     }
     save() {
       return this.app.save();
@@ -179757,6 +179840,8 @@
           type,
           payload
         });
+        this.#lastEvents = structuredClone(result.events);
+        this.#eventLog.push(...structuredClone(result.events));
         return { ok: true, events: result.events };
       } catch (error) {
         const code = error instanceof Error ? error.message.split(":", 1)[0] : "COMMAND_REJECTED";

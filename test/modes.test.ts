@@ -283,6 +283,11 @@ test("3X 准备命令可从 Ban 连续推进到标准对局开局", () => {
   assert.equal(current.status, "playing");
   assert.equal(current.players.p1.mana, 6);
   assert.equal(current.players.p2.commandSeals, 4);
+  run("prepare-1", "p1", CommandType.CompletePlayerWindow, {});
+  run("prepare-2", "p2", CommandType.CompletePlayerWindow, {});
+  assert.equal(current.phase, "outpost");
+  assert.equal(current.activePlayerId, "p1");
+  assert.equal(engine.getLegalActions(current, "p1").some((action) => action.type === CommandType.DeployPlayer), true);
 });
 
 test("3X 公开投影只向本人展示圣晶石购点明细", () => {

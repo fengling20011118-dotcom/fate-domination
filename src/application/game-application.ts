@@ -27,8 +27,8 @@ export class GameApplication {
     this.#engine = new StandardMatchEngine(input.content);
   }
 
-  static create(input: { gameInstanceId: string; players: PlayerSeed[]; seed: number; content: StandardContent }): GameApplication {
-    return new GameApplication({ state: createGameState({ gameInstanceId: input.gameInstanceId, players: input.players, seed: input.seed }), content: input.content });
+  static create(input: { gameInstanceId: string; players: PlayerSeed[]; seed: number; content: StandardContent; mode?: GameState["mode"] }): GameApplication {
+    return new GameApplication({ state: createGameState({ gameInstanceId: input.gameInstanceId, players: input.players, seed: input.seed, mode: input.mode }), content: input.content });
   }
 
   get state(): GameState { return cloneState(this.#state); }
@@ -54,12 +54,20 @@ export class GameApplication {
 
   /** Static definitions are safe catalog data; card instances and zones remain in MatchView. */
   cardDefinitions(): Record<string, CardDefinition> {
-    const definitions = structuredClone(this.#content.cards);
+    const definitions = structuredClone({
+      ...this.#content.cards,
+      ...Object.fromEntries(this.#content.events.map((definition) => [definition.id, definition as CardDefinition])),
+      ...Object.fromEntries(this.#content.situations.map((definition) => [definition.id, definition as CardDefinition])),
+    });
     for (const definition of Object.values(definitions)) {
       definition.name = localizePlayerFacingLabel(definition.name);
       if (definition.text) definition.text = localizePlayerFacingText(definition.text);
     }
     return definitions;
+  }
+
+  victoryStatus(): import("../domain/state/types.ts").VictoryStatus {
+    return structuredClone(this.#engine.getModeDefinition(this.#state.mode).getVictoryStatus(this.#state));
   }
 
   /** Front-end transport boundary: never returns the authoritative GameState. */

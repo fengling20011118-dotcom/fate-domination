@@ -3,6 +3,10 @@ import { GameApplication } from "../application/game-application.ts";
 import { buildStandardContent } from "../content/content-package.ts";
 import { CommandType } from "../match-engine/commands.ts";
 import type { AvailableAction } from "../application/integration-contract.ts";
+import { createGameState } from "../domain/state/createGameState.ts";
+import { applyThreeXPurchase, createThreeXBudgetForMaster, finalizeThreeXPurchases, type ThreeXPurchase } from "../rules-core/three-x-economy.ts";
+import type { ThreeXModeState } from "../rules-core/three-x-state.ts";
+import type { GameEvent } from "../domain/state/types.ts";
 
 const MASTER_IDS = [
   "master.kayneth",
@@ -27,11 +31,14 @@ const SERVANT_IDS = [
 type CharacterPreview = { sourceId?: string; name?: string; fullName?: string; class?: string; image?: string };
 type DetailCatalog = { masters?: Record<string, CharacterPreview>; servants?: Record<string, CharacterPreview> };
 type Listener = (snapshot: ReturnType<BrowserBattleRuntime["snapshot"]>) => void;
+type RuntimeMode = "standard" | "three-x";
+type ThreeXPurchaseCounts = Partial<Record<ThreeXPurchase, number>>;
+type RuntimeOptions = { master?: string; servant?: string; seed?: number; mode?: string; threeXPurchases?: ThreeXPurchaseCounts };
 
 declare global {
   interface Window {
     FDCodexDetailData?: DetailCatalog;
-    FDBattleRuntime?: { create(options?: { master?: string; servant?: string; seed?: number }): BrowserBattleRuntime };
+    FDBattleRuntime?: { create(options?: RuntimeOptions): BrowserBattleRuntime };
   }
 }
 
@@ -64,38 +71,70 @@ export class BrowserBattleRuntime {
   readonly playerId = "p1";
   readonly assignments: Array<{ playerId: string; masterId: string; servantId: string }>;
   readonly app: GameApplication;
+  readonly definitions: ReturnType<GameApplication["cardDefinitions"]>;
   #sequence = 0;
   #listeners = new Set<Listener>();
   #lastEvents: unknown[] = [];
+  #eventLog: GameEvent[] = [];
   #aiPumping = false;
 
-  constructor(options: { master?: string; servant?: string; seed?: number } = {}) {
-    const selectedMaster = selectedSourceId("masters", options.master, MASTER_IDS);
-    const selectedServant = selectedSourceId("servants", options.servant, SERVANT_IDS);
-    const masters = orderedWithSelected(MASTER_IDS, selectedMaster);
-    const servants = orderedWithSelected(SERVANT_IDS, selectedServant);
+  constructor(options: RuntimeOptions = {}) {
+    const mode: RuntimeMode = options.mode === "3x" || options.mode === "three-x" || options.mode === "threeX" ? "three-x" : "standard";
+    const allContent = buildStandardContent(rawContent);
+    const masterPool = [...MASTER_IDS];
+    const servantPool = [...SERVANT_IDS];
+    const selectedMaster = selectedSourceId("masters", options.master, masterPool);
+    const selectedServant = selectedSourceId("servants", options.servant, servantPool);
+    const masters = orderedWithSelected(masterPool, selectedMaster).slice(0, 7);
+    const servants = orderedWithSelected(servantPool, selectedServant).slice(0, 7);
     this.assignments = masters.map((masterId, index) => ({ playerId: `p${index + 1}`, masterId, servantId: servants[index] }));
 
-    const allContent = buildStandardContent(rawContent);
     const fuyukiGroups = (allContent.eventGroups ?? []).filter((group) => group.id === "event-group.fuyuki" || group.name.includes("冬木"));
     if (fuyukiGroups.length !== 1) throw new Error("FUYUKI_EVENT_GROUP_REQUIRED");
-    const content = { ...allContent, eventGroups: fuyukiGroups };
-    this.app = GameApplication.create({
-      gameInstanceId: `local-${Date.now().toString(36)}`,
-      players: this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "玩家" : `电脑玩家 ${index}` })),
-      seed: options.seed ?? Date.now(),
-      content,
-    });
-    for (const assignment of this.assignments) {
-      this.#send(assignment.playerId, CommandType.AssignIdentity, { masterId: assignment.masterId, servantId: assignment.servantId });
+    const content = {
+      ...allContent,
+      eventGroups: fuyukiGroups,
+      threeXMasterPool: masterPool,
+      threeXMasterRatings: Object.fromEntries(masterPool.map((id) => [id, allContent.threeXMasterRatings?.[id] ?? 4])),
+    };
+    const gameInstanceId = `local-${Date.now().toString(36)}`;
+    const players = this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "玩家" : `电脑玩家 ${index}` }));
+    if (mode === "three-x") {
+      const state = createGameState({ gameInstanceId, players, seed: options.seed ?? Date.now(), mode: "three-x" });
+      const threeX = state.modeState.threeX as ThreeXModeState;
+      threeX.setupPhase = "complete";
+      threeX.turnOrderLocked = true;
+      threeX.selectedMasterIds = Object.fromEntries(this.assignments.map((entry) => [entry.playerId, entry.masterId]));
+      threeX.selectedServantIds = Object.fromEntries(this.assignments.map((entry) => [entry.playerId, entry.servantId]));
+      threeX.banCommittedPlayerIds = [...threeX.playerIds];
+      threeX.purchaseCommittedPlayerIds = [...threeX.playerIds];
+      for (const entry of this.assignments) {
+        const budget = createThreeXBudgetForMaster(entry.masterId, content.threeXMasterRatings ?? {});
+        if (entry.playerId === this.playerId) {
+          for (const [purchase, rawCount] of Object.entries(options.threeXPurchases ?? {}) as Array<[ThreeXPurchase, number]>) {
+            const count = Math.max(0, Math.floor(Number(rawCount) || 0));
+            for (let index = 0; index < count; index += 1) applyThreeXPurchase(budget, purchase);
+          }
+        }
+        finalizeThreeXPurchases(budget);
+        threeX.budgets[entry.playerId] = budget;
+      }
+      this.app = new GameApplication({ state, content });
+    } else {
+      this.app = GameApplication.create({ gameInstanceId, players, seed: options.seed ?? Date.now(), content, mode });
+      for (const assignment of this.assignments) {
+        this.#send(assignment.playerId, CommandType.AssignIdentity, { masterId: assignment.masterId, servantId: assignment.servantId });
+      }
     }
-    this.#send("host", CommandType.StartStandardGame, {});
+    this.definitions = this.app.cardDefinitions();
+    const started = this.#send("host", CommandType.StartStandardGame, {});
+    if (!started.ok) throw new Error(started.rejection.code);
     this.#scheduleComputerPlayers();
   }
 
   snapshot() {
     const view = this.app.viewFor(this.playerId);
-    const definitions = this.app.cardDefinitions();
+    const definitions = this.definitions;
     const roster = this.assignments.map((assignment) => {
       const player = view.players[assignment.playerId];
       const master = previewBySourceId("masters", assignment.masterId) ?? { sourceId: assignment.masterId, name: assignment.masterId };
@@ -108,6 +147,8 @@ export class BrowserBattleRuntime {
       definitions,
       roster,
       events: structuredClone(this.#lastEvents),
+      eventLog: structuredClone(this.#eventLog),
+      victory: this.app.victoryStatus(),
       approvedEventGroupId: "event-group.fuyuki",
     };
   }
@@ -128,10 +169,51 @@ export class BrowserBattleRuntime {
     };
     const result = this.#send(this.playerId, action.commandType, payload);
     if (!result.ok) throw new Error(result.rejection.code);
-    this.#lastEvents = result.events;
     this.#emit();
     this.#scheduleComputerPlayers();
     return this.snapshot();
+  }
+
+  autoAct(): ReturnType<BrowserBattleRuntime["snapshot"]> {
+    const snapshot = this.snapshot();
+    const actions = snapshot.actions;
+    const decision = actions.find((action) => action.commandType === CommandType.ResolveDecision);
+    if (decision) {
+      const selections = (decision.input?.options ?? [])
+        .filter((option) => !option.disabled)
+        .slice(0, decision.input?.min ?? 1)
+        .map((option) => option.id);
+      return this.dispatch(decision.id, selections);
+    }
+
+    const priority = [
+      CommandType.DeployPlayer,
+      CommandType.MovePlayer,
+      CommandType.CommitAttack,
+      CommandType.ResolveCombat,
+      CommandType.CompleteCombatResponse,
+      CommandType.EndRound,
+      CommandType.CompletePlayerWindow,
+    ];
+    for (const commandType of priority) {
+      const candidates = actions.filter((action) => action.commandType === commandType);
+      if (!candidates.length) continue;
+      if (commandType === CommandType.CommitAttack) {
+        const definitions = snapshot.definitions;
+        candidates.sort((left, right) => {
+          const score = (action: AvailableAction) => [
+            ...((action.payload as { faceUpInstanceIds?: string[] })?.faceUpInstanceIds ?? []),
+            ...((action.payload as { faceDownInstanceIds?: string[] })?.faceDownInstanceIds ?? []),
+          ].reduce((sum, instanceId) => {
+            const definitionId = snapshot.view.cards[instanceId]?.definitionId;
+            return sum + Number(definitionId ? definitions[definitionId]?.basePower ?? 0 : 0);
+          }, 0);
+          return score(right) - score(left);
+        });
+      }
+      return this.dispatch(candidates[0].id);
+    }
+    throw new Error("NO_AUTOMATIC_ACTION_AVAILABLE");
   }
 
   save(): string { return this.app.save(); }
@@ -147,6 +229,8 @@ export class BrowserBattleRuntime {
         type,
         payload,
       });
+      this.#lastEvents = structuredClone(result.events);
+      this.#eventLog.push(...structuredClone(result.events));
       return { ok: true as const, events: result.events };
     } catch (error) {
       const code = error instanceof Error ? error.message.split(":", 1)[0] : "COMMAND_REJECTED";

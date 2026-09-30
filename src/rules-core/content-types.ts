@@ -275,6 +275,8 @@ export function hasCardAttribute(definition: Pick<CardDefinition, "attributes" |
 
 export interface SituationDefinition {
   id: string;
+  /** Player-facing label. Rules continue to depend on the stable id. */
+  name?: string;
   mana: number;
   climax?: boolean;
   /** Explicit non-derived attributes named by the active Situation card. */
@@ -284,6 +286,7 @@ export interface SituationDefinition {
   forbiddenAttributes?: CardAttribute[];
   /** Structured combat modifiers; display text is never parsed at runtime. */
   combatPower?: SituationCombatPowerDefinition;
+  presentation?: { imageKey?: string };
 }
 
 export interface SituationCombatPowerDefinition {
@@ -295,6 +298,8 @@ export interface SituationCombatPowerDefinition {
 
 export interface EventDefinition {
   id: string;
+  /** Player-facing label. Rules continue to depend on the stable id. */
+  name?: string;
   locationId?: "mountain" | "city";
   victoryPoints: number;
   /** Stable structured markers for objective/event mechanics; runtime never parses display text. */
@@ -304,6 +309,7 @@ export interface EventDefinition {
   /** Structured combat-power contribution printed on an event card. */
   combatPower?: SituationCombatPowerDefinition;
   text?: string;
+  presentation?: { imageKey?: string };
 }
 
 export interface EventGroupDefinition {
