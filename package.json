@@ -20,7 +20,8 @@
     "index:ui-assets": "node tools/build-ui-startup-assets.mjs",
     "index:board-codex": "node tools/build-board-codex.mjs",
     "import:legacy": "node tools/import-legacy-content.mjs",
-    "ui:preview": "node tools/serve-ui-preview.mjs"
+    "ui:preview": "node tools/serve-ui-preview.mjs",
+    "index:tutorial": "node tools/build-tutorial-data.mjs"
   },
   "dependencies": {
     "animejs": "^4.5.0",

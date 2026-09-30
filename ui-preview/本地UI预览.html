@@ -1359,8 +1359,14 @@
 .codex-category-tabs button{padding:10px 18px;white-space:nowrap;font-size:15px}
 .codex-board-count{align-self:center;margin-left:18px;color:#a6b2c0;font-size:12px}
 @media(max-width:1000px){.codex-category-tabs button{padding:9px 12px;font-size:13px}.codex-category-tabs{gap:4px}}
+.codex-empty-state{grid-column:1/-1;padding:40px;text-align:center;color:#e7c87e}.codex-empty-state p{color:#a6b2c0;font-size:13px}
+.tutorial-page{grid-template-columns:240px minmax(0,1fr)}.tutorial-chapters{display:flex;flex-direction:column;gap:10px;overflow:auto}.tutorial-chapters button{padding:12px;text-align:left;border:1px solid #303c47;background:#101923;color:#c6d0da}.tutorial-chapters button.active{border-color:#cfaf6d;color:#ffe4a0}.tutorial-lesson-copy p{color:#ccd5df;font-size:15px;line-height:1.9;white-space:pre-wrap}.tutorial-lesson-copy h3{color:#e7c87e}.tutorial-lesson-art{width:100%;max-height:240px;object-fit:cover;border:1px solid #394451;margin-bottom:16px}.tutorial-step-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:22px}.tutorial-step-actions button{padding:10px 20px;background:#111b27;color:#eee;border:1px solid #cfaf6d}.tutorial-step-actions button:disabled{opacity:.35}.tutorial-step-actions span{color:#adbad0}.tutorial-rule-table{overflow:auto}.tutorial-rule-table table{border-collapse:collapse;width:100%;font-size:13px;color:#cbd6e0}.tutorial-rule-table td{padding:9px;border:1px solid #36414e;min-width:90px}.tutorial-rule-table tr:first-child{color:#e7c87e;background:#17202c}
 /* 图鉴详情：角色卡图 / 技能 / 从者卡组 */
 .codex-detail-page{position:absolute;z-index:3;left:54px;right:54px;top:154px;bottom:28px;display:grid;grid-template-columns:minmax(250px,310px) minmax(0,1fr);gap:22px;min-height:0}
+.codex-detail-page.tutorial-page{grid-template-columns:240px minmax(0,1fr)}
+.codex-detail-identity.tutorial-chapters{display:flex;overflow:auto}
+.tutorial-chapters button{flex:0 0 auto;cursor:pointer;transition:border-color .17s ease,color .17s ease,background .17s ease}
+.tutorial-chapters button:hover{border-color:#cfaf6d;color:#ffe4a0;background:#172433}
 .codex-detail-identity,.codex-detail-content{will-change:transform,opacity,filter}.codex-detail-content{transform-origin:center left}
 .codex-detail-identity{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:16px;border:1px solid rgba(151,184,204,.15);background:rgba(4,13,22,.82);box-shadow:0 18px 46px rgba(0,0,0,.24);overflow:hidden}
 .codex-detail-art{min-height:0;display:grid;place-items:center;overflow:hidden;background:linear-gradient(180deg,rgba(18,31,45,.78),rgba(5,13,22,.9));cursor:zoom-in}.codex-detail-art img{width:100%;height:100%;display:block;object-fit:contain}
@@ -2046,6 +2052,7 @@ button:not(:disabled):not(.nav):not(.press-any):not(.mode-card):not(.tutorial-ca
 <script src="./character-preview-data.js"></script>
 <script src="./codex-detail-data.js"></script>
 <script src="./board-codex-data.js?v=20261001-board-codex-1"></script>
+<script src="./tutorial-data.js?v=20261001-ui-module-1"></script>
 <script src="./battle-runtime.iife.js?v=20260930-location-sequence-1"></script>
 
 <script src="./startup-assets.js?v=20260930-board-art-1"></script>
@@ -2055,8 +2062,10 @@ button:not(:disabled):not(.nav):not(.press-any):not(.mode-card):not(.tutorial-ca
 <script>
 (function(){
 const app=document.getElementById('app');
-let codexSection='characters',codexBoardFilter='all';
+let codexSection='characters',codexBoardFilter='all',codexRenderedKey='';const codexScrollPositions=new Map();
+let tutorialKind='beginner',tutorialStep=0,tutorialDocument='flow';
 let screen='legal',codexTab='all',codexClass='全部',codexDetailName='',codexDetailKind='',codexDetailTab='skills',codexDetailOrigin=null,chosenMode='free',isSwitching=false,routeEpoch=0,codexSwapTimer=0,codexAnimationEpoch=0;
+let standardStageTransitioning=false;
 let setupSource='single',standardPickStage='master',standardClass='全部',selectedMaster='',selectedServant='',selectionLocked=false;
 let threeXStep='ban',threeXBannedMaster='',threeXBans=[],threeXMasterCandidates=[],threeXSelectedMaster='',threeXCrystals=0,threeXPurchases={servant:0,score:0,mana:0,seal:0},threeXServantCandidates=[],threeXSelectedServant='',threeXTransitioning=false;
 let multiplayerRoomPlayers=[],multiplayerLaunchRoster=[];
@@ -2343,6 +2352,8 @@ function animateRouteIn(){
  if(pieces.length)motion.animate(pieces,{opacity:[0,1],y:[14,0],delay:stagger(40),duration:300,ease:'outCubic'});
 }
 function prepareScreenExit(next){
+ standardStageTransitioning=false;
+ if(screen==='codex'){const grid=app.querySelector('.codex-grid');if(grid&&codexRenderedKey)codexScrollPositions.set(codexRenderedKey,grid.scrollTop)}
  routeEpoch++;
  resetDocumentPreviews();
  stopHomeNoticeCarousel();
@@ -2386,14 +2397,16 @@ function go(next){
  transitionToScreen(next);
 }
 function switchStandardStage(nextStage){
- if(selectionLocked||nextStage===standardPickStage)return;
+ if(selectionLocked||standardStageTransitioning||nextStage===standardPickStage)return;
  if(nextStage==='servant'&&!selectedMaster)return;
+ standardStageTransitioning=true;
  const ownerEpoch=routeEpoch,reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,motion=window.anime;
- if(reduce||!motion||typeof motion.animate!=='function'){standardPickStage=nextStage;renderCharacterSelect();return}
+ if(reduce||!motion||typeof motion.animate!=='function'){standardPickStage=nextStage;standardStageTransitioning=false;renderCharacterSelect();return}
  const forward=nextStage==='servant',outgoing=app.querySelector('.lol-draft');
  if(outgoing)motion.animate(outgoing,{opacity:[1,0],x:[0,forward?-34:34],duration:170,ease:'inCubic'});
  window.setTimeout(()=>{
-   if(ownerEpoch!==routeEpoch)return;
+   if(ownerEpoch!==routeEpoch){standardStageTransitioning=false;return}
+   standardStageTransitioning=false;
    standardPickStage=nextStage;
    renderCharacterSelect();
    const incoming=app.querySelector('.lol-draft');
@@ -2469,13 +2482,31 @@ function render(){
  if(screen==='multi-join'){app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>MULTIPLAYER</span><h1>加入房间</h1></div></header><section class="room-panel"><span class="room-panel__kicker">ROOM CODE</span><h2>输入房间码</h2><p>加入房间后将自动使用房主选择的游戏模式。</p><label class="room-field room-field--code"><span>房间码</span><input placeholder="例如：FD-8241" maxlength="12" autocomplete="off"></label><button class="room-primary" type="button">加入房间</button></section></main>';return}
  if(screen==='codex'){renderCodex();return}
  if(screen==='codex-detail'){renderCodexDetail();return}
- if(screen==='tutorial'){app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>GUIDE</span><h1>教程</h1></div></header><section class="tutorial-grid"><button class="tutorial-card" data-tutorial="新手教程"><strong>新手教程</strong><p>通过引导对局学习移动、出牌、技能、战斗与结算。</p></button><button class="tutorial-card" data-tutorial="详细教程"><strong>详细教程</strong><p>查阅回合流程、地点、关键词、令咒、败北、3X 等完整规则。</p></button></section></main>';return}
+ if(screen==='tutorial-lesson'){renderTutorialLesson();return}
+ if(screen==='tutorial'){app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>GUIDE</span><h1>教程</h1></div></header><section class="tutorial-grid"><button class="tutorial-card" data-tutorial="新手教程"><strong>新手教程</strong><p>按步骤学习准备、部署、移动、出牌与结算。</p></button><button class="tutorial-card" data-tutorial="详细教程"><strong>详细教程</strong><p>查阅回合流程、地点、关键词、令咒、败北、3X 等完整规则。</p></button></section></main>';return}
  if(screen==='settings'){app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>OPTIONS</span><h1>设置</h1></div></header>'+renderBackgroundSettings()+'</main>'}
 }
 function mode(id,tag,title,desc,multi){const image=id==='3x'?'3x.png':'standard.png';return '<button class="mode-card" data-mode="'+id+'"><div class="mode-art mode-art--image"><div class="mode-media mode-media--image"><img class="mode-card-image" src="../assets/ui/modes/'+image+'" alt="'+esc(title)+'"></div></div><div class="mode-body"><small>'+(multi?'创建联机房间':'开始单人对局')+'</small><strong>'+title+'</strong><p>'+desc+'</p></div></button>'}
 function joinMode(){return '<button class="mode-card mode-card--join" type="button" data-join-room><div class="join-card-top mode-art--image"><div class="mode-media mode-media--image"><img class="mode-card-image" src="../assets/ui/modes/join.png" alt="加入房间"></div></div><div class="mode-body"><small>已有房间码</small><strong>加入房间</strong><p>输入房主提供的房间码，加入现有联机房间。</p></div></button>'}
 function cardArt(kind,name){const folder=kind==='master'?'masters':'servants';return '<div class="pick-card-avatar"><span>'+esc(name).slice(0,1)+'</span><img src="../assets/cards/'+folder+'/'+esc(name)+'.png" alt="'+esc(name)+' 卡图" onerror="this.remove()"></div>'}
 function pickCard(kind,name,meta,active=false,extra=''){return '<button class="pick-card '+(active?'active ':'')+extra+'" type="button" data-character-kind="'+kind+'" data-character-name="'+esc(name)+'" data-pick-'+kind+'="'+esc(name)+'">'+cardArt(kind,name)+'<div class="pick-card-info"><strong>'+esc(name)+'</strong><small>'+esc(meta)+'</small></div></button>'}
+function updateStandardChoice(){
+ app.querySelectorAll('.pick-card').forEach(card=>{const selected=card.dataset.characterKind==='master'?selectedMaster:selectedServant,active=card.dataset.characterName===selected;card.classList.toggle('active',active);card.setAttribute('aria-pressed',String(active))});
+ const names=app.querySelectorAll('.ow-selection-summary b');if(names[0])names[0].textContent=selectedMaster||'未选择';if(names[1])names[1].textContent=selectedServant||'未选择';
+ const confirm=app.querySelector('[data-standard-next]');if(confirm)confirm.disabled=standardPickStage==='master'?!selectedMaster:!selectedMaster||!selectedServant;
+}
+function backWithinUi(){
+ if(screen==='codex-detail'){go('codex');return}
+ if(screen==='tutorial-lesson'){go('tutorial');return}
+ if(screen==='character-select'){
+   if(selectionLocked){selectionLocked=false;standardPickStage='servant';renderCharacterSelect();requestAnimationFrame(animateRouteIn);return}
+   if(standardPickStage==='servant'){switchStandardStage('master');return}
+   go(setupSource==='multi'?'multi-create':'single');return;
+ }
+ if(screen==='three-x-setup'||screen==='single-setup'){go(setupSource==='multi'?'multi-create':'single');return}
+ if(screen==='multi-create'||screen==='multi-join'){go('multi');return}
+ go('home');
+}
 function renderCharacterSelect(){
  if(selectionLocked){
   const modeLabel=setupSource==='multi'?'MULTIPLAYER · STANDARD':'SOLO · STANDARD';
@@ -2490,7 +2521,7 @@ function renderCharacterSelect(){
  const ready=isMaster?!!selectedMaster:!!selectedMaster&&!!selectedServant;
  const title=selectionLocked?'阵容已锁定':isMaster?'选择一名御主':'选择一名从者';
  const hint=selectionLocked?'等待进入对局。':isMaster?'选择御主后确认，进入从者选择。':'选择从者并锁定最终阵容。';
- app.innerHTML='<main class="screen draft-screen ow-draft-screen">'+bg()+'<button class="back draft-back">‹ 返回</button>'+playerIdentityPlateHtml()+'<section class="lol-draft ow-draft"><header class="ow-phase-head"><div class="ow-phase-line"></div><div class="ow-phase-copy"><small>'+(setupSource==='multi'?'MULTIPLAYER · STANDARD':'SOLO · STANDARD')+'</small><h1>'+title+'</h1><p>'+hint+'</p></div><div class="ow-phase-line"></div></header><div class="ow-draft-toolbar"><div class="ow-stage-tabs"><button type="button" class="'+(isMaster?'active':'')+'" data-standard-stage="master">御主</button><button type="button" class="'+(!isMaster?'active':'')+'" data-standard-stage="servant" '+(!selectedMaster?'disabled':'')+'>从者</button></div>'+(isMaster?'':'<div class="pick-filter ow-class-filter">'+classHtml+'</div>')+'</div><div class="ow-roster '+(isMaster?'ow-roster--masters':'ow-roster--servants')+'"><div class="pick-grid ow-roster-grid">'+poolHtml+'</div></div><footer class="ow-draft-footer"><div class="ow-selection-summary"><span>御主 <b>'+(selectedMaster?esc(selectedMaster):'未选择')+'</b></span><i></i><span>从者 <b>'+(selectedServant?esc(selectedServant):'未选择')+'</b></span></div>'+(selectionLocked?'<div class="ow-lock-state">阵容已锁定</div>':'<button class="ow-primary" type="button" data-standard-next '+(!ready?'disabled':'')+'>'+(isMaster?'确认御主':'确认选择')+'</button>')+'</footer></section></main>';
+ app.innerHTML='<main class="screen draft-screen ow-draft-screen">'+bg()+'<button class="back draft-back">‹ 返回</button>'+playerIdentityPlateHtml()+'<section class="lol-draft ow-draft"><header class="ow-phase-head"><div class="ow-phase-line"></div><div class="ow-phase-copy"><small>'+(setupSource==='multi'?'MULTIPLAYER · STANDARD':'SOLO · STANDARD')+'</small><h1>'+title+'</h1><p>'+hint+'</p></div><div class="ow-phase-line"></div></header><div class="ow-draft-toolbar"><div class="ow-stage-tabs"><button type="button" class="'+(isMaster?'active':'')+'" data-standard-stage="master">御主</button><button type="button" class="'+(!isMaster?'active':'')+'" data-standard-stage="servant" '+(!selectedMaster?'disabled':'')+'>从者</button></div>'+(isMaster?'':'<div class="pick-filter ow-class-filter">'+classHtml+'</div>')+'</div><div class="ow-roster '+(isMaster?'ow-roster--masters':'ow-roster--servants')+'"><div class="pick-grid ow-roster-grid">'+(poolHtml||'<div class="codex-empty-state"><strong>该职阶暂无可选从者</strong><p>选择全部或其他职阶。</p></div>')+'</div></div><footer class="ow-draft-footer"><div class="ow-selection-summary"><span>御主 <b>'+(selectedMaster?esc(selectedMaster):'未选择')+'</b></span><i></i><span>从者 <b>'+(selectedServant?esc(selectedServant):'未选择')+'</b></span></div>'+(selectionLocked?'<div class="ow-lock-state">阵容已锁定</div>':'<button class="ow-primary" type="button" data-standard-next '+(!ready?'disabled':'')+'>'+(isMaster?'确认御主':'确认选择')+'</button>')+'</footer></section></main>';
 }
 function threeXStepIndex(step){return {ban:0,master:1,purchase:2,servant:3,complete:4}[step]??0}
 function threeXStepper(){const steps=[['01','禁用'],['02','御主'],['03','圣晶石'],['04','从者']],idx=threeXStepIndex(threeXStep);return '<div class="threex-stepper">'+steps.map((x,i)=>'<button type="button" class="'+(i===idx?'active ':i<idx?'done ':'')+'"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></button>').join('')+'</div>'}
@@ -2514,6 +2545,28 @@ function updateThreeXPurchaseInPlace(addedCandidates=[]){
  const count=app.querySelector('.purchase-screen .purchase-candidates .purchase-section-title>span');if(count)count.textContent='共 '+threeXServantCandidates.length+' 名';
  const options=app.querySelector('.purchase-screen .purchase-grid');if(options)options.innerHTML=purchaseOptionsHtml();
 }
+const BEGINNER_LESSONS=[
+ {title:'认识御主与从者',image:'../assets/map/locations/workshop.png',text:'先选择一名御主，再选择一名从者。魔力用于支付牌和行动的费用；令咒提供额外能力；战果决定排名。确认阵容后可返回更换选择。'},
+ {title:'准备阶段',image:'../assets/map/locations/situation.png',text:'回合开始时处理抽牌、局势、事件与魔力恢复，然后玩家按顺位使用准备阶段能力。事件是否增加、增加在哪个地点，由本回合局势决定。例如「新都之战」只给新都增加一张事件牌；「深山町的杀人魔」只给深山町增加一张。'},
+ {title:'部署阶段',image:'../assets/map/locations/workshop.png',text:'按顺位将御主部署到魔术工坊、深山町或新都；不可直接部署到侦察。点击地图上的合法地点完成部署。部署到工坊时获得位置标注的魔力；部署到战场地利位置且仍留在那里，结算时获得相应威力。'},
+ {title:'行动阶段',image:'../assets/map/locations/mountain.png',text:'需要常规移动时，先点击「常规移动」，再点击地图上的合法目的地。移动要支付魔力；处于交战中的玩家不能常规移动。选择攻击牌后确认出牌并支付费用；选牌时出牌区显示预估威力，确认后玩家面板才更新公开合计威力。'},
+ {title:'战斗与地区结算',image:'../assets/map/locations/city.png',text:'完成战斗阶段的能力窗口后，计算合计威力与战果。地区展示按魔术工坊、深山町、新都、侦察，以及展开的月之圣杯依次推进。明置牌可以查看效果；暗置牌在公开前只显示牌背。'},
+ {title:'下一回合与终局',image:'../assets/map/locations/scouting.png',text:'完成地区结算后进入下一回合，回合顺位按规则轮换。第8、9、10回合结束时分别保留战果前4、3、2名，同分者一起保留。第11回合结束时战果最多者获胜；终局同分与特殊效果详见基础规则和规则问答。'}
+];
+function tutorialDocumentHtml(text){
+ const lines=String(text||'').split(/\r?\n/),html=[];for(let i=0;i<lines.length;i++){const line=lines[i].trim();if(!line)continue;
+ if(line.startsWith('|')){const rows=[];while(i<lines.length&&lines[i].trim().startsWith('|')){const cells=lines[i].trim().replace(/^\||\|$/g,'').split('|').map(cell=>cell.trim());if(!cells.every(cell=>/^:?-+:?$/.test(cell)))rows.push('<tr>'+cells.map(cell=>'<td>'+esc(cell)+'</td>').join('')+'</tr>');i++}i--;html.push('<div class="tutorial-rule-table"><table>'+rows.join('')+'</table></div>');continue}
+ if(/^#{1,6}\s/.test(line))html.push('<h3>'+esc(line.replace(/^#{1,6}\s+/,''))+'</h3>');else html.push('<p>'+esc(line)+'</p>');
+ }return html.join('');
+}
+function renderTutorialLesson(){
+ const beginner=tutorialKind==='beginner',documents=window.FDTutorialDocuments||[],data=beginner?BEGINNER_LESSONS[tutorialStep]:documents.find(doc=>doc.id===tutorialDocument),title=beginner?'新手教程':'详细教程';
+ const links=(beginner?BEGINNER_LESSONS:documents).map((item,index)=>'<button type="button" '+(beginner?'data-tutorial-step="'+index+'"':'data-tutorial-document="'+esc(item.id)+'"')+' class="'+(beginner?index===tutorialStep?'active':'':item.id===tutorialDocument?'active':'')+'">'+(beginner?String(index+1).padStart(2,'0')+' · ':'')+esc(item.title)+'</button>').join('');
+ const body=beginner?'<img class="tutorial-lesson-art" src="'+esc(data.image)+'" alt="'+esc(data.title)+'"><p>'+esc(data.text)+'</p>':tutorialDocumentHtml(data?.text);
+ const controls=beginner?'<footer class="tutorial-step-actions"><button type="button" data-tutorial-step="'+Math.max(0,tutorialStep-1)+'" '+(!tutorialStep?'disabled':'')+'>上一步</button><span>'+(tutorialStep+1)+' / '+BEGINNER_LESSONS.length+'</span>'+(tutorialStep<BEGINNER_LESSONS.length-1?'<button type="button" data-tutorial-step="'+(tutorialStep+1)+'">下一步</button>':'<button type="button" data-nav="single">开始选择主从</button>')+'</footer>':'';
+ app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回教程</button><div class="sub-title"><span>GUIDE</span><h1>'+title+'</h1></div></header><section class="codex-detail-page tutorial-page"><aside class="codex-detail-identity tutorial-chapters">'+links+'</aside><section class="codex-detail-content"><div class="codex-detail-tabs"><button type="button" class="active">'+esc(data?.title||title)+'</button></div><div class="codex-detail-scroll tutorial-lesson-copy">'+body+controls+'</div></section></section></main>';
+}
+
 function readyCharacterPanel(kind,name){
  const bucket=kind==='master'?'masters':'servants',label=kind==='master'?'御主':'从者';
  const data=window.FDCharacterPreviewData&&window.FDCharacterPreviewData[bucket]&&window.FDCharacterPreviewData[bucket][name];
@@ -2679,6 +2732,8 @@ async function animateCodexCards(grid){
  return animations;
 }
 function renderCodex(){
+ const oldGrid=app.querySelector('.codex-grid');if(oldGrid&&codexRenderedKey)codexScrollPositions.set(codexRenderedKey,oldGrid.scrollTop);
+ const nextKey=[codexSection,codexTab,codexClass,codexBoardFilter].join('|'),savedScroll=codexScrollPositions.get(nextKey)||0;codexRenderedKey=nextKey;
  const masterList=masters.map(n=>[n,'御主','master']);
  const servantList=servants.map(x=>[x[0],x[1],'servant']);
  let list;
@@ -2697,6 +2752,7 @@ function renderCodex(){
    gridHtml=filtered.map(card=>'<button type="button" class="codex-card" data-entry="'+esc(card.id)+'" data-entry-kind="'+codexSection+'"><div class="portrait codex-portrait"><img src="'+esc(card.image)+'" alt="'+esc(card.name)+' 卡图"></div><div class="codex-name">'+esc(card.name)+'</div><div class="codex-meta">'+(situations?(card.climax?'高潮局势':'普通局势')+' · 恢复魔力 '+card.mana:'冬木 · 战果 '+card.victoryPoints+(card.count>1?' · ×'+card.count:''))+'</div></button>').join('');
  }
  const categoryHtml='<nav class="filters codex-category-tabs" aria-label="图鉴分类">'+[['characters','御主与从者'],['situation','局势'],['event','事件']].map(([id,label])=>'<button type="button" data-codex-section="'+id+'" class="'+(codexSection===id?'active':'')+'" aria-pressed="'+(codexSection===id)+'">'+label+'</button>').join('')+'</nav>';
+ if(!gridHtml)gridHtml='<div class="codex-empty-state"><strong>当前筛选没有角色</strong><p>切换职阶或选择全部查看。</p></div>';
  const currentToolbar=app.querySelector('.toolbar'),currentGrid=app.querySelector('.codex-grid');
  if(screen==='codex'&&currentToolbar&&currentGrid){
    currentToolbar.innerHTML=toolbarHtml;
@@ -2707,13 +2763,13 @@ function renderCodex(){
    codexSwapTimer=window.setTimeout(()=>{
      currentGrid.innerHTML=gridHtml;
      currentGrid.classList.remove('codex-grid-out');
-      currentGrid.scrollTop=0;
+      currentGrid.scrollTop=savedScroll;
       animateCodexCards(currentGrid);
     },120);
    return;
  }
   app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>ARCHIVE</span><h1>图鉴</h1></div>'+categoryHtml+'</header><section class="toolbar codex-toolbar">'+toolbarHtml+'</section><section class="codex-grid codex-awaiting">'+gridHtml+'</section></main>';
-  const grid=app.querySelector('.codex-grid');if(grid)requestAnimationFrame(()=>animateCodexCards(grid));
+  const grid=app.querySelector('.codex-grid');if(grid)requestAnimationFrame(()=>{grid.scrollTop=savedScroll;animateCodexCards(grid)});
 }
 function ensureCodexImagePreview(){let box=document.getElementById('codexImagePreview');if(box)return box;box=document.createElement('div');box.id='codexImagePreview';box.className='codex-image-preview';box.innerHTML='<img alt="卡图放大预览">';document.body.appendChild(box);return box}
 function moveCodexImagePreview(e){const box=document.getElementById('codexImagePreview');if(!box||!box.classList.contains('active'))return;const gap=24,margin=14,w=box.offsetWidth||390,h=box.offsetHeight||560;let left=e.clientX+gap;if(left+w>window.innerWidth-margin)left=e.clientX-w-gap;left=Math.max(margin,Math.min(left,window.innerWidth-w-margin));let top=e.clientY-h/2;top=Math.max(margin,Math.min(top,window.innerHeight-h-margin));box.style.left=left+'px';box.style.top=top+'px'}
@@ -2794,6 +2850,9 @@ document.addEventListener('click',e=>{
  const profileModeButton=e.target.closest('[data-profile-mode]');if(profileModeButton&&screen==='profile'){profileMode=normalizeProfileMode(profileModeButton.dataset.profileMode);profileTransferCode=document.querySelector('[data-profile-transfer-code]')?.value||profileTransferCode;renderPlayerProfile();return}
  const profileExport=e.target.closest('[data-profile-export]');if(profileExport&&screen==='profile'){exportProfileToPanel();return}
  const profileImport=e.target.closest('[data-profile-import]');if(profileImport&&screen==='profile'){importProfileFromPanel();return}
+ const tutorial=e.target.closest('[data-tutorial]');if(tutorial){tutorialKind=tutorial.dataset.tutorial==='新手教程'?'beginner':'rules';tutorialStep=0;tutorialDocument='flow';go('tutorial-lesson');return}
+ const step=e.target.closest('[data-tutorial-step]');if(step&&screen==='tutorial-lesson'){tutorialStep=Number(step.dataset.tutorialStep);renderTutorialLesson();requestAnimationFrame(animateRouteIn);return}
+ const doc=e.target.closest('[data-tutorial-document]');if(doc&&screen==='tutorial-lesson'){tutorialDocument=doc.dataset.tutorialDocument;renderTutorialLesson();requestAnimationFrame(animateRouteIn);return}
  const nav=e.target.closest('[data-nav]');if(nav){go(nav.dataset.nav);return}
  const avatarClose=e.target.closest('[data-avatar-close]');if(avatarClose||e.target.matches('[data-avatar-backdrop]')){avatarPickerOpen=false;closeUiDialog(document.querySelector('.avatar-picker-modal'));return}
  const bgmToggle=e.target.closest('[data-bgm-toggle]');if(bgmToggle&&screen==='settings'){setBgmEnabled(!bgmEnabled);bgmToggle.classList.toggle('on',bgmEnabled);bgmToggle.textContent=bgmEnabled?'已开启':'已关闭';bgmToggle.setAttribute('aria-pressed',String(bgmEnabled));document.querySelectorAll('[data-bgm-volume]').forEach(slider=>slider.disabled=!bgmEnabled);const summary=document.querySelector('[data-open-bgm-settings] .settings-row-current b');if(summary)summary.textContent=bgmEnabled?'已开启':'已关闭';return}
@@ -2807,17 +2866,17 @@ document.addEventListener('click',e=>{
  const bgOpen=e.target.closest('[data-open-bg-settings]');if(bgOpen&&screen==='settings'){settingsBackgroundOpen=true;openUiDialog(document.querySelector('.settings-bg-modal'),'.settings-bg-dialog');return}
  const bgClose=e.target.closest('[data-close-bg-settings]');if((bgClose||e.target.matches('[data-settings-bg-backdrop]'))&&screen==='settings'){settingsBackgroundOpen=false;closeUiDialog(document.querySelector('.settings-bg-modal'));return}
  const bgChoice=e.target.closest('[data-battle-bg]');if(bgChoice&&screen==='settings'){chooseBattleBackground(bgChoice.dataset.battleBg);return}
- if(e.target.closest('.back')){if(screen==='codex-detail'){go('codex')}else if(screen==='character-select'||screen==='three-x-setup'||screen==='single-setup'){go(setupSource==='multi'?'multi-create':'single')}else if(screen==='multi-create'||screen==='multi-join')go('multi');else go('home');return}
+ if(e.target.closest('.back')){backWithinUi();return}
  const join=e.target.closest('[data-join-room]');if(join){go('multi-join');return}
  const m=e.target.closest('[data-mode]');if(m){chosenMode=m.dataset.mode;if(screen==='multi'){resetMultiplayerLobby();go('multi-create')}else startSetup('single',chosenMode);return}
  const roomStart=e.target.closest('[data-room-start]');if(roomStart&&screen==='multi-create'&&multiplayerHumansReady()){prepareMultiplayerLaunch();startSetup('multi',chosenMode);return}
  const battleEntry=e.target.closest('[data-enter-battle-preview]');if(battleEntry){startBattleTransition();return}
  const battleExit=e.target.closest('[data-battle-exit]');if(battleExit&&screen==='battle-preview'){go('home');return}
  const stage=e.target.closest('[data-standard-stage]');if(stage&&!selectionLocked){switchStandardStage(stage.dataset.standardStage);return}
- const pm=e.target.closest('[data-pick-master]');if(pm&&!selectionLocked&&standardPickStage==='master'){selectedMaster=pm.dataset.pickMaster;renderCharacterSelect();return}
- const ps=e.target.closest('[data-pick-servant]');if(ps&&!selectionLocked&&standardPickStage==='servant'){selectedServant=ps.dataset.pickServant;renderCharacterSelect();return}
+ const pm=e.target.closest('[data-pick-master]');if(pm&&!selectionLocked&&!standardStageTransitioning&&standardPickStage==='master'){selectedMaster=pm.dataset.pickMaster;updateStandardChoice();return}
+ const ps=e.target.closest('[data-pick-servant]');if(ps&&!selectionLocked&&!standardStageTransitioning&&standardPickStage==='servant'){selectedServant=ps.dataset.pickServant;updateStandardChoice();return}
  const pc=e.target.closest('[data-pick-class]');if(pc&&!selectionLocked&&standardPickStage==='servant'){standardClass=pc.dataset.pickClass;renderCharacterSelect();return}
- if(e.target.closest('[data-standard-next]')&&!selectionLocked){if(standardPickStage==='master'&&selectedMaster){switchStandardStage('servant');return}if(standardPickStage==='servant'&&selectedServant){selectionLocked=true;renderCharacterSelect();requestAnimationFrame(animateRouteIn);return}}
+ if(e.target.closest('[data-standard-next]')&&!selectionLocked&&!standardStageTransitioning){if(standardPickStage==='master'&&selectedMaster){switchStandardStage('servant');return}if(standardPickStage==='servant'&&selectedServant){selectionLocked=true;renderCharacterSelect();requestAnimationFrame(animateRouteIn);return}}
  const xb=e.target.closest('[data-threex-ban]');if(xb&&threeXStep==='ban'){threeXBannedMaster=xb.dataset.threexBan;updateThreeXChoiceInPlace('ban',threeXBannedMaster);return}
  if(e.target.closest('[data-threex-confirm-ban]')&&threeXBannedMaster&&threeXStep==='ban'&&!threeXBans.length){refreshThreeXStage(completeThreeXBans);return}
  if(e.target.closest('[data-threex-finish-ban]')&&threeXStep==='ban'&&threeXBans.length&&threeXBans.every(entry=>entry.master)){transitionThreeXStep('master',()=>{threeXMasterCandidates=sampleUnique(threeXMasterPool(),3,threeXBannedNames());threeXSelectedMaster='' });return}
@@ -2836,7 +2895,16 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{if(e.target&&e.target.matches('[data-bgm-volume]')){const percent=Number(e.target.value),zone=e.target.dataset.bgmZone;setBgmVolume(zone,percent/100);e.target.style.setProperty('--bgm-volume',percent+'%');const output=document.querySelector('[data-bgm-volume-output='+zone+']');if(output)output.textContent=percent+'%';return}if(e.target&&e.target.matches('[data-sfx-volume]')){const percent=Number(e.target.value),group=e.target.dataset.sfxGroup;setSfxVolume(group,percent/100);e.target.style.setProperty('--bgm-volume',percent+'%');const output=document.querySelector('[data-sfx-volume-output='+group+']');if(output)output.textContent=percent+'%';if(group==='master'){const summary=document.querySelector('[data-open-sfx-settings] .settings-row-current b');if(summary)summary.textContent=percent+'%'}}});
  document.addEventListener('change',e=>{if(e.target&&e.target.id==='battleBackgroundUpload'){const file=e.target.files&&e.target.files[0];if(file)importBattleBackground(file);return}if(e.target&&e.target.matches('[data-bgm-upload]')){if(e.target.files&&e.target.files.length)importCustomBgm(e.target.dataset.bgmUpload,e.target.files);e.target.value=''}});
-document.addEventListener('keydown',e=>{if(screen==='legal'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(legalAssetsReady)enterSplashFromLegal();return}if(screen==='splash'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){enterHomeFromSplash();return}if(e.key==='Escape'&&screen!=='home'){if(screen==='battle-preview'){return}if(screen==='codex-detail')go('codex');else if(screen==='character-select'||screen==='three-x-setup'||screen==='single-setup')go(setupSource==='multi'?'multi-create':'single');else if(screen==='multi-create'||screen==='multi-join')go('multi');else go('home')}});
+document.addEventListener('keydown',e=>{
+ if(screen==='legal'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(legalAssetsReady)enterSplashFromLegal();return}
+ if(screen==='splash'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){enterHomeFromSplash();return}
+ if(e.key!=='Escape')return;
+ const preview=document.getElementById('codexImagePreview');if(preview?.classList.contains('active')){hideCodexImagePreview();return}
+ const notice=app.querySelector('[data-notice-detail].open');if(notice){notice.querySelector('[data-notice-detail-close]')?.click();return}
+ const editor=app.querySelector('.home-notice-editor.open');if(editor){editor.querySelector('[data-notice-editor-close]')?.click();return}
+ const dialog=app.querySelector('.settings-bg-modal.open,.settings-bgm-modal.open,.avatar-picker-modal.open');if(dialog){settingsBackgroundOpen=false;settingsBgmOpen=false;settingsSfxOpen=false;avatarPickerOpen=false;closeUiDialog(dialog);return}
+ if(screen!=='home'&&screen!=='battle-preview'){e.preventDefault();backWithinUi()}
+});
 document.addEventListener('mousemove',e=>{const nx=(e.clientX/window.innerWidth-.5)*2,ny=(e.clientY/window.innerHeight-.5)*2,r=document.documentElement.style;r.setProperty('--bg-px',(-nx*2).toFixed(2)+'px');r.setProperty('--bg-py',(-ny*1.5).toFixed(2)+'px');r.setProperty('--light-x',(66+nx*3.2).toFixed(1)+'%');r.setProperty('--light-y',(31+ny*2.2).toFixed(1)+'%')});
 window.addEventListener('blur',()=>{const r=document.documentElement.style;r.setProperty('--bg-px','0px');r.setProperty('--bg-py','0px');r.setProperty('--light-x','66%');r.setProperty('--light-y','31%')});
 window.addEventListener('message',e=>{if(e.data==='fd-battle-exit'&&screen==='battle-preview')go('home')});
