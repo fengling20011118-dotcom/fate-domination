@@ -36,6 +36,20 @@ test("normal Command Seal is a standard command: mana mode spends one seal and g
   assert.equal(result.events.some((event) => event.type === "command-seal.used"), true);
 });
 
+test("normal Command Seal works in split Action steps but only for the active player", () => {
+  for (const step of ["move-decision", "play-batch-draft", "play-batch-commit"]) {
+    const { engine, state } = fixture(`seal-action-${step}`);
+    state.step = step;
+    state.players.p.mana = 6;
+    assert.ok(engine.getLegalActions(state, "p").some(action => action.type === CommandType.UseCommandSeal));
+    const result = engine.execute(state, command(state, `use-${step}`, CommandType.UseCommandSeal, "p", { mode: "mana" }));
+    assert.equal(result.state.step, step);
+    assert.equal(result.state.players.p.mana, 10);
+    assert.equal(result.state.players.p.commandSeals, 2);
+    assert.throws(() => engine.execute(state, command(state, `other-${step}`, CommandType.UseCommandSeal, "o", { mode: "mana" })), /COMMAND_SEAL_WINDOW_INVALID/);
+  }
+});
+
 test("normal Command Seal power mode gives +2 total power and +2 VP after winning", () => {
   const { engine, state } = fixture("seal-power");
   const used = engine.execute(state, command(state, "seal-power-use", CommandType.UseCommandSeal, "p", { mode: "power" })).state;

@@ -29,7 +29,8 @@ function assertNormalCommandSealWindow(
 ): void {
   const player = state.players[playerId];
   if (!player || player.eliminated) throw new Error("COMMAND_SEAL_PLAYER_INVALID");
-  if (state.status !== "playing" || state.activePlayerId !== playerId || state.step !== "player-window") {
+  const ownActionStep = state.phase === "action" && ["move-decision", "play-batch-draft", "play-batch-commit"].includes(state.step);
+  if (state.status !== "playing" || state.activePlayerId !== playerId || (state.step !== "player-window" && !ownActionStep)) {
     throw new Error("COMMAND_SEAL_WINDOW_INVALID");
   }
   const configuredWindow = typeof player.flags.commandSealWindow === "string" ? player.flags.commandSealWindow : "action";

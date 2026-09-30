@@ -1,4 +1,5 @@
 import rawContent from "../content/generated/legacy-content.json" with { type: "json" };
+import boardArt from "../content/generated/battle-board-art.json" with { type: "json" };
 import { GameApplication } from "../application/game-application.ts";
 import { buildStandardContent, type LegacyContentPackage } from "../content/content-package.ts";
 import { CommandType } from "../match-engine/commands.ts";
@@ -8,6 +9,7 @@ import { applyThreeXPurchase, createThreeXBudgetForMaster, finalizeThreeXPurchas
 import type { ThreeXModeState } from "../rules-core/three-x-state.ts";
 import type { GameEvent } from "../domain/state/types.ts";
 import { StateRandom } from "../match-engine/random.ts";
+import { calculateCombatPower } from "../rules-core/combat-power.ts";
 
 const MASTER_IDS = [
   "master.kayneth",
@@ -200,6 +202,9 @@ export class BrowserBattleRuntime {
       }
     }
     this.definitions = this.app.cardDefinitions();
+    for (const [id, imageKey] of Object.entries(boardArt)) {
+      if (this.definitions[id]) this.definitions[id].presentation = { ...this.definitions[id].presentation, imageKey };
+    }
     const started = this.#send("host", CommandType.StartStandardGame, {});
     if (!started.ok) throw new Error(started.rejection.code);
     this.#scheduleComputerPlayers();
@@ -225,6 +230,7 @@ export class BrowserBattleRuntime {
       draftAttackActions: this.#draftAttackActions(),
       movementUnavailableReason: actions.some(action => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
       definitions,
+      combatPowers: this.#visibleCombatPowers(view),
       roster,
       events: structuredClone(this.#lastEvents),
       eventLog: structuredClone(this.#eventLog),
@@ -347,6 +353,21 @@ export class BrowserBattleRuntime {
     if (codes.includes("PLAYER_MOVEMENT_BLOCKED") || codes.some(code => code.startsWith("MOVEMENT_BLOCKED"))) return "当前效果禁止常规移动";
     if (codes.some(code => /MANA|COST/.test(code))) return "魔力不足，无法支付移动成本";
     return "当前没有合法的移动地点";
+  }
+
+  #visibleCombatPowers(view: ReturnType<GameApplication["viewFor"]>): Record<string, number> {
+    // Display-only independent copy. GameApplication.state also returns a clone;
+    // none of these visibility adjustments are dispatched to the actual game.
+    const displayState = structuredClone(this.app.state);
+    for (const card of Object.values(displayState.cards)) {
+      if (!view.cards[card.instanceId]?.definitionId) { card.active = false; card.definitionId = "hidden"; }
+    }
+    for (const locationId of Object.keys(displayState.board.currentEvents)) {
+      displayState.board.currentEvents[locationId] = (displayState.board.currentEvents[locationId] ?? [])
+        .filter(id => displayState.board.eventVisibility[id] === "up");
+    }
+    return Object.fromEntries(Object.values(displayState.players).map(player => [player.id,
+      player.attack.length && player.locationId && !player.eliminated ? calculateCombatPower(displayState, player, this.definitions, player.locationId) : 0]));
   }
 
   #send(actorId: string, type: string, payload: unknown) {

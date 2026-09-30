@@ -438,16 +438,31 @@ function render(host,options={}){
     }
     function renderSelfPanel(){
       const panel=root.querySelector('.player.self-player');
-      if(panel)panel.innerHTML=playerPanelInnerHtml(battleRoster[0],0,true);
+      if(panel)syncPlayerPanel(panel,battleRoster[0],0,true);
+    }
+    function animateStat(node,value){
+      const previous=node._statValue;node._statValue=value;
+      if(previous===value)return;
+      if(previous===undefined||window.matchMedia('(prefers-reduced-motion: reduce)').matches){node.textContent=String(value);return}
+      if(node._statFrame)cancelAnimationFrame(node._statFrame);
+      const from=Number(node.textContent)||0,delta=value-previous,start=performance.now();
+      const tick=now=>{const t=Math.min(1,(now-start)/300);node.textContent=String(Math.round(from+(value-from)*(1-Math.pow(1-t,3))));if(t<1)node._statFrame=requestAnimationFrame(tick);else node._statFrame=0};node._statFrame=requestAnimationFrame(tick);
+      node.animate([{translate:'0 5px',scale:1.18,color:delta>0?'#95e7bf':'#ff9d9d'},{translate:'0 -1px',scale:1.04,offset:.65},{translate:'0 0',scale:1}],{duration:420,easing:'cubic-bezier(.2,.9,.3,1)'});
+      node.parentElement.querySelectorAll('.stat-delta').forEach(item=>item.remove());const feedback=document.createElement('span');feedback.className='stat-delta '+(delta>0?'gain':'loss');feedback.textContent=(delta>0?'+':'')+delta;node.parentElement.append(feedback);feedback.animate([{opacity:0,translate:'0 4px'},{opacity:1,translate:'0 -4px',offset:.25},{opacity:0,translate:'0 -20px'}],{duration:850,easing:'ease-out'}).finished.catch(()=>{}).then(()=>feedback.remove());
+    }
+    function syncPlayerPanel(panel,player,index,isSelf=false){
+      const signature=JSON.stringify({master:player.master?.name,servant:player.servant?.name,revealed:player.nameRevealed,statuses:player.statuses});
+      if(panel.dataset.identitySignature!==signature){panel.innerHTML=playerPanelInnerHtml(player,index,isSelf);panel.dataset.identitySignature=signature;const statSelectors={power:'[data-opponent-power]',seals:'.opp-seals',mana:'.opp-location-line strong',deckCount:'.opp-deck-line span:nth-child(1) strong',handCount:'.opp-deck-line span:nth-child(2) strong',discardCount:'.opp-deck-line span:nth-child(3) strong'};for(const [key,selector]of Object.entries(statSelectors))panel.querySelectorAll(selector).forEach(node=>node.dataset.stat=key);const meta=panel.querySelector('.opp-detail-meta');if(meta)meta.innerHTML='<span data-panel-location></span><span>魔 <b data-stat="mana"></b></span><span>令 <b data-stat="seals"></b></span><span>牌 <b data-stat="deckCount"></b></span>'}
+      panel.querySelectorAll('[data-stat]').forEach(node=>animateStat(node,Number(player[node.dataset.stat])||0));
+      const location=panel.querySelector('.opp-location-line');if(location?.firstChild)location.firstChild.nodeValue=player.location+' · 魔力 ';panel.querySelectorAll('[data-panel-location]').forEach(node=>node.textContent=player.location);
     }
     function bindBattleRoster(){
       const opponents=battleRoster.slice(1);
       renderSelfPanel();
       const left=root.querySelector('.opponents.left'),right=root.querySelector('.opponents.right');
-      if(left)left.innerHTML=opponents.slice(0,3).map((p,i)=>opponentHtml(p,i+1)).join('');
-      if(right)right.innerHTML=opponents.slice(3,6).map((p,i)=>opponentHtml(p,i+4)).join('');
+      for(const [container,players,offset]of [[left,opponents.slice(0,3),1],[right,opponents.slice(3,6),4]]){if(!container)continue;container.querySelectorAll('.opponent:not([data-roster-index])').forEach(node=>node.remove());players.forEach((player,i)=>{const index=i+offset;let panel=container.querySelector('[data-roster-index="'+index+'"]');if(!panel){panel=document.createElement('article');panel.className='opponent';panel.dataset.rosterIndex=String(index);container.append(panel)}syncPlayerPanel(panel,player,index)})}
       renderTablePlayedCards();
-      const ranking=root.querySelector('.ranking');if(ranking)ranking.innerHTML='战果排名　'+battleRoster.map((p,i)=>(i===0?'<b>':'')+(i+1)+'. '+h(p.master.name)+' '+p.vp+(i===0?'</b>':'')).join('　');
+      const ranking=root.querySelector('.ranking');if(ranking&&!options.runtime)ranking.innerHTML='战果排名　'+battleRoster.map((p,i)=>(i===0?'<b>':'')+(i+1)+'. '+h(p.master.name)+' '+p.vp+(i===0?'</b>':'')).join('　');
       const turnRoster=Array.isArray(currentTurnOrder)?currentTurnOrder.map(playerId=>battleRoster.find(player=>player.playerId===playerId)).filter(Boolean):battleRoster;
       const turn=root.querySelector('.turn-order');if(turn)turn.innerHTML=turnRoster.map((p,i)=>'<span class="turn-token '+(p.current?'active':'')+'" data-player-id="'+h(p.playerId||'')+'" aria-label="'+(i+1)+' '+h(p.master.name)+(p.current?'（当前）':'')+'"><img src="'+h(masterImg(p.master))+'" alt=""></span>'+(i<turnRoster.length-1?'<i class="turn-arrow">›</i>':'')).join('');
       if(!currentTurnOrder){const workshopSlots=[...root.querySelectorAll('.workshop .slot-face')],mountainSlots=[...root.querySelectorAll('.mountain .slot-face')],citySlots=[...root.querySelectorAll('.city .slot-face')],placements=[battleRoster[4],battleRoster[0],battleRoster[1],battleRoster[2]];[workshopSlots[0],mountainSlots[0],mountainSlots[1],citySlots[0]].forEach((slot,i)=>{const p=placements[i];if(!slot||!p)return;slot.innerHTML='<img src="'+h(masterImg(p.master))+'" alt="'+h(p.master.name)+'">'})}
@@ -688,7 +703,7 @@ function render(host,options={}){
       ]:[{transform:'rotateY(0deg)'},{transform:'rotateY(0deg)'}],{duration:760,delay,easing:'ease-in-out',fill:'both'});
       return travel.finished.catch(()=>{}).then(()=>{targetNode.classList.remove('map-deal-pending');flight.remove();});
     }
-    function playMapOpeningSequence(deals){return Promise.all(deals.map(animateMapDeal))}
+    function playMapOpeningSequence(deals){return Promise.all(deals.map(animateMapDeal)).finally(()=>root.querySelectorAll('.map-deal-pending').forEach(node=>node.classList.remove('map-deal-pending')))}
     function openAnimatedModal(modal,panel){
       if(!modal)return;
       invalidatePreview();
@@ -1229,6 +1244,10 @@ function render(host,options={}){
         .runtime-live .move-action-row:has([data-runtime-map-move-toggle]){grid-template-columns:1fr}
         .runtime-live .move-action-row [data-runtime-map-move-toggle]{width:100%;font-size:12px}
         .runtime-live [data-runtime-map-move-toggle]:disabled{opacity:.72;color:#9ba8b7}
+        .runtime-live [data-stat]{display:inline-block;position:relative;font-variant-numeric:tabular-nums;min-width:.65em}
+        .runtime-live .opp-location-line,.runtime-live .opp-seal-line,.runtime-live .opp-deck-line>span,.runtime-live .opp-power-badge,.runtime-live .opp-detail-meta>span,.runtime-live [data-score-player]{position:relative}
+        .runtime-live .stat-delta{position:absolute;z-index:25;right:2px;top:-10px;pointer-events:none;font-size:11px;font-weight:800;text-shadow:0 2px 5px #000}
+        .runtime-live .stat-delta.gain{color:#95e7bf}.runtime-live .stat-delta.loss{color:#ff9d9d}
         .runtime-live .settlement-location-info{margin-top:12px;padding:14px;border:1px solid #303741;border-radius:7px;background:#0c1119}
         .runtime-live .settlement-location-info h3{margin:0 0 12px;color:#f3dda0;font-size:14px}
         .runtime-live .settlement-location-info h4{margin:12px 0 8px;font-size:12px;color:#c1ccd8}
@@ -1290,7 +1309,7 @@ function render(host,options={}){
       function boardDefinition(id){return live?.definitions?.[id]||{id,name:id,text:'',victoryPoints:0}}
       function boardArt(definition,kind){const key=definition?.presentation?.imageKey;if(key)return asset(key);if(kind==='event'&&definition?.name==='占领高地')return '../assets/map/events/占领高地.png';if(kind==='situation'&&definition?.name==='怒不可遏')return '../assets/map/situations/怒不可遏.png';return ''}
       function boardCardInner(definition,kind,hidden=false){if(hidden)return '';const art=boardArt(definition,kind),name=definition?.name||definition?.id||'未知卡牌';return (art?'<img src="'+h(art)+'" alt="'+h(name)+'">':'<span class="runtime-card-face"><b>'+h(name)+'</b><small>'+h(definition?.text||'')+'</small></span>')+(kind==='event'?'<span class="event-vp">'+h(definition?.victoryPoints??0)+'</span><span class="event-name">'+h(name)+'</span>':'<span>'+h(name)+'</span>')}
-      function runtimeRoster(snapshot){return snapshot.roster.map((entry,index)=>{const p=entry.player||{},m=detailBySource(entry.masterId)||entry.master,s=detailBySource(entry.servantId)||entry.servant,activeCards=Object.values(snapshot.view.cards||{}).filter(card=>card.ownerPlayerId===entry.playerId&&card.zone==='attack').map(card=>card.definitionId?{...cardPresentation(card.definitionId),instanceId:card.instanceId,faceDown:card.face==='down'}:{instanceId:card.instanceId,name:'暗置牌',faceDown:true});return {playerId:entry.playerId,master:m,servant:s,mana:p.mana??0,seals:p.commandSeals??0,location:locationLabel[p.locationId]||'未部署',power:Number(p.publicFlags?.['public:combatPower']??0),vp:p.victoryPoints??0,handCount:p.handCount??0,deckCount:p.deckCount??0,discardCount:p.discardCount??0,activeAttackCount:p.attackCount??0,activeCards,statuses:p.statuses||[],current:snapshot.view.activePlayerId===entry.playerId,nameRevealed:index===0||p.servantId!==null};})}
+      function runtimeRoster(snapshot){return snapshot.roster.map((entry,index)=>{const p=entry.player||{},m=detailBySource(entry.masterId)||entry.master,s=detailBySource(entry.servantId)||entry.servant,activeCards=Object.values(snapshot.view.cards||{}).filter(card=>card.ownerPlayerId===entry.playerId&&card.zone==='attack').map(card=>card.definitionId?{...cardPresentation(card.definitionId),instanceId:card.instanceId,faceDown:card.face==='down'}:{instanceId:card.instanceId,name:'暗置牌',faceDown:true});return {playerId:entry.playerId,master:m,servant:s,mana:p.mana??0,seals:p.commandSeals??0,location:locationLabel[p.locationId]||'未部署',power:Number(snapshot.combatPowers?.[entry.playerId]??0),vp:p.victoryPoints??0,handCount:p.handCount??0,deckCount:p.deckCount??0,discardCount:p.discardCount??0,activeAttackCount:p.attackCount??0,activeCards,statuses:p.statuses||[],current:snapshot.view.activePlayerId===entry.playerId,nameRevealed:index===0||p.servantId!==null};})}
       function syncMap(snapshot){
         const mapSignature=JSON.stringify({locations:snapshot.view.board?.locations,currentEvents:snapshot.view.board?.currentEvents,activeSituations:snapshot.view.board?.activeSituations,situationDeck:snapshot.view.board?.situationDeck,eventDeck:snapshot.view.board?.eventDeck,situationDiscard:snapshot.view.board?.situationDiscard,eventDiscard:snapshot.view.board?.eventDiscard});if(mapSignature===lastMapSignature)return;lastMapSignature=mapSignature;
         root.querySelectorAll('.land-slots .slot-face').forEach(slot=>slot.replaceChildren());
@@ -1305,7 +1324,7 @@ function render(host,options={}){
         }
         lastLocationsByPlayer=nextLocationsByPlayer;mapLocationsInitialized=true;
          for(const [locationId,selector] of Object.entries({mountain:'.mountain',city:'.city'})){
-           const place=root.querySelector(selector);if(!place)continue;place.querySelectorAll('.map-event-card').forEach(node=>node.remove());
+           const place=root.querySelector(selector);if(!place)continue;const eventSignature=JSON.stringify(snapshot.view.board?.currentEvents?.[locationId]||[]);if(place.dataset.eventSignature===eventSignature)continue;place.dataset.eventSignature=eventSignature;place.querySelectorAll('.map-event-card').forEach(node=>node.remove());
            (snapshot.view.board?.currentEvents?.[locationId]||[]).forEach((eventId,index)=>{const hidden=eventId==='event:hidden',definition=boardDefinition(eventId),node=document.createElement('div');node.className='map-event-card runtime-offset'+(hidden?' facedown':'');node.style.setProperty('--runtime-offset',(index*38)+'px');node.dataset.info=hidden?'未揭示事件|卡名、效果和战果保持隐藏。':(definition.name||eventId)+'|'+(definition.text||'');node.innerHTML=boardCardInner(definition,'event',hidden);place.append(node)});
            const small=place.querySelector('.place-title small'),cards=snapshot.view.board?.currentEvents?.[locationId]||[];if(small)small.textContent=(locationId==='mountain'?'基础战果2':'基础战果3')+' · '+(cards.some(id=>id==='event:hidden')?'当前事件未揭示':cards.length?'事件牌明置':'暂无事件牌');
          }
@@ -1387,7 +1406,7 @@ function render(host,options={}){
         root.querySelectorAll('.phase span').forEach(node=>node.classList.toggle('active',node.dataset.phase===activePhase));
         const round=root.querySelector('.round strong');if(round)round.textContent='第 '+view.round+' 回合';const status=root.querySelector('.status');if(status){const actor=snapshot.roster.find(entry=>entry.playerId===view.activePlayerId),actorMaster=actor?(detailBySource(actor.masterId)||actor.master):null;status.innerHTML='<b>'+h(actorMaster?.name||'规则结算')+'</b> · '+h(phaseLabel[view.phase]||view.phase)+' · '+h(view.step)}
         const eventLabel=root.querySelector('.event .place-title small');if(eventLabel)eventLabel.textContent='冬木事件组 · 剩余'+(view.board.eventDeck?.length??0)+'张';
-        const ordered=snapshot.roster.slice().sort((a,b)=>(b.player?.victoryPoints||0)-(a.player?.victoryPoints||0)||(a.player?.seat||0)-(b.player?.seat||0)),ranking=root.querySelector('.ranking');if(ranking)ranking.innerHTML='战果排名　'+ordered.map((entry,index)=>{const master=detailBySource(entry.masterId)||entry.master;return (index===0?'<b>':'')+(index+1)+'. '+h(master?.name||entry.playerId)+' '+h(entry.player?.victoryPoints??0)+(index===0?'</b>':'')}).join('　');
+        const ordered=snapshot.roster.slice().sort((a,b)=>(b.player?.victoryPoints||0)-(a.player?.victoryPoints||0)||(a.player?.seat||0)-(b.player?.seat||0)),ranking=root.querySelector('.ranking');if(ranking){const signature=ordered.map(entry=>entry.playerId).join('|'),previous=new Map([...ranking.querySelectorAll('[data-score-player]')].map(node=>[node.dataset.scorePlayer,node.querySelector('[data-stat]')?._statValue]));if(ranking.dataset.rankSignature!==signature){ranking.dataset.rankSignature=signature;ranking.innerHTML='战果排名　'+ordered.map((entry,index)=>{const master=detailBySource(entry.masterId)||entry.master;return '<span data-score-player="'+h(entry.playerId)+'">'+(index===0?'<b>':'')+(index+1)+'. '+h(master?.name||entry.playerId)+' <strong data-stat="vp">'+h(entry.player?.victoryPoints??0)+'</strong>'+(index===0?'</b>':'')+'</span>'}).join('　');ranking.querySelectorAll('[data-score-player]').forEach(node=>{const stat=node.querySelector('[data-stat]'),old=previous.get(node.dataset.scorePlayer);stat._statValue=old;if(old!==undefined)stat.textContent=String(old)})}ordered.forEach(entry=>{const node=ranking.querySelector('[data-score-player="'+entry.playerId+'"] [data-stat]');if(node)animateStat(node,entry.player?.victoryPoints??0)})}
       }
       root.addEventListener('click',event=>{
         const phase=event.target.closest('.phase span');if(phase){event.preventDefault();event.stopImmediatePropagation();return}

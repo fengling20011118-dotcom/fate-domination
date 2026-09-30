@@ -49146,6 +49146,43 @@
     ]
   };
 
+  // src/content/generated/battle-board-art.json
+  var battle_board_art_default = {
+    "event.fuyuki.1": "../assets/map/events/\u593A\u56DE\u4F0A\u8389\u96C5.png",
+    "event.fuyuki.2": "../assets/map/events/\u94E4\u800C\u8D70\u9669.png",
+    "event.fuyuki.3": "../assets/map/events/\u94E4\u800C\u8D70\u9669.png",
+    "event.fuyuki.4": "../assets/map/events/\u5723\u5730.png",
+    "event.fuyuki.5": "../assets/map/events/\u706B\u529B\u538B\u5236.png",
+    "event.fuyuki.6": "../assets/map/events/\u5F3A\u5EA6\u6D4B\u9A8C.png",
+    "event.fuyuki.7": "../assets/map/events/\u547D\u8FD0\u4E4B\u6218.png",
+    "event.fuyuki.8": "../assets/map/events/\u5360\u9886\u9AD8\u5730.png",
+    "event.fuyuki.9": "../assets/map/events/\u5F52\u96F6\u5730.png",
+    "event.fuyuki.10": "../assets/map/events/\u5149\u8363\u51B3\u6597.png",
+    "event.fuyuki.11": "../assets/map/events/\u796D\u7940\u4E4B\u5730.png",
+    "event.fuyuki.12": "../assets/map/events/\u9669\u6076\u4E4B\u5730.png",
+    "event.fuyuki.13": "../assets/map/events/\u904F\u5236\u5A01\u80C1.png",
+    "event.fuyuki.14": "../assets/map/events/\u5077\u88AD.png",
+    "event.fuyuki.15": "../assets/map/events/\u5077\u88AD.png",
+    "event.fuyuki.16": "../assets/map/events/\u534F\u540C.png",
+    "event.fuyuki.17": "../assets/map/events/\u56FA\u6709\u7ED3\u754C.png",
+    "event.fuyuki.18": "../assets/map/events/\u56FA\u6709\u7ED3\u754C.png",
+    "event.fuyuki.19": "../assets/map/events/\u5730\u8109.png",
+    "event.fuyuki.20": "../assets/map/events/\u5730\u8109.png",
+    "situation.sit1": "../assets/map/situations/\u8F6C\u673A.png",
+    "situation.sit2": "../assets/map/situations/\u65B0\u90FD\u4E4B\u6218.png",
+    "situation.sit3": "../assets/map/situations/\u6DF1\u5C71\u753A\u7684\u6740\u4EBA\u9B54.png",
+    "situation.sit4": "../assets/map/situations/\u6012\u4E0D\u53EF\u904F.png",
+    "situation.sit5": "../assets/map/situations/\u66B4\u98CE\u96E8\u524D\u7684\u5B81\u9759.png",
+    "situation.sit6": "../assets/map/situations/\u5B8C\u7F8E\u7684\u6D41\u52A8.png",
+    "situation.sit7": "../assets/map/situations/\u5B89\u54E5\u62C9\xB7\u66FC\u7EBD\u7684\u5B9E\u8D28.png",
+    "situation.sit8": "../assets/map/situations/\u5B89\u54E5\u62C9\xB7\u66FC\u7EBD\u7684\u9634\u5F71.png",
+    "situation.sit9": "../assets/map/situations/\u5B89\u54E5\u62C9\xB7\u66FC\u7EBD\u7684\u8BC5\u5492.png",
+    "situation.sit10": "../assets/map/situations/\u5BF9\u672A\u6765\u7684\u61A7\u61AC.png",
+    "situation.sit11": "../assets/map/situations/\u547D\u8FD0\u4E4B\u591C.png",
+    "situation.sit12": "../assets/map/situations/\u8EAB\u5904\u5730\u72F1\u4E4B\u95E8.png",
+    "situation.sit13": "../assets/map/situations/\u5929\u4E4B\u676F.png"
+  };
+
   // src/rules-core/three-x-economy.ts
   var THREE_X_PURCHASES = /* @__PURE__ */ new Set(["servant-draw", "climax-tiebreak", "starting-mana", "command-seal"]);
   function isThreeXPurchase(value) {
@@ -109813,7 +109850,8 @@
   function assertNormalCommandSealWindow(state, playerId, definitions) {
     const player = state.players[playerId];
     if (!player || player.eliminated) throw new Error("COMMAND_SEAL_PLAYER_INVALID");
-    if (state.status !== "playing" || state.activePlayerId !== playerId || state.step !== "player-window") {
+    const ownActionStep = state.phase === "action" && ["move-decision", "play-batch-draft", "play-batch-commit"].includes(state.step);
+    if (state.status !== "playing" || state.activePlayerId !== playerId || state.step !== "player-window" && !ownActionStep) {
       throw new Error("COMMAND_SEAL_WINDOW_INVALID");
     }
     const configuredWindow = typeof player.flags.commandSealWindow === "string" ? player.flags.commandSealWindow : "action";
@@ -179805,6 +179843,9 @@
         }
       }
       this.definitions = this.app.cardDefinitions();
+      for (const [id, imageKey] of Object.entries(battle_board_art_default)) {
+        if (this.definitions[id]) this.definitions[id].presentation = { ...this.definitions[id].presentation, imageKey };
+      }
       const started = this.#send("host", CommandType.StartStandardGame, {});
       if (!started.ok) throw new Error(started.rejection.code);
       this.#scheduleComputerPlayers();
@@ -179827,6 +179868,7 @@
         draftAttackActions: this.#draftAttackActions(),
         movementUnavailableReason: actions.some((action) => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
         definitions,
+        combatPowers: this.#visibleCombatPowers(view),
         roster,
         events: structuredClone(this.#lastEvents),
         eventLog: structuredClone(this.#eventLog),
@@ -179951,6 +179993,22 @@
       if (codes.includes("PLAYER_MOVEMENT_BLOCKED") || codes.some((code) => code.startsWith("MOVEMENT_BLOCKED"))) return "\u5F53\u524D\u6548\u679C\u7981\u6B62\u5E38\u89C4\u79FB\u52A8";
       if (codes.some((code) => /MANA|COST/.test(code))) return "\u9B54\u529B\u4E0D\u8DB3\uFF0C\u65E0\u6CD5\u652F\u4ED8\u79FB\u52A8\u6210\u672C";
       return "\u5F53\u524D\u6CA1\u6709\u5408\u6CD5\u7684\u79FB\u52A8\u5730\u70B9";
+    }
+    #visibleCombatPowers(view) {
+      const displayState = structuredClone(this.app.state);
+      for (const card of Object.values(displayState.cards)) {
+        if (!view.cards[card.instanceId]?.definitionId) {
+          card.active = false;
+          card.definitionId = "hidden";
+        }
+      }
+      for (const locationId of Object.keys(displayState.board.currentEvents)) {
+        displayState.board.currentEvents[locationId] = (displayState.board.currentEvents[locationId] ?? []).filter((id) => displayState.board.eventVisibility[id] === "up");
+      }
+      return Object.fromEntries(Object.values(displayState.players).map((player) => [
+        player.id,
+        player.attack.length && player.locationId && !player.eliminated ? calculateCombatPower(displayState, player, this.definitions, player.locationId) : 0
+      ]));
     }
     #send(actorId, type, payload) {
       const state = this.app.state;

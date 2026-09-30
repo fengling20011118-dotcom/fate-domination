@@ -81,6 +81,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (!/冬木事件组 · 剩余(?:18|19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
   const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
+  const openingBoard=await page.evaluate(()=>{const runtime=window.fdCurrentBattleRuntime,before=JSON.stringify(runtime.app.state),snapshot=runtime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return {snapshotPreservedState:before===JSON.stringify(runtime.app.state),events:['mountain','city'].map(id=>({id,expected:snapshot.view.board.currentEvents[id].length,visible:root.querySelectorAll(`.${id} .map-event-card`).length})),artDefinitions:Object.values(snapshot.definitions).filter(def=>def.id?.startsWith('event.fuyuki.')||def.id?.startsWith('situation.')).every(def=>!!def.presentation?.imageKey)};});
+  if(!openingBoard.snapshotPreservedState||!openingBoard.artDefinitions||openingBoard.events.some(entry=>entry.visible!==entry.expected))throw new Error(`开局事件显示或只读投影异常：${JSON.stringify(openingBoard)}`);
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
   if (battleEntryMs > 3000) throw new Error(`进入主对战区仍然过慢：${battleEntryMs}ms`);
 
@@ -123,12 +125,16 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   });
   if (Object.values(occupantDiagnostic).some(({expected,visible}) => expected !== visible)) throw new Error(`地区玩家头像显示不完整：${JSON.stringify(occupantDiagnostic)}`);
   const firstVisibleHandCard = page.locator('.battle-host').locator('.hand .card').first();
+  const numberAnimation=await page.evaluate(()=>{const runtime=window.fdCurrentBattleRuntime,action=runtime.snapshot().actions.find(action=>action.commandType==='command-seal.use'&&action.payload?.mode==='mana');if(!action)return null;const root=document.querySelector('.battle-host').shadowRoot,oldSeal=root.querySelector('.self-player [data-stat="seals"]'),oldMana=root.querySelector('.self-player [data-stat="mana"]');runtime.dispatch(action.id);return {preservedSeal:oldSeal===root.querySelector('.self-player [data-stat="seals"]'),preservedMana:oldMana===root.querySelector('.self-player [data-stat="mana"]'),gain:!!root.querySelector('.self-player .stat-delta.gain'),loss:!!root.querySelector('.self-player .stat-delta.loss')};});
+  if(numberAnimation&&(!numberAnimation.preservedSeal||!numberAnimation.preservedMana||!numberAnimation.gain||!numberAnimation.loss))throw new Error(`令咒和魔力没有增量动画：${JSON.stringify(numberAnimation)}`);
+  const panelPowerBefore=await page.evaluate(()=>window.fdCurrentBattleRuntime.snapshot().combatPowers.p1);
   await page.evaluate(()=>{
     const root=document.querySelector('.battle-host').shadowRoot;window.__removedPlayedLayers=0;
     new MutationObserver(records=>records.forEach(record=>record.removedNodes.forEach(node=>{if(node.nodeType===1&&node.matches('.map-played-layer'))window.__removedPlayedLayers++}))).observe(root.querySelector('.board'),{childList:true,subtree:true});
   });
   await firstVisibleHandCard.waitFor({timeout: 15000});
   await firstVisibleHandCard.click();
+  if(await page.evaluate(()=>window.fdCurrentBattleRuntime.snapshot().combatPowers.p1)!==panelPowerBefore)throw new Error('选牌预估错误地改变了面板合计威力');
   const selectionCheck = await page.evaluate(() => {
     const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;
     const button=root.querySelector('[data-runtime-map-move-toggle]'),row=root.querySelector('.move-action-row');
@@ -168,6 +174,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     return host?.shadowRoot?.querySelector(faceDown?'#confirm-hidden-play':'#confirm-play')?.disabled === false;
   }, playFaceDown, {timeout: 10000});
   await confirmPlay.click();
+  const panelPowerAfter=await page.evaluate(()=>{const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return {power:snapshot.combatPowers.p1,display:root.querySelector('.self-player [data-opponent-power]')?._statValue,eventsVisible:[...root.querySelectorAll('.map-event-card')].every(node=>!node.classList.contains('map-deal-pending')),publicArt:[...root.querySelectorAll('.map-event-card:not(.facedown),.situation-active')].every(node=>!!node.querySelector('img'))};});
+  if(panelPowerAfter.power!==panelPowerAfter.display||(!playFaceDown&&panelPowerAfter.power<=panelPowerBefore)||!panelPowerAfter.eventsVisible||!panelPowerAfter.publicArt)throw new Error(`出牌后威力或事件未正确更新：${JSON.stringify(panelPowerAfter)}`);
   await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId !== 'p1') || window.fdCurrentBattleRuntime.snapshot().view.phase === 'combat', null, {timeout: 20000});
   const visualMotion = await page.evaluate(() => {const root=document.querySelector('.battle-host')?.shadowRoot,css=[...(root?.querySelectorAll('style')||[])].map(style=>style.textContent).join('\n');return {tokenArrivals:root?.querySelectorAll('.runtime-token-arrive').length??0,cardArrivals:root?.querySelectorAll('.runtime-card-arrive').length??0,cardAnimationInstalled:css.includes('.runtime-card-arrive')}});
   if (!visualMotion.tokenArrivals || !visualMotion.cardAnimationInstalled) throw new Error(`AI 动作没有生成入场动画：${JSON.stringify(visualMotion)}`);
@@ -240,7 +248,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
 
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress, settlementBefore, settlementAfter}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress, openingBoard, numberAnimation, panelPowerAfter, settlementBefore, settlementAfter}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);
