@@ -179869,6 +179869,7 @@
         movementUnavailableReason: actions.some((action) => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
         definitions,
         combatPowers: this.#visibleCombatPowers(view),
+        moonCell: getMoonCellState(this.app.state),
         roster,
         events: structuredClone(this.#lastEvents),
         eventLog: structuredClone(this.#eventLog),

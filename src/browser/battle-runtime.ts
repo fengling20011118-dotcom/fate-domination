@@ -10,6 +10,7 @@ import type { ThreeXModeState } from "../rules-core/three-x-state.ts";
 import type { GameEvent } from "../domain/state/types.ts";
 import { StateRandom } from "../match-engine/random.ts";
 import { calculateCombatPower } from "../rules-core/combat-power.ts";
+import { getMoonCellState } from "../rules-core/moon-cell.ts";
 
 const MASTER_IDS = [
   "master.kayneth",
@@ -231,6 +232,7 @@ export class BrowserBattleRuntime {
       movementUnavailableReason: actions.some(action => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
       definitions,
       combatPowers: this.#visibleCombatPowers(view),
+      moonCell: getMoonCellState(this.app.state),
       roster,
       events: structuredClone(this.#lastEvents),
       eventLog: structuredClone(this.#eventLog),

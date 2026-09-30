@@ -81,6 +81,9 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (!/冬木事件组 · 剩余(?:18|19|20)张/.test(battleText)) throw new Error(`主对战区未使用冬木20张事件组：${battleText.match(/冬木[^\n]{0,40}/)?.[0] || '未找到冬木状态'}`);
   if (/CURRENT DECISION|DIRECTIVES/.test(battleText)) throw new Error('主对战区仍包含调试客户端内容');
   const runtimeSkillCards = await page.evaluate(() => Object.values(window.fdCurrentBattleRuntime.snapshot().definitions).filter(card => card.cardType === 'skill' || card.isSkill).length);
+  // Presentation-only fixture: exercise the expanded Moon Cell page without enabling unfinished skills.
+  const moonSequence=process.env.FD_VERIFY_MOON_SEQUENCE==='1';
+  if(moonSequence)await page.evaluate(()=>{const runtime=window.fdCurrentBattleRuntime,original=runtime.snapshot.bind(runtime);runtime.snapshot=()=>({...original(),moonCell:{sourceIds:['ui-fixture'],playerIds:[],objectiveEventIds:[]}})});
   const openingBoard=await page.evaluate(()=>{const runtime=window.fdCurrentBattleRuntime,before=JSON.stringify(runtime.app.state),snapshot=runtime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return {snapshotPreservedState:before===JSON.stringify(runtime.app.state),events:['mountain','city'].map(id=>({id,expected:snapshot.view.board.currentEvents[id].length,visible:root.querySelectorAll(`.${id} .map-event-card`).length})),artDefinitions:Object.values(snapshot.definitions).filter(def=>def.id?.startsWith('event.fuyuki.')||def.id?.startsWith('situation.')).every(def=>!!def.presentation?.imageKey)};});
   if(!openingBoard.snapshotPreservedState||!openingBoard.artDefinitions||openingBoard.events.some(entry=>entry.visible!==entry.expected))throw new Error(`开局事件显示或只读投影异常：${JSON.stringify(openingBoard)}`);
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
@@ -107,7 +110,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (await page.locator('.battle-host').locator('.end-action').count()) throw new Error('行动阶段仍然显示了“跳过移动”');
   if (await page.locator('.battle-host').locator('.place.runtime-map-action-move').count()) throw new Error('未点击常规移动时地图已经可以移动');
   let moveLabel = '当前无可移动地点';
-  if (await moveToggle.isEnabled()) {
+  if (await moveToggle.count() && await moveToggle.isEnabled()) {
     await moveToggle.click();
     const moveTarget = page.locator('.battle-host').locator('.place.runtime-map-action-move').first();
     await moveTarget.waitFor({timeout: 15000});
@@ -133,6 +136,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     new MutationObserver(records=>records.forEach(record=>record.removedNodes.forEach(node=>{if(node.nodeType===1&&node.matches('.map-played-layer'))window.__removedPlayedLayers++}))).observe(root.querySelector('.board'),{childList:true,subtree:true});
   });
   await firstVisibleHandCard.waitFor({timeout: 15000});
+  const beforeSelection=await page.evaluate(()=>({step:window.fdCurrentBattleRuntime.snapshot().view.step,moveVisible:!!document.querySelector('.battle-host').shadowRoot.querySelector('[data-runtime-map-move-toggle]')}));
   await firstVisibleHandCard.click();
   if(await page.evaluate(()=>window.fdCurrentBattleRuntime.snapshot().combatPowers.p1)!==panelPowerBefore)throw new Error('选牌预估错误地改变了面板合计威力');
   const selectionCheck = await page.evaluate(() => {
@@ -140,8 +144,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     const button=root.querySelector('[data-runtime-map-move-toggle]'),row=root.querySelector('.move-action-row');
     return {step:snapshot.view.step,moveVisible:!!button,buttonWidth:button?.offsetWidth,rowWidth:row.offsetWidth};
   });
-  if (selectionCheck.step !== 'move-decision' || !selectionCheck.moveVisible) throw new Error(`选牌提前提交了移动决定：${JSON.stringify(selectionCheck)}`);
-  if (Math.abs(selectionCheck.buttonWidth-selectionCheck.rowWidth)>2) throw new Error(`常规移动未占满整行：${JSON.stringify(selectionCheck)}`);
+  if (selectionCheck.step !== beforeSelection.step || selectionCheck.moveVisible !== beforeSelection.moveVisible) throw new Error(`选牌提前提交了移动决定：${JSON.stringify(selectionCheck)}`);
+  if (selectionCheck.moveVisible && Math.abs(selectionCheck.buttonWidth-selectionCheck.rowWidth)>2) throw new Error(`常规移动未占满整行：${JSON.stringify(selectionCheck)}`);
   if (await moveToggle.isEnabled()) {
     await moveToggle.click(); // Cancel the currently open map picker after selecting a card.
     await moveToggle.click(); // Reopen it without changing the card draft or the engine step.
@@ -197,6 +201,12 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     const diagnostic = await page.evaluate(() => { const snapshot=window.fdCurrentBattleRuntime.snapshot(); return {view:snapshot.view,actions:snapshot.actions,eventTypes:snapshot.eventLog.slice(-12).map(event=>event.type)}; });
     throw new Error(`未能进入战场结算：${JSON.stringify(diagnostic)}`);
   }
+  async function currentRegion(){return page.evaluate(()=>{const root=document.querySelector('.battle-host').shadowRoot;return {id:root.querySelector('[data-settlement-location]')?.dataset.settlementLocation,button:root.querySelector('.settlement-actions button')?.textContent.trim(),progress:root.querySelector('.settlement-progress')?.textContent.trim()}})}
+  const workshopStep=await currentRegion();
+  if(workshopStep.id!=='workshop'||!workshopStep.progress.includes(moonSequence?'1 / 5':'1 / 4'))throw Error('结算未从魔术工坊开始 '+JSON.stringify(workshopStep));
+  const workshopInfo=await page.evaluate(()=>{const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return {players:root.querySelectorAll('[data-settlement-info-player]').length,cards:root.querySelectorAll('.settlement-info-card').length,expectedPlayers:snapshot.roster.filter(entry=>entry.player?.locationId==='workshop').length,expectedCards:Object.values(snapshot.view.cards).filter(card=>card.zone==='attack'&&snapshot.view.players[card.ownerPlayerId]?.locationId==='workshop').length}});
+  if(workshopInfo.players!==workshopInfo.expectedPlayers||workshopInfo.cards!==workshopInfo.expectedCards)throw Error('魔术工坊出牌信息不完整 '+JSON.stringify(workshopInfo));
+  await page.locator('.battle-host').locator('[data-settlement-next]').click();
   const settlementBefore = await page.evaluate(() => {
     const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
     const actionButton=root?.querySelector('.settlement-actions [data-runtime-action]'),shell=root?.querySelector('.settlement-shell'),buttonRect=actionButton?.getBoundingClientRect(),shellRect=shell?.getBoundingClientRect();
@@ -210,17 +220,18 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
       progress: root?.querySelector('.settlement-progress')?.textContent.trim() || '',
       playedGroups,
       removedPlayedLayers:window.__removedPlayedLayers,
-      locationInfo:['workshop','scouting'].map(id=>{const section=root.querySelector(`[data-settlement-info-location="${id}"]`);return {id,exists:!!section,players:section?.querySelectorAll('[data-settlement-info-player]').length,cards:section?.querySelectorAll('.settlement-info-card').length,expectedPlayers:snapshot.roster.filter(entry=>entry.player?.locationId===id).length,expectedCards:Object.values(snapshot.view.cards).filter(card=>card.zone==='attack'&&snapshot.view.players[card.ownerPlayerId]?.locationId===id).length}}),
+
     };
   });
+  if (process.env.FD_SETTLEMENT_SCREENSHOT) await page.waitForTimeout(700);
   if (process.env.FD_SETTLEMENT_SCREENSHOT) await page.screenshot({path: process.env.FD_SETTLEMENT_SCREENSHOT});
   if (JSON.stringify(settlementBefore.resolveLocations) !== JSON.stringify(['mountain'])) throw new Error(`首个结算项目不是唯一的深山町：${JSON.stringify(settlementBefore)}`);
   if (settlementBefore.buttons.length !== 1 || settlementBefore.buttons[0] !== '结算深山町') throw new Error(`结算界面没有只显示当前战场操作：${JSON.stringify(settlementBefore)}`);
   if (!settlementBefore.buttonFullyVisible) throw new Error(`结算按钮没有完整显示：${JSON.stringify(settlementBefore)}`);
-  if (!settlementBefore.progress.includes('1 / 2')) throw new Error(`结算界面没有显示顺序进度：${JSON.stringify(settlementBefore)}`);
+  if (!settlementBefore.progress.includes(moonSequence?'2 / 5':'2 / 4')) throw new Error(`结算界面没有显示顺序进度：${JSON.stringify(settlementBefore)}`);
   if (Object.values(settlementBefore.playedGroups).some(group=>group.expected!==group.actual||!group.seatsInside||!group.cardsInside)) throw new Error(`地区内玩家出牌组显示不完整：${JSON.stringify(settlementBefore.playedGroups)}`);
   if(settlementBefore.removedPlayedLayers)throw new Error('行动中仍在整片重建地图出牌区');
-  if(settlementBefore.locationInfo.some(info=>!info.exists||info.players!==info.expectedPlayers||info.cards!==info.expectedCards))throw new Error(`工坊或侦察出牌情报缺失：${JSON.stringify(settlementBefore.locationInfo)}`);
+
   await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
   for (let attempts = 0; attempts < 12; attempts += 1) {
     const state = await page.evaluate(() => ({
@@ -234,6 +245,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
       await page.waitForTimeout(450);
     }
   }
+  if((await currentRegion()).id!=='mountain')throw Error('深山町结果未留在当前页');
+  await page.locator('.battle-host').locator('[data-settlement-next]').click();
   const settlementAfter = await page.evaluate(() => {
     const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
     return {
@@ -246,9 +259,18 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (settlementAfter.buttons.length !== 1 || settlementAfter.buttons[0] !== '结算新都') throw new Error(`第二项结算操作不正确：${JSON.stringify(settlementAfter)}`);
   if (settlementAfter.completed < 1) throw new Error(`结算界面没有保留已完成战场结果：${JSON.stringify(settlementAfter)}`);
 
+  await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
+  for(let attempt=0;attempt<16;attempt++){if(await page.locator('.battle-host').locator('[data-settlement-next]').count())break;const button=page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]');if(await button.count())await button.click();else await page.waitForTimeout(200)}
+  await page.locator('.battle-host').locator('[data-settlement-next]').click();
+  const scoutingStep=await currentRegion();if(scoutingStep.id!=='scouting'||scoutingStep.button!==(moonSequence?'继续 · 月之圣杯':'进入下一回合'))throw Error('新都后未进入侦察 '+JSON.stringify(scoutingStep));
+  const scoutingInfo=await page.evaluate(()=>{const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return {players:root.querySelectorAll('[data-settlement-info-player]').length,cards:root.querySelectorAll('.settlement-info-card').length,expectedPlayers:snapshot.roster.filter(entry=>entry.player?.locationId==='scouting').length,expectedCards:Object.values(snapshot.view.cards).filter(card=>card.zone==='attack'&&snapshot.view.players[card.ownerPlayerId]?.locationId==='scouting').length}});
+  if(scoutingInfo.players!==scoutingInfo.expectedPlayers||scoutingInfo.cards!==scoutingInfo.expectedCards)throw Error('侦察出牌信息不完整 '+JSON.stringify(scoutingInfo));
+  const scoutingReward=await page.evaluate(()=>{const snapshot=window.fdCurrentBattleRuntime.snapshot(),root=document.querySelector('.battle-host').shadowRoot;return [...root.querySelectorAll('[data-settlement-info-player]')].map(node=>{const id=node.dataset.settlementInfoPlayer,awarded=snapshot.eventLog.filter(event=>event.type==='combat.resolved'&&event.payload?.round===snapshot.view.round).reduce((total,event)=>total+Number(event.payload?.victoryPoints?.[id]??0),0);return {id,awarded,text:node.textContent}})});
+  if(scoutingReward.some(row=>row.awarded>0&&!row.text.includes('+'+row.awarded+' 战果')))throw Error('侦察页未显示真实战果 '+JSON.stringify(scoutingReward));
+  let moonStep=null;if(moonSequence){await page.locator('.battle-host').locator('[data-settlement-next]').click();moonStep=await currentRegion();if(moonStep.id!=='moon-cell'||moonStep.button!=='进入下一回合'||!moonStep.progress.includes('5 / 5'))throw Error('展开的月之圣杯未置于最后 '+JSON.stringify(moonStep))}
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress, openingBoard, numberAnimation, panelPowerAfter, settlementBefore, settlementAfter}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress, openingBoard, numberAnimation, panelPowerAfter, workshopStep, workshopInfo, settlementBefore, settlementAfter, scoutingStep, scoutingInfo, scoutingReward, moonStep}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);
