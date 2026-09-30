@@ -169,17 +169,24 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   }
   const settlementBefore = await page.evaluate(() => {
     const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
+    const actionButton=root?.querySelector('.settlement-actions [data-runtime-action]'),shell=root?.querySelector('.settlement-shell'),buttonRect=actionButton?.getBoundingClientRect(),shellRect=shell?.getBoundingClientRect();
+    const locationSelectors={workshop:'.workshop',mountain:'.mountain',city:'.city',scouting:'.scout','moon-cell':'.moon-cell'};
+    const playedGroups=Object.fromEntries(Object.entries(locationSelectors).map(([locationId,selector])=>{const place=root?.querySelector(selector),placeRect=place?.getBoundingClientRect(),expected=snapshot.roster.filter(entry=>entry.player?.locationId===locationId&&Object.values(snapshot.view.cards||{}).some(card=>card.ownerPlayerId===entry.playerId&&card.zone==='attack')).length,seats=[...(place?.querySelectorAll('.map-played-layer .table-play-seat')||[])],cards=[...(place?.querySelectorAll('.map-played-layer .mini-card')||[])],inside=rect=>!placeRect||(!rect.width&&!rect.height)||(rect.left>=placeRect.left-1&&rect.right<=placeRect.right+1&&rect.top>=placeRect.top-1&&rect.bottom<=placeRect.bottom+1);return [locationId,{expected,actual:seats.length,seatsInside:seats.every(node=>inside(node.getBoundingClientRect())),cardsInside:cards.every(node=>inside(node.getBoundingClientRect()))}]}));
     return {
       resolveLocations: snapshot.actions.filter(action => action.commandType === 'combat.resolve').map(action => action.payload?.locationId),
       buttons: [...(root?.querySelectorAll('.settlement-actions [data-runtime-action]') || [])].map(button => button.textContent.trim()),
+      buttonFullyVisible: Boolean(buttonRect&&shellRect&&buttonRect.top>=shellRect.top&&buttonRect.bottom<=shellRect.bottom&&buttonRect.bottom<=innerHeight),
       combatants: root?.querySelectorAll('.settlement-combatant').length ?? 0,
       progress: root?.querySelector('.settlement-progress')?.textContent.trim() || '',
+      playedGroups,
     };
   });
   if (process.env.FD_SETTLEMENT_SCREENSHOT) await page.screenshot({path: process.env.FD_SETTLEMENT_SCREENSHOT});
   if (JSON.stringify(settlementBefore.resolveLocations) !== JSON.stringify(['mountain'])) throw new Error(`首个结算项目不是唯一的深山町：${JSON.stringify(settlementBefore)}`);
   if (settlementBefore.buttons.length !== 1 || settlementBefore.buttons[0] !== '结算深山町') throw new Error(`结算界面没有只显示当前战场操作：${JSON.stringify(settlementBefore)}`);
+  if (!settlementBefore.buttonFullyVisible) throw new Error(`结算按钮没有完整显示：${JSON.stringify(settlementBefore)}`);
   if (!settlementBefore.progress.includes('1 / 2')) throw new Error(`结算界面没有显示顺序进度：${JSON.stringify(settlementBefore)}`);
+  if (Object.values(settlementBefore.playedGroups).some(group=>group.expected!==group.actual||!group.seatsInside||!group.cardsInside)) throw new Error(`地区内玩家出牌组显示不完整：${JSON.stringify(settlementBefore.playedGroups)}`);
   await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
   for (let attempts = 0; attempts < 12; attempts += 1) {
     const state = await page.evaluate(() => ({
