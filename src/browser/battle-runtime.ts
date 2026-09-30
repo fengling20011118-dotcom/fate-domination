@@ -7,6 +7,7 @@ import { createGameState } from "../domain/state/createGameState.ts";
 import { applyThreeXPurchase, createThreeXBudgetForMaster, finalizeThreeXPurchases, type ThreeXPurchase } from "../rules-core/three-x-economy.ts";
 import type { ThreeXModeState } from "../rules-core/three-x-state.ts";
 import type { GameEvent } from "../domain/state/types.ts";
+import { StateRandom } from "../match-engine/random.ts";
 
 const MASTER_IDS = [
   "master.kayneth",
@@ -120,6 +121,20 @@ function decisionPayload(action: AvailableAction): unknown {
   };
 }
 
+function randomizeStartingPlayer(state: ReturnType<typeof createGameState>): void {
+  if (state.turnOrder.length < 2) return;
+  const offset = new StateRandom().integer(state, state.turnOrder.length);
+  state.turnOrder = [...state.turnOrder.slice(offset), ...state.turnOrder.slice(0, offset)];
+}
+
+function computerActionDelay(events: unknown[]): number {
+  const types = new Set(events.flatMap((event) => event && typeof event === "object" && "type" in event ? [String(event.type)] : []));
+  if (types.has("card.played") || types.has("attack.committed")) return 520;
+  if (types.has("player.deployed") || types.has("player.moved")) return 420;
+  if (types.has("combat.resolved") || types.has("round.started")) return 360;
+  return 110;
+}
+
 export class BrowserBattleRuntime {
   readonly playerId = "p1";
   readonly assignments: Array<{ playerId: string; masterId: string; servantId: string }>;
@@ -154,6 +169,7 @@ export class BrowserBattleRuntime {
     const players = this.assignments.map(({ playerId }, index) => ({ id: playerId, name: index === 0 ? "玩家" : `电脑玩家 ${index}` }));
     if (mode === "three-x") {
       const state = createGameState({ gameInstanceId, players, seed: options.seed ?? Date.now(), mode: "three-x" });
+      randomizeStartingPlayer(state);
       const threeX = state.modeState.threeX as ThreeXModeState;
       threeX.setupPhase = "complete";
       threeX.turnOrderLocked = true;
@@ -174,7 +190,9 @@ export class BrowserBattleRuntime {
       }
       this.app = new GameApplication({ state, content });
     } else {
-      this.app = GameApplication.create({ gameInstanceId, players, seed: options.seed ?? Date.now(), content, mode });
+      const state = createGameState({ gameInstanceId, players, seed: options.seed ?? Date.now(), mode });
+      randomizeStartingPlayer(state);
+      this.app = new GameApplication({ state, content });
       for (const assignment of this.assignments) {
         this.#send(assignment.playerId, CommandType.AssignIdentity, { masterId: assignment.masterId, servantId: assignment.servantId });
       }
@@ -350,7 +368,7 @@ export class BrowserBattleRuntime {
       if (!acceptedEvents) return;
       this.#lastEvents = acceptedEvents;
       this.#emit();
-      await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+      await new Promise<void>((resolve) => window.setTimeout(resolve, computerActionDelay(acceptedEvents)));
     }
     throw new Error("AI_ACTION_GUARD_EXCEEDED");
   }

@@ -84,6 +84,7 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (runtimeSkillCards !== 0) throw new Error(`试玩运行时仍载入了 ${runtimeSkillCards} 张未完成技能卡`);
   if (battleEntryMs > 3000) throw new Error(`进入主对战区仍然过慢：${battleEntryMs}ms`);
 
+  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().view.activePlayerId === 'p1', null, {timeout: 15000});
   const endAction = page.locator('.battle-host').locator('.end-action');
   if ((await endAction.innerText()) !== '完成当前阶段') throw new Error('阶段完成按钮没有使用“完成当前阶段”');
   await endAction.click();
@@ -100,10 +101,24 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if ((await moveToggle.innerText()) !== '常规移动') throw new Error('行动阶段没有显示常规移动按钮');
   if (await page.locator('.battle-host').locator('.end-action').count()) throw new Error('行动阶段仍然显示了“跳过移动”');
   if (await page.locator('.battle-host').locator('.place.runtime-map-action-move').count()) throw new Error('未点击常规移动时地图已经可以移动');
-  await moveToggle.click();
-  const moveTarget = page.locator('.battle-host').locator('.place.runtime-map-action-move').first();
-  await moveTarget.waitFor({timeout: 15000});
-  const mapInteractions = {deploy: deployedViaMap, move: await moveTarget.getAttribute('aria-label')};
+  let moveLabel = '当前无可移动地点';
+  if (await moveToggle.isEnabled()) {
+    await moveToggle.click();
+    const moveTarget = page.locator('.battle-host').locator('.place.runtime-map-action-move').first();
+    await moveTarget.waitFor({timeout: 15000});
+    moveLabel = await moveTarget.getAttribute('aria-label');
+  }
+  const mapInteractions = {deploy: deployedViaMap, move: moveLabel};
+  const occupantDiagnostic = await page.evaluate(() => {
+    const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
+    const selectors = {workshop:'.workshop',mountain:'.mountain',city:'.city',scouting:'.scout','moon-cell':'.moon-cell'};
+    return Object.fromEntries(Object.entries(selectors).map(([id,selector]) => {
+      const place = root?.querySelector(selector), expected = snapshot.view.board.locations?.[id]?.length ?? 0;
+      const visible = (place?.querySelectorAll('.land-slots .slot-face img').length ?? 0) + (place?.querySelectorAll('.location-occupant img').length ?? 0);
+      return [id,{expected,visible}];
+    }));
+  });
+  if (Object.values(occupantDiagnostic).some(({expected,visible}) => expected !== visible)) throw new Error(`地区玩家头像显示不完整：${JSON.stringify(occupantDiagnostic)}`);
   const firstVisibleHandCard = page.locator('.battle-host').locator('.hand .card').first();
   await firstVisibleHandCard.waitFor({timeout: 15000});
   await firstVisibleHandCard.click();
@@ -131,12 +146,16 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     return host?.shadowRoot?.querySelector('#confirm-play')?.disabled === false;
   }, null, {timeout: 10000});
   await confirmPlay.click();
-  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId === 'p2'), null, {timeout: 15000});
+  await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId !== 'p1') || window.fdCurrentBattleRuntime.snapshot().view.phase === 'combat', null, {timeout: 20000});
+  const visualMotion = await page.evaluate(() => {const root=document.querySelector('.battle-host')?.shadowRoot;return {tokenArrivals:root?.querySelectorAll('.runtime-token-arrive').length??0,cardArrivals:root?.querySelectorAll('.runtime-card-arrive').length??0}});
+  if (!visualMotion.tokenArrivals || !visualMotion.cardArrivals) throw new Error(`AI 动作没有生成入场动画：${JSON.stringify(visualMotion)}`);
+  const seededFirstPlayers = await page.evaluate(() => [1,123456789,305419896].map(seed => window.FDBattleRuntime.create({seed}).snapshot().view.turnOrder[0]));
+  if (new Set(seededFirstPlayers).size < 2) throw new Error(`新局首位玩家没有随机化：${seededFirstPlayers.join(',')}`);
   const automaticProgress = await page.evaluate(() => ({phase: window.fdCurrentBattleRuntime.snapshot().view.phase, activePlayerId: window.fdCurrentBattleRuntime.snapshot().view.activePlayerId}));
 
   const relevantErrors = errors.filter(message => !message.includes('favicon') && !message.includes('net::ERR_ABORTED'));
   if (relevantErrors.length) throw new Error(relevantErrors.join('\n'));
-  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, automaticProgress}, null, 2));
+  console.log(JSON.stringify({ok: true, mode: requestedMode, url: page.url(), selected: [selectedMaster, selectedServant], eventGroup: '冬木', eventCards: 20, runtimeSkillCards, battleEntryMs, mapInteractions, occupantDiagnostic, visualMotion, seededFirstPlayers, automaticProgress}, null, 2));
   await browser.close();
 })().catch(async error => {
   console.error(error.stack || error);
