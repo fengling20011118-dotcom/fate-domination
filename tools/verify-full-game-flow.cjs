@@ -88,7 +88,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   const endAction = page.locator('.battle-host').locator('.end-action');
   if ((await endAction.innerText()) !== '完成当前阶段') throw new Error('阶段完成按钮没有使用“完成当前阶段”');
   await endAction.click();
-  const deployTarget = page.locator('.battle-host').locator('.place.runtime-map-action-deploy').first();
+  const deployLocation=process.env.FD_VERIFY_DEPLOY_LOCATION;
+  const deployTarget = page.locator('.battle-host').locator(deployLocation?`.place.${deployLocation}.runtime-map-action-deploy`:'.place.runtime-map-action-deploy').first();
   await deployTarget.waitFor({timeout: 15000});
   if (await endAction.isEnabled()) throw new Error('尚未部署时仍然可以跳过部署阶段');
   if (await page.locator('.battle-host').locator('[data-runtime-map-move-toggle]').count()) throw new Error('部署阶段错误显示了“常规移动”');
@@ -98,7 +99,9 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   await deployTarget.click();
   const moveToggle = page.locator('.battle-host').locator('[data-runtime-map-move-toggle]');
   await moveToggle.waitFor({timeout: 15000});
-  if ((await moveToggle.innerText()) !== '常规移动') throw new Error('行动阶段没有显示常规移动按钮');
+  if (!(await moveToggle.innerText()).startsWith('常规移动')) throw new Error('行动阶段没有显示常规移动按钮');
+  const movementReason=await page.evaluate(()=>window.fdCurrentBattleRuntime.snapshot().movementUnavailableReason);
+  if (!await moveToggle.isEnabled() && !movementReason) throw new Error('不可移动时没有解释原因');
   if (await page.locator('.battle-host').locator('.end-action').count()) throw new Error('行动阶段仍然显示了“跳过移动”');
   if (await page.locator('.battle-host').locator('.place.runtime-map-action-move').count()) throw new Error('未点击常规移动时地图已经可以移动');
   let moveLabel = '当前无可移动地点';
@@ -120,6 +123,10 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   });
   if (Object.values(occupantDiagnostic).some(({expected,visible}) => expected !== visible)) throw new Error(`地区玩家头像显示不完整：${JSON.stringify(occupantDiagnostic)}`);
   const firstVisibleHandCard = page.locator('.battle-host').locator('.hand .card').first();
+  await page.evaluate(()=>{
+    const root=document.querySelector('.battle-host').shadowRoot;window.__removedPlayedLayers=0;
+    new MutationObserver(records=>records.forEach(record=>record.removedNodes.forEach(node=>{if(node.nodeType===1&&node.matches('.map-played-layer'))window.__removedPlayedLayers++}))).observe(root.querySelector('.board'),{childList:true,subtree:true});
+  });
   await firstVisibleHandCard.waitFor({timeout: 15000});
   await firstVisibleHandCard.click();
   const selectionCheck = await page.evaluate(() => {
@@ -135,7 +142,10 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     if (!await page.locator('.battle-host').locator('.place.runtime-map-action-move').count()) throw new Error('选牌后无法重新开启常规移动');
     if (!await page.locator('.battle-host').locator('.hand .card.selected').count()) throw new Error('切换常规移动丢失了选牌');
   }
-  const playableInstanceIds = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().draftAttackActions.find(action => action.payload?.faceUpInstanceIds?.length && !action.payload?.faceDownInstanceIds?.length)?.payload.faceUpInstanceIds);
+  const moveDestination=process.env.FD_VERIFY_MOVE_LOCATION;
+  if(moveDestination){await page.locator('.battle-host').locator(`.place.${moveDestination}.runtime-map-action-move`).click();await page.waitForFunction(()=>window.fdCurrentBattleRuntime.snapshot().view.step==='play-batch-draft');}
+  const playFaceDown=process.env.FD_VERIFY_FACE_DOWN==='1';
+  const playableInstanceIds = await page.evaluate((faceDown) => {const snapshot=window.fdCurrentBattleRuntime.snapshot();return [...snapshot.actions,...snapshot.draftAttackActions].find(action => action.commandType==='player.attack.commit' && (faceDown?action.payload?.faceDownInstanceIds?.length&&!action.payload?.faceUpInstanceIds?.length:action.payload?.faceUpInstanceIds?.length&&!action.payload?.faceDownInstanceIds?.length))?.payload[faceDown?'faceDownInstanceIds':'faceUpInstanceIds']},playFaceDown);
   if (!playableInstanceIds?.length) {
     const available = await page.evaluate(() => window.fdCurrentBattleRuntime.snapshot().actions.filter(action => action.commandType === 'player.attack.commit'));
     throw new Error(`移动后没有可打出的手牌组合：${JSON.stringify(available)}`);
@@ -147,16 +157,16 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
     await handCard.waitFor({timeout: 15000});
     await handCard.click();
   }
-  const confirmPlay = page.locator('.battle-host').locator('#confirm-play');
+  const confirmPlay = page.locator('.battle-host').locator(playFaceDown?'#confirm-hidden-play':'#confirm-play');
   const playDiagnostic = await page.evaluate(() => {
     const snapshot = window.fdCurrentBattleRuntime.snapshot(), root = document.querySelector('.battle-host')?.shadowRoot;
     return {phase: snapshot.view.phase, step: snapshot.view.step, actions: snapshot.actions.map(action => action.commandType), selected: root?.querySelectorAll('.hand .card.selected').length, buttonDisabled: root?.querySelector('#confirm-play')?.disabled};
   });
-  if (playDiagnostic.step !== 'move-decision') throw new Error(`选牌改变了行动步骤：${JSON.stringify(playDiagnostic)}`);
-  await page.waitForFunction(() => {
+  if (playDiagnostic.step !== (moveDestination?'play-batch-draft':'move-decision')) throw new Error(`选牌改变了行动步骤：${JSON.stringify(playDiagnostic)}`);
+  await page.waitForFunction((faceDown) => {
     const host = document.querySelector('.battle-host');
-    return host?.shadowRoot?.querySelector('#confirm-play')?.disabled === false;
-  }, null, {timeout: 10000});
+    return host?.shadowRoot?.querySelector(faceDown?'#confirm-hidden-play':'#confirm-play')?.disabled === false;
+  }, playFaceDown, {timeout: 10000});
   await confirmPlay.click();
   await page.waitForFunction(() => window.fdCurrentBattleRuntime.snapshot().eventLog.some(event => event.type === 'attack.committed' && event.payload?.playerId !== 'p1') || window.fdCurrentBattleRuntime.snapshot().view.phase === 'combat', null, {timeout: 20000});
   const visualMotion = await page.evaluate(() => {const root=document.querySelector('.battle-host')?.shadowRoot,css=[...(root?.querySelectorAll('style')||[])].map(style=>style.textContent).join('\n');return {tokenArrivals:root?.querySelectorAll('.runtime-token-arrive').length??0,cardArrivals:root?.querySelectorAll('.runtime-card-arrive').length??0,cardAnimationInstalled:css.includes('.runtime-card-arrive')}});
@@ -191,6 +201,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
       combatants: root?.querySelectorAll('.settlement-combatant').length ?? 0,
       progress: root?.querySelector('.settlement-progress')?.textContent.trim() || '',
       playedGroups,
+      removedPlayedLayers:window.__removedPlayedLayers,
+      locationInfo:['workshop','scouting'].map(id=>{const section=root.querySelector(`[data-settlement-info-location="${id}"]`);return {id,exists:!!section,players:section?.querySelectorAll('[data-settlement-info-player]').length,cards:section?.querySelectorAll('.settlement-info-card').length,expectedPlayers:snapshot.roster.filter(entry=>entry.player?.locationId===id).length,expectedCards:Object.values(snapshot.view.cards).filter(card=>card.zone==='attack'&&snapshot.view.players[card.ownerPlayerId]?.locationId===id).length}}),
     };
   });
   if (process.env.FD_SETTLEMENT_SCREENSHOT) await page.screenshot({path: process.env.FD_SETTLEMENT_SCREENSHOT});
@@ -199,6 +211,8 @@ const {chromium} = require(path.join(rulesRoot, 'node_modules/playwright'));
   if (!settlementBefore.buttonFullyVisible) throw new Error(`结算按钮没有完整显示：${JSON.stringify(settlementBefore)}`);
   if (!settlementBefore.progress.includes('1 / 2')) throw new Error(`结算界面没有显示顺序进度：${JSON.stringify(settlementBefore)}`);
   if (Object.values(settlementBefore.playedGroups).some(group=>group.expected!==group.actual||!group.seatsInside||!group.cardsInside)) throw new Error(`地区内玩家出牌组显示不完整：${JSON.stringify(settlementBefore.playedGroups)}`);
+  if(settlementBefore.removedPlayedLayers)throw new Error('行动中仍在整片重建地图出牌区');
+  if(settlementBefore.locationInfo.some(info=>!info.exists||info.players!==info.expectedPlayers||info.cards!==info.expectedCards))throw new Error(`工坊或侦察出牌情报缺失：${JSON.stringify(settlementBefore.locationInfo)}`);
   await page.locator('.battle-host').locator('.settlement-actions [data-runtime-action]').click();
   for (let attempts = 0; attempts < 12; attempts += 1) {
     const state = await page.evaluate(() => ({

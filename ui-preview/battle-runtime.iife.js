@@ -179825,6 +179825,7 @@
         view,
         actions,
         draftAttackActions: this.#draftAttackActions(),
+        movementUnavailableReason: actions.some((action) => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
         definitions,
         roster,
         events: structuredClone(this.#lastEvents),
@@ -179924,6 +179925,32 @@
       } catch {
         return [];
       }
+    }
+    #movementUnavailableReason() {
+      const state = this.app.state;
+      if (state.phase !== "action" || state.step !== "move-decision") return "";
+      if (state.activePlayerId !== this.playerId) return "\u7B49\u5F85\u5176\u4ED6\u73A9\u5BB6\u884C\u52A8";
+      const codes = [];
+      for (const locationId of ["workshop", "mountain", "city", "scouting"]) {
+        if (locationId === state.players[this.playerId]?.locationId) continue;
+        try {
+          new GameApplication({ state, content: this.#content }).dispatch({
+            commandId: `move-preview:${state.revision}:${locationId}`,
+            gameInstanceId: state.gameInstanceId,
+            actorId: this.playerId,
+            expectedRevision: state.revision,
+            type: CommandType.MovePlayer,
+            payload: { locationId }
+          });
+        } catch (error) {
+          codes.push(error instanceof Error ? error.message.split(":", 1)[0] : "");
+        }
+      }
+      if (codes.includes("ENGAGED_CANNOT_MOVE")) return "\u4EA4\u6218\u4E2D\uFF1A\u540C\u4E00\u6218\u573A\u6709\u5BF9\u624B\uFF0C\u4E0D\u80FD\u5E38\u89C4\u79FB\u52A8";
+      if (codes.includes("PLAYER_DEFEATED")) return "\u8D25\u5317\u72B6\u6001\u4E0B\u4E0D\u80FD\u5E38\u89C4\u79FB\u52A8";
+      if (codes.includes("PLAYER_MOVEMENT_BLOCKED") || codes.some((code) => code.startsWith("MOVEMENT_BLOCKED"))) return "\u5F53\u524D\u6548\u679C\u7981\u6B62\u5E38\u89C4\u79FB\u52A8";
+      if (codes.some((code) => /MANA|COST/.test(code))) return "\u9B54\u529B\u4E0D\u8DB3\uFF0C\u65E0\u6CD5\u652F\u4ED8\u79FB\u52A8\u6210\u672C";
+      return "\u5F53\u524D\u6CA1\u6709\u5408\u6CD5\u7684\u79FB\u52A8\u5730\u70B9";
     }
     #send(actorId, type, payload) {
       const state = this.app.state;

@@ -223,6 +223,7 @@ export class BrowserBattleRuntime {
       view,
       actions,
       draftAttackActions: this.#draftAttackActions(),
+      movementUnavailableReason: actions.some(action => action.commandType === CommandType.MovePlayer) ? "" : this.#movementUnavailableReason(),
       definitions,
       roster,
       events: structuredClone(this.#lastEvents),
@@ -325,6 +326,27 @@ export class BrowserBattleRuntime {
         .filter(action => action.commandType === CommandType.CommitAttack)
         .map(action => ({ ...action, id: `draft:${action.id}` }));
     } catch { return []; }
+  }
+
+  #movementUnavailableReason(): string {
+    const state = this.app.state;
+    if (state.phase !== "action" || state.step !== "move-decision") return "";
+    if (state.activePlayerId !== this.playerId) return "等待其他玩家行动";
+    const codes: string[] = [];
+    for (const locationId of ["workshop", "mountain", "city", "scouting"]) {
+      if (locationId === state.players[this.playerId]?.locationId) continue;
+      try {
+        new GameApplication({ state, content: this.#content }).dispatch({
+          commandId: `move-preview:${state.revision}:${locationId}`, gameInstanceId: state.gameInstanceId,
+          actorId: this.playerId, expectedRevision: state.revision, type: CommandType.MovePlayer, payload: { locationId },
+        });
+      } catch (error) { codes.push(error instanceof Error ? error.message.split(":", 1)[0] : ""); }
+    }
+    if (codes.includes("ENGAGED_CANNOT_MOVE")) return "交战中：同一战场有对手，不能常规移动";
+    if (codes.includes("PLAYER_DEFEATED")) return "败北状态下不能常规移动";
+    if (codes.includes("PLAYER_MOVEMENT_BLOCKED") || codes.some(code => code.startsWith("MOVEMENT_BLOCKED"))) return "当前效果禁止常规移动";
+    if (codes.some(code => /MANA|COST/.test(code))) return "魔力不足，无法支付移动成本";
+    return "当前没有合法的移动地点";
   }
 
   #send(actorId: string, type: string, payload: unknown) {
