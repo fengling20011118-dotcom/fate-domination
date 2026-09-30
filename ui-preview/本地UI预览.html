@@ -1355,6 +1355,10 @@
 .codex-card:hover .codex-portrait>img{transform:scale(1.035);filter:brightness(1.05)}
 .codex-name{font-size:14px;padding-top:9px}.codex-meta{font-size:10px;padding-bottom:11px}
 
+.codex-category-tabs{margin-left:auto;align-self:flex-end;margin-bottom:8px;display:flex;gap:8px}
+.codex-category-tabs button{padding:10px 18px;white-space:nowrap;font-size:15px}
+.codex-board-count{align-self:center;margin-left:18px;color:#a6b2c0;font-size:12px}
+@media(max-width:1000px){.codex-category-tabs button{padding:9px 12px;font-size:13px}.codex-category-tabs{gap:4px}}
 /* 图鉴详情：角色卡图 / 技能 / 从者卡组 */
 .codex-detail-page{position:absolute;z-index:3;left:54px;right:54px;top:154px;bottom:28px;display:grid;grid-template-columns:minmax(250px,310px) minmax(0,1fr);gap:22px;min-height:0}
 .codex-detail-identity,.codex-detail-content{will-change:transform,opacity,filter}.codex-detail-content{transform-origin:center left}
@@ -2041,6 +2045,7 @@ button:not(:disabled):not(.nav):not(.press-any):not(.mode-card):not(.tutorial-ca
 <script src="./vendor/anime.umd.min.js"></script>
 <script src="./character-preview-data.js"></script>
 <script src="./codex-detail-data.js"></script>
+<script src="./board-codex-data.js?v=20261001-board-codex-1"></script>
 <script src="./battle-runtime.iife.js?v=20260930-location-sequence-1"></script>
 
 <script src="./startup-assets.js?v=20260930-board-art-1"></script>
@@ -2050,6 +2055,7 @@ button:not(:disabled):not(.nav):not(.press-any):not(.mode-card):not(.tutorial-ca
 <script>
 (function(){
 const app=document.getElementById('app');
+let codexSection='characters',codexBoardFilter='all';
 let screen='legal',codexTab='all',codexClass='全部',codexDetailName='',codexDetailKind='',codexDetailTab='skills',codexDetailOrigin=null,chosenMode='free',isSwitching=false,routeEpoch=0,codexSwapTimer=0,codexAnimationEpoch=0;
 let setupSource='single',standardPickStage='master',standardClass='全部',selectedMaster='',selectedServant='',selectionLocked=false;
 let threeXStep='ban',threeXBannedMaster='',threeXBans=[],threeXMasterCandidates=[],threeXSelectedMaster='',threeXCrystals=0,threeXPurchases={servant:0,score:0,mana:0,seal:0},threeXServantCandidates=[],threeXSelectedServant='',threeXTransitioning=false;
@@ -2613,7 +2619,16 @@ function renderBattlePreview(){const m=chosenMode==='3x'?(threeXSelectedMaster||
 function codexSkillStats(s){const chips=[];if(s.cost!==null&&s.cost!==undefined)chips.push('<span>魔耗 '+esc(s.cost)+'</span>');if(s.requirement!==null&&s.requirement!==undefined)chips.push('<span>需求 '+esc(s.requirement)+'</span>');if(s.basePower!==null&&s.basePower!==undefined)chips.push('<span>基础威力 '+esc(s.basePower)+'</span>');return chips.join('')}
 function codexSkillItem(s){const art=s.image?'<div class="codex-skill-art" data-codex-preview="'+esc(s.image)+'"><img src="'+esc(s.image)+'" alt="'+esc(s.name)+' 技能卡图"></div>':'';return '<article class="codex-skill-item '+(s.image?'':'no-art')+'">'+art+'<div class="codex-skill-copy"><header><h3>'+esc(s.name)+'</h3><span>'+esc(s.type||'技能')+'</span></header><div class="codex-skill-stats">'+codexSkillStats(s)+'</div><p>'+esc(s.text||'暂无技能描述')+'</p></div></article>'}
 function codexDeckCard(c){return '<article class="codex-deck-card"><span class="codex-deck-count">×'+esc(c.count)+'</span><div class="codex-deck-art">'+(c.image?'<img src="'+esc(c.image)+'" alt="'+esc(c.name)+' 卡图">':'')+'</div><h3>'+esc(c.name)+'</h3><div class="codex-deck-meta"><span>'+esc(c.type||'卡牌')+'</span><span>'+(c.cost!==null&&c.cost!==undefined?'魔耗 '+esc(c.cost):'')+(c.basePower!==null&&c.basePower!==undefined?' · 威力 '+esc(c.basePower):'')+'</span></div><p>'+esc(c.text||'')+'</p></article>'}
+function renderBoardCodexDetail(){
+ const isSituation=codexDetailKind==='situation',data=(window.FDBoardCodexData?.[isSituation?'situations':'events']||[]).find(card=>card.id===codexDetailName);if(!data)return;
+ const label=isSituation?'局势牌':'事件牌',english=isSituation?'SITUATION':'EVENT';
+ const stats=isSituation?'<span>恢复魔力 '+esc(data.mana)+'</span><span>'+(data.climax?'高潮局势':'普通局势')+'</span>':'<span>事件战果 '+esc(data.victoryPoints)+'</span><span>'+esc(data.group)+'事件组</span><span>数量 ×'+esc(data.count)+'</span>';
+ const identity='<aside class="codex-detail-identity"><div class="codex-detail-art" data-codex-preview="'+esc(data.image)+'"><img src="'+esc(data.image)+'" alt="'+esc(data.name)+' 卡图"></div><div class="codex-detail-id"><small>'+english+'</small><strong>'+esc(data.name)+'</strong><em>'+label+'</em></div></aside>';
+ const content='<div class="codex-detail-section-head"><div><small>'+english+'</small><h2>'+esc(data.name)+'</h2></div><span>'+label+'</span></div><div class="codex-skill-list"><article class="codex-skill-item no-art"><div class="codex-skill-copy"><header><h3>卡牌效果</h3><span>'+label+'</span></header><div class="codex-skill-stats">'+stats+'</div><p>'+esc(data.text)+'</p></div></article></div>';
+ app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回图鉴</button><div class="sub-title"><span>ARCHIVE · '+english+'</span><h1>'+label+'资料</h1></div></header><section class="codex-detail-page">'+identity+'<section class="codex-detail-content"><div class="codex-detail-tabs"><button type="button" class="active">卡牌资料</button></div><div class="codex-detail-scroll">'+content+'</div></section></section></main>';
+}
 function renderCodexDetail(){
+ if(codexDetailKind==='situation'||codexDetailKind==='event'){renderBoardCodexDetail();return}
  const bucket=codexDetailKind==='master'?'masters':'servants';
  const data=window.FDCodexDetailData&&window.FDCodexDetailData[bucket]&&window.FDCodexDetailData[bucket][codexDetailName];
  if(!data){app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回图鉴</button><div class="sub-title"><span>ARCHIVE</span><h1>角色资料</h1></div></header><div class="codex-empty-detail">暂无该角色资料。</div></main>';return}
@@ -2670,15 +2685,22 @@ function renderCodex(){
  if(codexTab==='all') list=masterList.concat(servantList);
  else if(codexTab==='master') list=masterList;
  else list=codexClass==='全部'?servantList:servantList.filter(x=>x[1]===codexClass);
- const toolbarHtml='<div class="filters codex-class-filters">'
+ let toolbarHtml='<div class="filters codex-class-filters">'
    +'<button data-tab="all" class="'+(codexTab==='all'?'active':'')+'">全部</button>'
    +'<button data-tab="master" class="'+(codexTab==='master'?'active':'')+'">御主</button>'
    +classes.map(c=>'<button data-class="'+c+'" class="'+(codexTab==='servant'&&codexClass===c?'active':'')+'">'+c+'</button>').join('')
    +'</div>';
- const gridHtml=list.map(x=>{const src='../assets/cards/'+(x[2]==='master'?'masters/':'servants/')+x[0]+'.png';return '<button class="codex-card" data-entry="'+x[0]+'" data-entry-kind="'+x[2]+'"><div class="portrait codex-portrait"><span>'+x[0].slice(0,1)+'</span><img src="'+esc(src)+'" alt="'+esc(x[0])+' 卡图" onerror="this.remove()"></div><div class="codex-name">'+x[0]+'</div><div class="codex-meta">'+x[1]+'</div></button>'}).join('');
+ let gridHtml=list.map(x=>{const src='../assets/cards/'+(x[2]==='master'?'masters/':'servants/')+x[0]+'.png';return '<button class="codex-card" data-entry="'+x[0]+'" data-entry-kind="'+x[2]+'"><div class="portrait codex-portrait"><span>'+x[0].slice(0,1)+'</span><img src="'+esc(src)+'" alt="'+esc(x[0])+' 卡图" onerror="this.remove()"></div><div class="codex-name">'+x[0]+'</div><div class="codex-meta">'+x[1]+'</div></button>'}).join('');
+ if(codexSection!=='characters'){
+   const situations=codexSection==='situation',cards=window.FDBoardCodexData?.[situations?'situations':'events']||[],filtered=situations&&codexBoardFilter!=='all'?cards.filter(card=>card.climax===(codexBoardFilter==='climax')):cards;
+   toolbarHtml=situations?'<div class="filters codex-class-filters">'+[['all','全部'],['normal','普通局势'],['climax','高潮局势']].map(([id,label])=>'<button type="button" data-board-filter="'+id+'" class="'+(codexBoardFilter===id?'active':'')+'">'+label+'</button>').join('')+'</div>':'<div class="filters codex-class-filters"><button type="button" class="active">冬木</button><span class="codex-board-count">共 '+cards.reduce((total,card)=>total+card.count,0)+' 张 · '+cards.length+' 种</span></div>';
+   gridHtml=filtered.map(card=>'<button type="button" class="codex-card" data-entry="'+esc(card.id)+'" data-entry-kind="'+codexSection+'"><div class="portrait codex-portrait"><img src="'+esc(card.image)+'" alt="'+esc(card.name)+' 卡图"></div><div class="codex-name">'+esc(card.name)+'</div><div class="codex-meta">'+(situations?(card.climax?'高潮局势':'普通局势')+' · 恢复魔力 '+card.mana:'冬木 · 战果 '+card.victoryPoints+(card.count>1?' · ×'+card.count:''))+'</div></button>').join('');
+ }
+ const categoryHtml='<nav class="filters codex-category-tabs" aria-label="图鉴分类">'+[['characters','御主与从者'],['situation','局势'],['event','事件']].map(([id,label])=>'<button type="button" data-codex-section="'+id+'" class="'+(codexSection===id?'active':'')+'" aria-pressed="'+(codexSection===id)+'">'+label+'</button>').join('')+'</nav>';
  const currentToolbar=app.querySelector('.toolbar'),currentGrid=app.querySelector('.codex-grid');
  if(screen==='codex'&&currentToolbar&&currentGrid){
    currentToolbar.innerHTML=toolbarHtml;
+   const categories=app.querySelector('.codex-category-tabs');if(categories)categories.outerHTML=categoryHtml;
    window.clearTimeout(codexSwapTimer);
     codexAnimationEpoch++;
    currentGrid.classList.add('codex-grid-out');
@@ -2690,7 +2712,7 @@ function renderCodex(){
     },120);
    return;
  }
-  app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>ARCHIVE</span><h1>图鉴</h1></div></header><section class="toolbar codex-toolbar">'+toolbarHtml+'</section><section class="codex-grid codex-awaiting">'+gridHtml+'</section></main>';
+  app.innerHTML='<main class="screen">'+bg()+'<header class="sub-header"><button class="back">‹ 返回</button><div class="sub-title"><span>ARCHIVE</span><h1>图鉴</h1></div>'+categoryHtml+'</header><section class="toolbar codex-toolbar">'+toolbarHtml+'</section><section class="codex-grid codex-awaiting">'+gridHtml+'</section></main>';
   const grid=app.querySelector('.codex-grid');if(grid)requestAnimationFrame(()=>animateCodexCards(grid));
 }
 function ensureCodexImagePreview(){let box=document.getElementById('codexImagePreview');if(box)return box;box=document.createElement('div');box.id='codexImagePreview';box.className='codex-image-preview';box.innerHTML='<img alt="卡图放大预览">';document.body.appendChild(box);return box}
@@ -2807,6 +2829,8 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-threex-confirm-servant]')&&threeXSelectedServant&&threeXStep==='servant'){transitionThreeXStep('complete');return}
  const entry=e.target.closest('[data-entry]');if(entry){const originNode=entry.querySelector('.codex-portrait')||entry,originRect=originNode.getBoundingClientRect();codexDetailOrigin={left:originRect.left,top:originRect.top,width:originRect.width,height:originRect.height};codexDetailName=entry.dataset.entry;codexDetailKind=entry.dataset.entryKind||'servant';codexDetailTab='skills';go('codex-detail');return}
  const detailTab=e.target.closest('[data-codex-detail-tab]');if(detailTab&&screen==='codex-detail'){codexDetailTab=detailTab.dataset.codexDetailTab;renderCodexDetail();return}
+ const category=e.target.closest('[data-codex-section]');if(category&&screen==='codex'){codexSection=category.dataset.codexSection;codexBoardFilter='all';renderCodex();return}
+ const boardFilter=e.target.closest('[data-board-filter]');if(boardFilter&&screen==='codex'){codexBoardFilter=boardFilter.dataset.boardFilter;renderCodex();return}
  const t=e.target.closest('[data-tab]');if(t){codexTab=t.dataset.tab;codexClass='全部';renderCodex();return}
  const c=e.target.closest('[data-class]');if(c){codexTab='servant';codexClass=c.dataset.class;renderCodex();return}
 });
