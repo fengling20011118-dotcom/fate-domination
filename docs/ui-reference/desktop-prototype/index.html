@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080a0f">
+  <meta name="description" content="Fate/Domination 电脑端高保真对局界面参考稿。">
+  <title>Fate/Domination · 圣杯战争战术桌</title>
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+  <a class="skip-link" href="#battlefield">跳至战场</a>
+
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="icon-scroll" viewBox="0 0 24 24"><path d="M7 4h10v16H7zM9.5 8h5M9.5 12h5M9.5 16h3"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.04.04-2.83 2.83-.04-.04a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.65V21H9.83v-.08a1.8 1.8 0 0 0-1.1-1.65 1.8 1.8 0 0 0-2 .36l-.04.04-2.83-2.83.04-.04a1.8 1.8 0 0 0 .36-2 1.8 1.8 0 0 0-1.65-1.1H2.5v-4h.08a1.8 1.8 0 0 0 1.65-1.1 1.8 1.8 0 0 0-.36-2l-.04-.04 2.83-2.83.04.04a1.8 1.8 0 0 0 2 .36 1.8 1.8 0 0 0 1.1-1.65V2.4h4v.08a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 2-.36l.04-.04 2.83 2.83-.04.04a1.8 1.8 0 0 0-.36 2 1.8 1.8 0 0 0 1.65 1.1h.08v4h-.08A1.8 1.8 0 0 0 19.4 15Z"/></symbol>
+    <symbol id="icon-location" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="icon-mana" viewBox="0 0 24 24"><path d="M12 2c2.6 3.7 6.5 7 6.5 12a6.5 6.5 0 0 1-13 0C5.5 9 9.4 5.7 12 2Z"/><path d="M9 15c.6 1.5 1.6 2.2 3 2.2"/></symbol>
+    <symbol id="icon-vp" viewBox="0 0 24 24"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z"/></symbol>
+    <symbol id="icon-command" viewBox="0 0 24 24"><path d="M12 2 6.5 5.2v6.3c0 4.4 2.4 8.1 5.5 10.5 3.1-2.4 5.5-6.1 5.5-10.5V5.2Z"/><path d="m9 12 2 2 4-5"/></symbol>
+    <symbol id="icon-swords" viewBox="0 0 24 24"><path d="m5 3 7 7-3 3-7-7V3Zm14 0-7 7 3 3 7-7V3ZM8 14l-4 4m12-4 4 4M3 21l3-3m15 3-3-3"/></symbol>
+    <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+  </svg>
+
+  <div class="desktop-notice" role="note">
+    <strong>本参考稿优先展示电脑端布局</strong>
+    <span>请将窗口宽度调整至 1180px 以上查看完整战术桌。</span>
+  </div>
+
+  <div class="app-shell">
+    <header class="phase-rail">
+      <div class="brand-lockup" aria-label="Fate Domination">
+        <span class="brand-sigil" aria-hidden="true"><i></i></span>
+        <div>
+          <strong>Fate / Domination</strong>
+          <span>圣杯战争战术桌</span>
+        </div>
+      </div>
+
+      <div class="round-block">
+        <span>第</span><strong>4</strong><span>回合</span>
+      </div>
+
+      <nav class="phase-track" aria-label="本回合阶段">
+        <button class="phase-step is-complete" type="button"><span>准备</span></button>
+        <button class="phase-step is-complete" type="button"><span>前哨</span></button>
+        <button class="phase-step is-current" type="button" aria-current="step"><span>行动</span></button>
+        <button class="phase-step" type="button"><span>战斗</span></button>
+        <button class="phase-step" type="button"><span>结算</span></button>
+      </nav>
+
+      <div class="turn-owner">
+        <span class="turn-owner__label">当前行动</span>
+        <strong>间桐慎二</strong>
+        <span>席位 I · 新都</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-button" type="button" aria-label="打开对局日志">
+          <svg><use href="#icon-scroll"/></svg>
+          <span class="notification-dot" aria-label="2条新记录">2</span>
+        </button>
+        <button class="icon-button" type="button" aria-label="打开设置">
+          <svg><use href="#icon-settings"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="match-layout">
+      <aside class="seat-panel" aria-labelledby="seat-panel-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="seat-panel-title">七席御主</h2>
+            <p>按本回合行动顺位</p>
+          </div>
+          <span class="live-status"><i></i>7 / 7</span>
+        </div>
+
+        <div class="seat-list">
+          <button class="seat-card is-active" type="button" data-player="间桐慎二" style="--seat-color:#d1aa5b">
+            <span class="seat-order">I</span>
+            <img src="assets/master-shinji.png" alt="间桐慎二">
+            <span class="seat-card__identity"><strong>间桐慎二</strong><small>新都 · 当前行动</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>11</b><b><svg><use href="#icon-mana"/></svg>10</b><b><svg><use href="#icon-command"/></svg>2</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="远坂凛" style="--seat-color:#d5686d">
+            <span class="seat-order">II</span><img src="assets/master-rin.png" alt="远坂凛">
+            <span class="seat-card__identity"><strong>远坂凛</strong><small>深山町 · 交战</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>9</b><b><svg><use href="#icon-mana"/></svg>7</b><b><svg><use href="#icon-command"/></svg>3</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="卫宫切嗣" style="--seat-color:#7386a8">
+            <span class="seat-order">III</span><img src="assets/master-kiritsugu.png" alt="卫宫切嗣">
+            <span class="seat-card__identity"><strong>卫宫切嗣</strong><small>新都 · 等待</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>8</b><b><svg><use href="#icon-mana"/></svg>5</b><b><svg><use href="#icon-command"/></svg>2</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="言峰绮礼" style="--seat-color:#876fa8">
+            <span class="seat-order">IV</span><img src="assets/master-kirei.png" alt="言峰绮礼">
+            <span class="seat-card__identity"><strong>言峰绮礼</strong><small>魔术工房 · 等待</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>7</b><b><svg><use href="#icon-mana"/></svg>12</b><b><svg><use href="#icon-command"/></svg>1</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="韦伯·维尔维特" style="--seat-color:#4fa89b">
+            <span class="seat-order">V</span><img src="assets/master-waver.png" alt="韦伯·维尔维特">
+            <span class="seat-card__identity"><strong>韦伯·维尔维特</strong><small>侦查 · 等待</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>6</b><b><svg><use href="#icon-mana"/></svg>4</b><b><svg><use href="#icon-command"/></svg>3</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="肯尼斯" style="--seat-color:#6679c4">
+            <span class="seat-order">VI</span><img src="assets/master-kayneth.png" alt="肯尼斯">
+            <span class="seat-card__identity"><strong>肯尼斯</strong><small>深山町 · 交战</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>5</b><b><svg><use href="#icon-mana"/></svg>8</b><b><svg><use href="#icon-command"/></svg>2</b></span>
+          </button>
+          <button class="seat-card" type="button" data-player="间桐樱" style="--seat-color:#b16d9b">
+            <span class="seat-order">VII</span><img src="assets/master-sakura.png" alt="间桐樱">
+            <span class="seat-card__identity"><strong>间桐樱</strong><small>魔术工房 · 等待</small></span>
+            <span class="seat-card__stats"><b><svg><use href="#icon-vp"/></svg>4</b><b><svg><use href="#icon-mana"/></svg>9</b><b><svg><use href="#icon-command"/></svg>3</b></span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="battle-stage" id="battlefield" aria-labelledby="battlefield-title">
+        <div class="public-rule-strip">
+          <button class="rule-card situation-card inspectable-card" type="button" data-card-type="situation" data-name="暴风雨前的宁静" data-source="当前局势牌" data-owner="公共区域" data-visibility="全员公开" data-phase="本回合持续" data-description="所有玩家已获得本回合魔力。局势牌的效果优先于事件牌进行处理。">
+            <img src="assets/situation-calm.png" alt="局势牌：暴风雨前的宁静">
+            <div><span>当前局势</span><strong>暴风雨前的宁静</strong><small>所有玩家已获得本回合魔力</small></div>
+          </button>
+          <div class="battle-stage__title">
+            <span class="deco-line" aria-hidden="true"></span>
+            <div><h1 id="battlefield-title">冬木市战场</h1><p>夜幕降临 · 新都存在争夺</p></div>
+            <span class="deco-line" aria-hidden="true"></span>
+          </div>
+          <div class="battle-legend" aria-label="地图图例">
+            <span><i class="legend-dot is-current"></i>当前玩家</span>
+            <span><i class="legend-dot is-conflict"></i>即将战斗</span>
+          </div>
+        </div>
+
+        <div class="map-board">
+          <div class="map-ambient" aria-hidden="true"></div>
+
+          <article class="location-card workshop" data-location="魔术工房">
+            <img src="assets/loc-workshop.png" alt="">
+            <header><span>非战场</span><h3>魔术工房</h3></header>
+            <div class="location-meta"><span>容量 4</span><span>工房位 +2 / +1</span></div>
+            <button class="table-card-marker location-effect-marker inspectable-card" type="button" data-card-type="location-effect" data-name="结界强化（占位）" data-source="地点效果牌" data-owner="言峰绮礼" data-visibility="全员公开" data-phase="持续生效" data-description="放置于魔术工房的公开地点效果示例。实际说明由结构化规则数据提供。"><img src="assets/card-luck.png" alt="地点效果牌：结界强化占位"><span><small>地点效果</small>结界强化</span></button>
+            <div class="location-slots" aria-label="魔术工房内玩家">
+              <button class="map-token" type="button" style="--token:#876fa8" aria-label="言峰绮礼位于魔术工房"><img src="assets/master-kirei.png" alt=""></button>
+              <button class="map-token" type="button" style="--token:#b16d9b" aria-label="间桐樱位于魔术工房"><img src="assets/master-sakura.png" alt=""></button>
+            </div>
+          </article>
+
+          <div class="route-link"><span><b>1</b></span><svg><use href="#icon-chevron"/></svg><small>魔力</small></div>
+
+          <article class="location-card miyama has-conflict" data-location="深山町">
+            <img src="assets/loc-miyama.png" alt="">
+            <header><span>战场 · 2 VP</span><h3>深山町</h3></header>
+            <button class="location-event inspectable-card" type="button" data-card-type="event" data-name="地脉" data-source="深山町事件牌" data-owner="公共区域" data-visibility="全员公开" data-phase="战场持续" data-description="公开事件牌示例。进入或结算该地点时，系统按照局势牌优先、事件牌其后的顺序生成规则提示。"><img src="assets/event-leyline.png" alt="事件牌：地脉"><span><small>明置事件</small>地脉</span></button>
+            <div class="location-slots" aria-label="深山町内玩家">
+              <button class="map-token" type="button" style="--token:#d5686d" aria-label="远坂凛位于深山町"><img src="assets/master-rin.png" alt=""></button>
+              <button class="map-token" type="button" style="--token:#6679c4" aria-label="肯尼斯位于深山町"><img src="assets/master-kayneth.png" alt=""></button>
+            </div>
+          </article>
+
+          <div class="route-link"><span><b>2</b></span><svg><use href="#icon-chevron"/></svg><small>魔力</small></div>
+
+          <article class="location-card shinto is-current has-conflict" data-location="新都">
+            <img src="assets/loc-shinto.png" alt="">
+            <header><span>战场 · 3 VP</span><h3>新都</h3></header>
+            <button class="location-event inspectable-card" type="button" data-card-type="event" data-name="固有结界" data-source="新都事件牌" data-owner="公共区域" data-visibility="全员公开" data-phase="战场持续" data-description="已经展示并持续影响新都的事件牌。该牌仅提供查看，不属于当前玩家可操作区域。"><img src="assets/event-reality-marble.png" alt="事件牌：固有结界"><span><small>已展示事件</small>固有结界</span></button>
+            <button class="table-card-marker public-skill-marker inspectable-card" type="button" data-card-type="public-skill" data-name="公开技能牌（占位）" data-source="卫宫切嗣 · 已使用技能" data-owner="卫宫切嗣" data-visibility="使用后公开" data-phase="行动阶段已结算" data-cost="3" data-description="其他玩家已经使用并公开的技能牌示例。你可以查看其中文复述，但不能进行任何操作。"><img src="assets/skill-riding.png" alt="其他玩家公开技能牌占位"><span><small>公开技能</small>已结算</span></button>
+            <div class="location-slots" aria-label="新都内玩家">
+              <button class="map-token is-current" type="button" style="--token:#d1aa5b" aria-label="当前玩家间桐慎二位于新都"><img src="assets/master-shinji.png" alt=""></button>
+              <button class="map-token" type="button" style="--token:#7386a8" aria-label="卫宫切嗣位于新都"><img src="assets/master-kiritsugu.png" alt=""></button>
+            </div>
+          </article>
+
+          <div class="route-link"><span><b>2</b></span><svg><use href="#icon-chevron"/></svg><small>魔力</small></div>
+
+          <article class="location-card recon" data-location="侦查">
+            <img src="assets/loc-recon.png" alt="">
+            <header><span>非战场 · 2 VP</span><h3>侦查</h3></header>
+            <div class="location-meta"><span>容量 1</span><span>战力结算时获得</span></div>
+            <div class="location-slots" aria-label="侦查内玩家">
+              <button class="map-token" type="button" style="--token:#4fa89b" aria-label="韦伯·维尔维特位于侦查"><img src="assets/master-waver.png" alt=""></button>
+            </div>
+          </article>
+        </div>
+
+        <div class="battle-summary" aria-label="即将发生的战斗">
+          <div><svg><use href="#icon-swords"/></svg><span><strong>2 处战斗待结算</strong><small>深山町 2 人 · 新都 2 人</small></span></div>
+          <div class="battle-summary__focus"><span>当前焦点</span><strong>新都</strong><small>完成出牌后公开合计威力</small></div>
+        </div>
+      </section>
+
+      <aside class="decision-panel" aria-labelledby="decision-title">
+        <div class="decision-panel__status"><span>行动阶段</span><b>进行中</b></div>
+        <div class="decision-panel__heading">
+          <span class="decision-mark" aria-hidden="true"></span>
+          <div><p>当前决策</p><h2 id="decision-title">完成常规出牌</h2></div>
+        </div>
+
+        <ol class="action-path">
+          <li class="is-done"><span></span><div><strong>常规移动</strong><small>已选择不移动</small></div></li>
+          <li class="is-current"><span></span><div><strong>选择攻击牌</strong><small>从合法区域同时选择 2 张</small></div></li>
+          <li><span></span><div><strong>可选阶段能力</strong><small>当前可用 2 项</small></div></li>
+          <li><span></span><div><strong>结束个人回合</strong><small>确认后未使用能力过期</small></div></li>
+        </ol>
+
+        <section class="rule-callout">
+          <svg><use href="#icon-eye"/></svg>
+          <div><strong>当前规则摘要</strong><p>你位于战场，本次常规出牌至少有 1 张必须明置。</p></div>
+        </section>
+
+        <div class="selection-meter">
+          <div><span>常规牌</span><strong id="regular-count">2 / 2</strong></div>
+          <div class="meter-track"><i id="selection-progress" style="width:100%"></i></div>
+          <small id="selection-hint">已满足常规数量；当前能力允许从手牌追加打出。</small>
+        </div>
+
+        <div class="decision-spacer"></div>
+
+        <div class="cost-preview">
+          <span>预计支付</span><strong><svg><use href="#icon-mana"/></svg><span id="total-cost">9</span></strong>
+        </div>
+        <button class="primary-action" type="button" id="confirm-play">确认本次出牌</button>
+        <button class="text-action" type="button">查看完整规则依据</button>
+      </aside>
+    </main>
+
+    <section class="player-console is-expanded" aria-label="当前玩家操作台">
+      <button class="console-identity" type="button" aria-expanded="true">
+        <span class="console-portrait"><img src="assets/master-shinji.png" alt=""></span>
+        <span><small>御主</small><strong>间桐慎二</strong></span>
+      </button>
+
+      <div class="resource-row" aria-label="玩家资源">
+        <span><svg><use href="#icon-mana"/></svg><small>魔力</small><strong>10</strong></span>
+        <span><svg><use href="#icon-command"/></svg><small>令咒</small><strong>2</strong></span>
+        <span><svg><use href="#icon-vp"/></svg><small>战果</small><strong>11</strong></span>
+      </div>
+
+      <div class="console-summary">
+        <span><small>手牌</small><strong>3</strong></span>
+        <span><small>技能区</small><strong>4</strong></span>
+        <span><small>激活攻击</small><strong>1</strong></span>
+        <span><small>合计威力</small><strong>4</strong></span>
+      </div>
+
+      <div class="servant-summary">
+        <span><small>从者</small><strong>Rider · 真名隐藏</strong></span>
+        <span class="servant-portrait"><img src="assets/servant-medusa.png" alt="美杜莎"></span>
+      </div>
+
+      <button class="console-toggle" type="button" aria-expanded="true">
+        <span>收起玩家操作台</span><svg><use href="#icon-chevron"/></svg>
+      </button>
+
+      <div class="console-workspace">
+        <section class="master-wing" aria-labelledby="master-wing-title">
+          <div class="wing-heading">
+            <div><span>御主体系</span><h2 id="master-wing-title">间桐慎二</h2></div>
+            <span class="visibility-tag">公开</span>
+          </div>
+          <div class="master-card-mini">
+            <button class="identity-card-trigger inspectable-card" type="button" data-card-type="master" data-name="间桐慎二" data-source="御主卡" data-owner="你" data-visibility="公开" data-phase="依能力文本" data-description="御主能力总览。点击卡牌可进入完整检视；可执行能力将由对应能力入口与后端合法动作决定。">
+              <img src="assets/master-shinji.png" alt="间桐慎二御主能力卡">
+            </button>
+            <div>
+              <strong>御主能力</strong>
+              <button type="button" class="ability-row"><span>吸魔命令</span><small>被动</small></button>
+              <button type="button" class="ability-row"><span>无用之人</span><small>游戏开始时</small></button>
+              <button type="button" class="ability-row is-placeholder"><span>专属能力占位</span><small>待录入</small></button>
+            </div>
+          </div>
+          <div class="command-spells" aria-label="剩余两枚令咒">
+            <span class="command-spell is-available"><svg><use href="#icon-command"/></svg></span>
+            <span class="command-spell is-available"><svg><use href="#icon-command"/></svg></span>
+            <span class="command-spell is-spent"><svg><use href="#icon-command"/></svg></span>
+            <button type="button">查看御主详情</button>
+          </div>
+        </section>
+
+        <section class="card-workbench" aria-labelledby="card-workbench-title">
+          <div class="source-rails">
+            <div class="card-rail-heading"><div><span>动态技能区</span><strong id="card-workbench-title">4 张可查看</strong></div><small>悬停或聚焦放大</small></div>
+            <div class="card-rail skill-rail" aria-label="技能区">
+              <button class="play-card inspectable-card is-selected" type="button" data-card-id="riding" data-kind="regular" data-card-type="servant-skill" data-actions="toggle-regular" data-cost="3" data-power="—" data-name="骑乘" data-source="从者技能" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="行动阶段能力；本参考稿用它演示从技能牌产生后续追加出牌权限。" aria-pressed="true"><img src="assets/skill-riding.png" alt="技能牌：骑乘"><span class="card-source">从者</span><span class="selection-order">I</span></button>
+              <button class="play-card inspectable-card is-selected" type="button" data-card-id="mystic-eyes" data-kind="regular" data-card-type="servant-skill" data-actions="toggle-regular" data-cost="4" data-power="—" data-name="石化之魔眼" data-source="从者技能" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="代表性的行动阶段技能牌；具体结算以正式卡牌数据为准。" aria-pressed="true"><img src="assets/skill-mystic-eyes.png" alt="技能牌：石化之魔眼"><span class="card-source">从者</span><span class="selection-order">II</span></button>
+              <button class="play-card inspectable-card" type="button" data-card-id="bellerophon" data-kind="regular" data-card-type="servant-skill" data-actions="toggle-regular" data-cost="9" data-power="—" data-name="骑英之缰绳" data-source="从者技能" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="未选择的从者技能牌。加入常规出牌后占用两张常规牌中的一个位置。" aria-pressed="false"><img src="assets/skill-bellerophon.png" alt="技能牌：骑英之缰绳"><span class="card-source">从者</span></button>
+              <button class="play-card inspectable-card" type="button" data-card-id="book" data-kind="regular" data-card-type="master-skill" data-actions="toggle-regular" data-cost="0" data-power="—" data-name="伪臣之书" data-source="御主技能" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="御主技能示例；展示御主技能加入动态技能区后的归属。" aria-pressed="false"><img src="assets/skill-book.png" alt="御主技能牌：伪臣之书"><span class="card-source is-master">御主</span></button>
+            </div>
+
+            <div class="card-rail-heading hand-heading"><div><span>手牌</span><strong>仅你可见</strong></div><small>3 / 3</small></div>
+            <div class="card-rail hand-rail" aria-label="手牌">
+              <button class="play-card inspectable-card is-selected is-additional" type="button" data-card-id="strength" data-kind="additional" data-card-type="hand" data-actions="toggle-additional" data-cost="2" data-power="6" data-name="力量攻击（占位）" data-source="手牌追加" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="追加打出的手牌示例，不计入常规两张；是否允许追加由已打出能力与后端合法动作决定。" aria-pressed="true"><img src="assets/card-strength.png" alt="手牌：力量攻击占位"><span class="card-source">手牌</span><span class="selection-order">追加</span></button>
+              <button class="play-card inspectable-card" type="button" data-card-id="magic" data-kind="additional" data-card-type="hand" data-actions="toggle-additional" data-cost="2" data-power="4" data-name="魔术攻击（占位）" data-source="手牌" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="未选择的魔术攻击手牌占位。" aria-pressed="false"><img src="assets/card-magic.png" alt="手牌：魔术攻击占位"><span class="card-source">手牌</span></button>
+              <button class="play-card inspectable-card" type="button" data-card-id="surveil" data-kind="additional" data-card-type="hand" data-actions="toggle-additional" data-cost="0" data-power="3" data-name="远隔操作（占位）" data-source="手牌" data-owner="你" data-visibility="仅你可见" data-phase="行动阶段" data-description="未选择的基础攻击手牌占位。" aria-pressed="false"><img src="assets/card-surveil.png" alt="手牌：远隔操作占位"><span class="card-source">手牌</span></button>
+            </div>
+          </div>
+
+          <aside class="play-composer" aria-label="本次出牌托盘">
+            <div class="composer-heading"><div><span>本次出牌</span><strong>同时提交</strong></div><span class="draft-badge">草稿</span></div>
+            <div class="composer-group"><div class="composer-label"><span>常规牌</span><b id="composer-regular-count">2 / 2</b></div><div class="composer-slots" id="regular-slots"></div></div>
+            <div class="composer-group additional-group"><div class="composer-label"><span>追加牌</span><b id="composer-additional-count">1</b></div><div class="composer-slots" id="additional-slots"></div></div>
+            <div class="composer-footer"><span>当前总费用</span><strong><svg><use href="#icon-mana"/></svg><span id="composer-cost">9</span></strong></div>
+          </aside>
+        </section>
+
+        <section class="servant-wing" aria-labelledby="servant-wing-title">
+          <div class="wing-heading"><div><span>从者体系</span><h2 id="servant-wing-title">Rider</h2></div><span class="visibility-tag is-private">仅你可见</span></div>
+          <button class="servant-card-mini inspectable-card" type="button" data-card-type="servant" data-name="Rider · 美杜莎" data-source="从者卡" data-owner="你" data-visibility="仅你可见" data-phase="依能力文本" data-description="从者完整状态与能力入口。真名和非公开信息只对所有者显示。"><img src="assets/servant-medusa.png" alt="从者概览：美杜莎"><span class="servant-card-copy"><span>真名</span><strong>美杜莎</strong><small>对其他玩家保持隐藏</small></span></button>
+          <dl class="servant-stats"><div><dt>牌库</dt><dd>7</dd></div><div><dt>弃牌</dt><dd>2</dd></div><div><dt>攻击区</dt><dd>1</dd></div><div><dt>暗置</dt><dd>0</dd></div></dl>
+          <div class="active-attack"><span>当前激活攻击</span><strong>敏捷 · 威力 4</strong><small>合计威力将在常规出牌后公开</small></div>
+        </section>
+
+      </div>
+    </section>
+  </div>
+
+  <aside class="card-hover-preview" aria-live="polite" aria-hidden="true">
+    <img id="hover-card-image" src="assets/skill-riding.png" alt="">
+    <div class="hover-preview-copy"><span id="hover-card-type">从者技能</span><strong id="hover-card-name">骑乘</strong><small id="hover-card-meta">费用 3 · 行动阶段</small><p id="hover-card-description">行动阶段能力。</p><em>单击打开完整检视</em></div>
+  </aside>
+
+  <div class="card-modal" id="card-inspection-modal" aria-hidden="true">
+    <div class="card-modal__backdrop" data-close-card-modal></div>
+    <section class="card-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-card-name">
+      <button class="card-modal__close" type="button" aria-label="关闭卡牌检视" data-close-card-modal>×</button>
+      <div class="card-modal__visual"><span id="modal-card-visibility">仅你可见</span><img id="modal-card-image" src="assets/skill-riding.png" alt=""></div>
+      <div class="card-modal__content">
+        <div class="card-modal__eyebrow"><span id="modal-card-type">从者技能</span><small id="modal-card-source">从者技能</small></div>
+        <h2 id="modal-card-name">骑乘</h2>
+        <dl class="card-modal__facts">
+          <div><dt>所有者</dt><dd id="modal-card-owner">你</dd></div>
+          <div><dt>使用阶段</dt><dd id="modal-card-phase">行动阶段</dd></div>
+          <div><dt>魔力费用</dt><dd id="modal-card-cost">3</dd></div>
+          <div><dt>基础威力</dt><dd id="modal-card-power">—</dd></div>
+        </dl>
+        <section class="card-modal__rules"><span>中文规则复述</span><p id="modal-card-description">行动阶段能力。</p><small>说明来自经过确认的结构化卡牌数据，不在检视时临时生成。</small></section>
+        <div class="card-modal__actions" id="modal-card-actions" aria-label="当前可用操作"></div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="public-drawer" aria-labelledby="public-drawer-title" aria-hidden="true">
+    <button class="drawer-close" type="button" aria-label="关闭玩家公开信息"><svg><use href="#icon-chevron"/></svg></button>
+    <div class="drawer-identity"><img id="drawer-avatar" src="assets/master-rin.png" alt=""><div><span>公开信息</span><h2 id="public-drawer-title">远坂凛</h2><p id="drawer-location">深山町 · 交战</p></div></div>
+    <div class="drawer-stats" id="drawer-stats"></div>
+    <section><h3>御主公开能力</h3><p>能力摘要占位。正式版本从后端公开信息视图读取。</p></section>
+    <section><h3>从者与攻击</h3><p>真名隐藏 · 明置攻击 2 · 暗置牌 1</p></section>
+  </aside>
+
+  <script src="app.js?v=4" defer></script>
+</body>
+</html>
